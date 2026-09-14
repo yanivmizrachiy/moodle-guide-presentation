@@ -29,7 +29,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
   FIRST_GUIDE_SLIDE_ID,
-  FIRST_TRAINING_SLIDE_ID,
   GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
   GUIDE_TOPICS,
@@ -359,9 +358,10 @@ function SlideContent({
             <Button
               size="lg"
               onClick={onStart}
-              className="h-16 min-w-44 rounded-2xl bg-amber-400 px-10 text-xl font-black text-slate-950 shadow-[0_16px_38px_rgba(251,191,36,0.22),0_8px_22px_rgba(0,0,0,0.28)] hover:bg-amber-300"
+              className="h-16 min-w-44 gap-3 rounded-2xl bg-amber-400 px-10 text-xl font-black text-slate-950 shadow-[0_16px_38px_rgba(251,191,36,0.22),0_8px_22px_rgba(0,0,0,0.28)] hover:bg-amber-300"
             >
-              התחל
+              <List className="h-6 w-6" />
+              לתוכן העניינים
             </Button>
           </div>
         </div>
@@ -559,6 +559,9 @@ export default function Guide() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [direction, setDirection] = useState(1);
   const [lightbox, setLightbox] = useState<LightboxState>(null);
+  // Which chapter is expanded in the table of contents. The menu lists only the
+  // chapter headings; a chapter reveals its topics and questions when opened.
+  const [openSection, setOpenSection] = useState<string | null>(null);
   const slideRef = useRef<HTMLElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const touchStartX = useRef<number | null>(null);
@@ -570,8 +573,9 @@ export default function Guide() {
   }, []);
 
   const slide = PUBLISHED_GUIDE_SLIDES[currentIndex] ?? PUBLISHED_GUIDE_SLIDES[0];
-  // The cover is an entry gate: its single "התחל" CTA is the one way forward, so the
-  // duplicated chrome (footer next/prev, header home, section label) stays hidden there.
+  // The cover is an entry gate: its single CTA opens the table of contents so the
+  // reader picks a chapter first, so the duplicated chrome (footer next/prev,
+  // header home, section label) stays hidden there.
   const isCover = Boolean(slide.cover);
   const sequence = useMemo(() => PUBLISHED_GUIDE_SLIDES.map((item) => item.id), []);
   const position = sequence.indexOf(slide.id);
@@ -713,15 +717,17 @@ export default function Guide() {
   // Slide numbers for the TOC and search results, matching the footer counter.
   const slideNumberOf = useMemo(() => new Map(sequence.map((id, index) => [id, index + 1])), [sequence]);
 
-  // Opening the TOC lands on the current question, so the reader always knows
-  // where they are inside the six chapters without scrolling to find out.
+  // The TOC lists only the chapter headings; a chapter opens its topics and
+  // questions when clicked. Opening the menu starts every chapter collapsed and
+  // just scrolls the reader's current chapter (marked "אתם כאן") into view.
   useEffect(() => {
     if (panel !== 'menu') return;
+    setOpenSection(null);
     const frame = requestAnimationFrame(() => {
-      document.querySelector('[data-toc-current="true"]')?.scrollIntoView({ block: 'center' });
+      document.querySelector('[data-toc-current-section="true"]')?.scrollIntoView({ block: 'center' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [panel]);
+  }, [panel, slide.section]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -876,7 +882,7 @@ export default function Guide() {
               <SlideContent
                 slide={slide}
                 onOpenScreenshot={setLightbox}
-                onStart={() => jumpToSlide(FIRST_TRAINING_SLIDE_ID)}
+                onStart={() => setPanel('menu')}
               />
             </m.article>
           </AnimatePresence>
@@ -962,68 +968,96 @@ export default function Guide() {
                 </header>
 
                 {panel === 'menu' ? (
-                  <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-7">
-                    <div className="mb-6 grid gap-3">
-                      <button
-                        onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
-                        className="flex items-center gap-4 rounded-2xl border-2 border-slate-200 bg-white p-5 text-right transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg"
-                      >
-                        <Home className="h-9 w-9 shrink-0 text-blue-700" />
-                        <span className="text-lg font-black text-slate-950">השקף הראשון</span>
-                      </button>
-                    </div>
-
-                    <div className="grid gap-5 lg:grid-cols-2">
+                  <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+                    <div className="grid gap-3">
                       {GUIDE_SECTIONS.map((section) => {
                         const sectionSlides = PUBLISHED_GUIDE_SLIDES.filter((item) => item.section === section.id);
                         if (sectionSlides.length === 0) return null;
                         const sectionTopics = GUIDE_TOPICS.filter((topic) => topic.section === section.id);
+                        const isOpen = openSection === section.id;
+                        const isCurrentSection = section.id === slide.section;
                         return (
-                          <div key={section.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-                            <h3 className="text-xl font-black text-slate-950">{section.title}</h3>
-                            {section.description && (
-                              <p className="mt-1 text-xs font-bold leading-relaxed text-slate-500">{section.description}</p>
-                            )}
-                            {sectionTopics.map((topic) => {
-                              const topicSlides = sectionSlides.filter((item) => item.topic === topic.id);
-                              if (topicSlides.length === 0) return null;
-                              return (
-                                <div key={topic.id} className="mt-4">
-                                  <h4 className="border-b border-slate-200 pb-1 text-sm font-black text-blue-800">
-                                    {topic.title}
-                                  </h4>
-                                  <div className="mt-2 grid gap-2">
-                                    {topicSlides.map((item) => (
-                                      <button
-                                        key={item.id}
-                                        onClick={() => jumpToSlide(item.id)}
-                                        aria-current={item.id === slide.id ? 'page' : undefined}
-                                        data-toc-current={item.id === slide.id ? 'true' : undefined}
-                                        className={cn(
-                                          'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
-                                          item.id === slide.id
-                                            ? 'bg-blue-800 text-white shadow-md'
-                                            : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-900'
-                                        )}
-                                      >
-                                        <span className="flex min-w-0 items-center gap-2.5">
-                                          <span
+                          <div
+                            key={section.id}
+                            data-toc-current-section={isCurrentSection ? 'true' : undefined}
+                            className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
+                          >
+                            <h3>
+                              <button
+                                type="button"
+                                onClick={() => setOpenSection((current) => (current === section.id ? null : section.id))}
+                                aria-expanded={isOpen}
+                                className={cn(
+                                  'flex w-full items-center justify-between gap-3 px-5 py-4 text-right transition',
+                                  isOpen ? 'bg-blue-800 text-white' : 'bg-slate-50 text-slate-950 hover:bg-blue-50'
+                                )}
+                              >
+                                <span className="flex min-w-0 items-center gap-3">
+                                  <span className="text-lg font-black">{section.title}</span>
+                                  {isCurrentSection && (
+                                    <span
+                                      className={cn(
+                                        'shrink-0 rounded-full px-2 py-0.5 text-[11px] font-black',
+                                        isOpen ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
+                                      )}
+                                    >
+                                      אתם כאן
+                                    </span>
+                                  )}
+                                </span>
+                                <ChevronsDown
+                                  className={cn('h-5 w-5 shrink-0 transition-transform', isOpen ? 'rotate-180' : '')}
+                                />
+                              </button>
+                            </h3>
+                            {isOpen && (
+                              <div className="px-4 pb-4 pt-1 sm:px-5">
+                                {section.description && (
+                                  <p className="mb-3 mt-2 text-xs font-bold leading-relaxed text-slate-500">
+                                    {section.description}
+                                  </p>
+                                )}
+                                {sectionTopics.map((topic) => {
+                                  const topicSlides = sectionSlides.filter((item) => item.topic === topic.id);
+                                  if (topicSlides.length === 0) return null;
+                                  return (
+                                    <div key={topic.id} className="mt-3">
+                                      <h4 className="border-b border-slate-200 pb-1 text-sm font-black text-blue-800">
+                                        {topic.title}
+                                      </h4>
+                                      <div className="mt-2 grid gap-2">
+                                        {topicSlides.map((item) => (
+                                          <button
+                                            key={item.id}
+                                            onClick={() => jumpToSlide(item.id)}
+                                            aria-current={item.id === slide.id ? 'page' : undefined}
                                             className={cn(
-                                              'inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[11px] font-black tabular-nums',
-                                              item.id === slide.id ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
+                                              'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
+                                              item.id === slide.id
+                                                ? 'bg-blue-800 text-white shadow-md'
+                                                : 'bg-slate-50 text-slate-700 hover:bg-blue-50 hover:text-blue-900'
                                             )}
                                           >
-                                            {slideNumberOf.get(item.id)}
-                                          </span>
-                                          <span>{item.title}</span>
-                                        </span>
-                                        <ArrowLeft className="h-4 w-4 shrink-0" />
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-                              );
-                            })}
+                                            <span className="flex min-w-0 items-center gap-2.5">
+                                              <span
+                                                className={cn(
+                                                  'inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[11px] font-black tabular-nums',
+                                                  item.id === slide.id ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
+                                                )}
+                                              >
+                                                {slideNumberOf.get(item.id)}
+                                              </span>
+                                              <span>{item.title}</span>
+                                            </span>
+                                            <ArrowLeft className="h-4 w-4 shrink-0" />
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
