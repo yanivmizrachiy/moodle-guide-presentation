@@ -12,6 +12,15 @@ export type GuideLink = {
 
 export type GuideSlideStatus = 'ready' | 'needs-capture' | 'needs-fact';
 
+/**
+ * One numbered action in a vertical top-to-bottom sequence: text, its real
+ * screen below it, and a double down-arrow leading to the next action.
+ */
+export type GuideFlowStep = {
+  text: string;
+  screenshot?: GuideScreenshot;
+};
+
 export type GuideSlide = {
   id: string;
   section: string;
@@ -20,6 +29,8 @@ export type GuideSlide = {
   /** Optional: slide text exists only when the owner dictated it (SSOT.md rules 11-12). */
   summary?: string;
   steps?: string[];
+  /** Vertical numbered action sequence; replaces steps+screenshots when set. */
+  flow?: GuideFlowStep[];
   points?: string[];
   tip?: string;
   warning?: string;
@@ -111,10 +122,15 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 1',
   title: 'איך פותחים מרחב למידה במודל?',
   summary: 'בחרו אם לפתוח מרחב למידה עם תלמידים או ללא תלמידים.',
-  steps: ['נכנסים לעמוד פתיחת מרחב.'],
-  screenshots: [
-    { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
-    { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.', secondary: true },
+  flow: [
+    {
+      text: 'נכנסים לעמוד פתיחת מרחב.',
+      screenshot: { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
+    },
+    {
+      text: 'מתחברים באמצעות סיסמת משרד החינוך.',
+      screenshot: { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.' },
+    },
   ],
   link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
   keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל', 'עם תלמידים', 'ללא תלמידים'],

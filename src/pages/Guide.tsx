@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronsDown,
   Copy,
   Expand,
   ExternalLink,
@@ -139,10 +140,13 @@ function ScreenshotCard({
   screenshot,
   slideTitle,
   onOpen,
+  hideCaption = false,
 }: {
   screenshot: GuideScreenshot;
   slideTitle: string;
   onOpen: (state: LightboxState) => void;
+  /** In a flow the step text already labels the screen; skip the caption bar. */
+  hideCaption?: boolean;
 }) {
   const reducedMotion = Boolean(useReducedMotion());
   const pointerX = useMotionValue(0);
@@ -238,12 +242,14 @@ function ScreenshotCard({
             </span>
           )}
 
-          <span className="flex items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3 text-sm font-black leading-relaxed text-slate-700">
-            <span>{screenshot.caption}</span>
-            {!failed && (
-              <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] text-blue-800">צילום אמיתי</span>
-            )}
-          </span>
+          {!hideCaption && (
+            <span className="flex items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3 text-sm font-black leading-relaxed text-slate-700">
+              <span>{screenshot.caption}</span>
+              {!failed && (
+                <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] text-blue-800">צילום אמיתי</span>
+              )}
+            </span>
+          )}
 
           <span
             aria-hidden="true"
@@ -359,6 +365,8 @@ function SlideContent({
   }
 
   const hasScreenshots = Boolean(slide.screenshots?.length);
+  const flow = slide.flow ?? [];
+  const hasFlow = flow.length > 0;
   const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
 
   return (
@@ -368,11 +376,16 @@ function SlideContent({
 
       <div
         className={cn(
-          'relative z-10 mx-auto grid min-h-full max-w-[1540px] content-center gap-6 lg:gap-8',
-          hasScreenshots ? 'lg:grid-cols-[0.72fr_1.28fr]' : 'max-w-5xl'
+          'relative z-10 mx-auto grid min-h-full gap-6 lg:gap-8',
+          // A flow slide reads top-to-bottom: title pinned to the top, one column.
+          hasFlow
+            ? 'max-w-[1080px] content-start'
+            : hasScreenshots
+              ? 'max-w-[1540px] content-center lg:grid-cols-[0.72fr_1.28fr]'
+              : 'max-w-5xl content-center'
         )}
       >
-        <div className="flex min-w-0 flex-col justify-center">
+        <div className={cn('flex min-w-0 flex-col', hasFlow ? 'justify-start' : 'justify-center')}>
           {/* The attribution card lives on the cover; repeating it here pushed the
               slide title down, so the title now starts at the top. */}
           <header>
@@ -460,6 +473,40 @@ function SlideContent({
                 {copied ? 'הקישור הועתק' : 'העתקת הקישור'}
               </Button>
             </div>
+
+            {hasFlow && (
+              <section aria-label="רצף הפעולות" className="mt-2">
+                <ol className="grid gap-3">
+                  {flow.map((step, index) => (
+                    <li key={`${slide.id}-flow-${index}`} className="grid gap-3">
+                      {index > 0 && (
+                        <ChevronsDown
+                          aria-hidden="true"
+                          className="mx-auto h-12 w-12 text-amber-500 drop-shadow-sm"
+                          strokeWidth={2.6}
+                        />
+                      )}
+                      <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white/88 px-3.5 py-3 shadow-sm backdrop-blur">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-black text-white shadow-md">
+                          {index + 1}
+                        </span>
+                        <span className="pt-1 text-sm font-black leading-relaxed text-slate-700 sm:text-base">
+                          {step.text}
+                        </span>
+                      </div>
+                      {step.screenshot && (
+                        <ScreenshotCard
+                          screenshot={step.screenshot}
+                          slideTitle={slide.title}
+                          onOpen={onOpenScreenshot}
+                          hideCaption
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
           </div>
         </div>
 
