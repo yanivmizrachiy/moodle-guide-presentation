@@ -131,6 +131,23 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
       text: 'בחרו אם לפתוח מרחב למידה עם תלמידים או ללא תלמידים.',
       screenshot: { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
     },
+    {
+      text: 'מלאו את פרטי הכיתה במסך הזה.',
+      screenshot: { src: '46-open-space-form.png', caption: 'טופס שלב 1 לאחר מילוי הפרטים.' },
+    },
+    { text: 'לחצו על כפתור ההמשך באשף.' },
+    {
+      text: 'לחצו על סוג המרחב הרצוי.',
+      screenshot: { src: '22-wizard-step2.jpg', caption: 'שלב „סוג מרחב הלמידה”.' },
+    },
+    {
+      text: 'לחצו „אישור”.',
+      screenshot: { src: '24-wizard-step4.jpg', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' },
+    },
+    {
+      text: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
+      screenshot: { src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' },
+    },
   ],
   link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
   keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל', 'עם תלמידים', 'ללא תלמידים'],
