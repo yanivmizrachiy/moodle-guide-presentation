@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   FIRST_GUIDE_SLIDE_ID,
   FIRST_TRAINING_SLIDE_ID,
+  GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
   GUIDE_SLIDES,
   GUIDE_TOPICS,
@@ -66,6 +67,11 @@ describe('slide identity', () => {
   it('the entry slides are published', () => {
     expect(publishedIds).toContain(FIRST_GUIDE_SLIDE_ID);
     expect(publishedIds).toContain(FIRST_TRAINING_SLIDE_ID);
+  });
+
+  it('the cover attribution text stays intact', () => {
+    expect(GUIDE_ATTRIBUTION.district.trim()).not.toBe('');
+    expect(GUIDE_ATTRIBUTION.site.trim()).not.toBe('');
   });
 
   it('every slide has a non-empty title and no blank text fields', () => {
@@ -138,7 +144,7 @@ describe('screenshots', () => {
   });
 });
 
-describe('routes', () => {
+describe('links', () => {
   it('external links are https and labeled', () => {
     for (const slide of GUIDE_SLIDES) {
       if (!slide.link) continue;

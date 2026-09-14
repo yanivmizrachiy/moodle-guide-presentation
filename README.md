@@ -9,7 +9,7 @@
 - ממשק המצגת: `src/pages/Guide.tsx`
 - עיצוב: `src/index.css` ו־`src/guide-visual-isolation.css`
 - צילומי המסך והלוגו האמיתיים: `public/guide/`
-- בדיקות שלמות אוטומטיות (מזהי שקפים, צילומים, מסלולים): `tests/deck-invariants.test.ts`
+- בדיקות שלמות אוטומטיות (מזהי שקפים, צילומים, קישורים, איכות תצוגה): `tests/deck-invariants.test.ts`
 - כללי הפרויקט: `SSOT.md`
 - הנחיות Claude Code: `CLAUDE.md`
 
