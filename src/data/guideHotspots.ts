@@ -35,6 +35,23 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 11.8, width: 15.8, height: 10.4 },
     { id: 'pass-grade', label: 'ציון "עובר"', x: 47.5, y: 5.4, width: 24, height: 8 },
   ],
+  // 3200x1800 settings form: the full-name field.
+  '41-space-settings': [
+    { id: 'fullname', label: 'השם המלא של מרחב־הלימוד', x: 26.8, y: 35.8, width: 30, height: 7.4 },
+  ],
+  // 3200x1800 settings: the course-image files box.
+  '44-space-image': [
+    { id: 'image-box', label: 'תמונת מרחב־הלימוד', x: 41.3, y: 5.6, width: 16.4, height: 24.5 },
+  ],
+  // 3200x1800 logs chooser: the filters row and the show button.
+  '51-logs-chooser': [
+    { id: 'filters', label: 'מסנני יומני המעקב', x: 21.5, y: 43.2, width: 60.5, height: 12.6 },
+    { id: 'show-logs', label: 'הצגת יומני מעקב אלו', x: 68.2, y: 53.8, width: 13.2, height: 7 },
+  ],
+  // 3200x1800 logs table: the results header area.
+  '52-logs-table': [
+    { id: 'log-rows', label: 'עמודות היומן: מי, מה, מתי', x: 3.6, y: 60.2, width: 77, height: 9 },
+  ],
   // 3200x1800 new my-courses page: the "מרחב חדש" button.
   '61-my-courses-new': [
     { id: 'new-space', label: 'מרחב חדש', x: 22.4, y: 20.4, width: 10.6, height: 7.6 },

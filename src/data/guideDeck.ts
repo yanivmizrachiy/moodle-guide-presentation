@@ -267,7 +267,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { src: '61-my-courses-new.png', caption: '„מרחבי הלמידה שלי” בעיצוב החדש — הכפתור „מרחב חדש” והסבר הסיור המודרך.' },
   ],
   link: { href: MOODLE_MY, label: 'פתיחת מרחבי הלמידה שלי' },
-  keywords: ['מרחבי הלמידה שלי', 'פתיחת מרחב כיתתי'],
+  keywords: ['מרחבי הלמידה שלי', 'מרחב חדש'],
   status: 'ready',
   },
   {
@@ -363,7 +363,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'לא. באשף החדש יצירת המרחב יכולה להמשיך ברקע, ואין צורך להישאר מול המסך עד לסיום.',
   screenshots: [{ src: '39-wizard-background-create.jpg', caption: 'הודעת האשף לאחר שליחת בקשת יצירת המרחב.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
-  keywords: ['יצירה ברקע', 'אין צורך להמתין', 'פתיחת מרחב כיתתי'],
+  keywords: ['יצירה ברקע', 'אין צורך להמתין', 'מרחב חדש'],
   status: 'needs-capture',
   missingCaptureId: 'M28',
   },
@@ -564,7 +564,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'מהו סדר העבודה במרחב חדש?',
   summary: 'פותחים, מגדירים, בודקים, מצרפים תלמידים ואז עוקבים.',
   steps: ['פותחים את המרחב הנכון.', 'מעדכנים הגדרות ותוכן.', 'בודקים בתצוגת תלמיד.', 'מצרפים תלמידים ועוקבים אחרי ביצוע.'],
-  keywords: ['התחלה', 'סדר עבודה', 'פתיחת מרחב כיתתי'],
+  keywords: ['התחלה', 'סדר עבודה', 'מרחב חדש'],
   status: 'ready',
   },
   {
