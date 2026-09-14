@@ -15,7 +15,8 @@ export type GuideSlide = {
   section: string;
   eyebrow: string;
   title: string;
-  summary: string;
+  /** Optional: slide text exists only when the owner dictated it (SSOT.md rules 11-12). */
+  summary?: string;
   steps?: string[];
   points?: string[];
   tip?: string;
@@ -89,7 +90,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     section: 'start',
     eyebrow: 'מחוז ירושלים והעיר ירושלים — מנח״י',
     title: 'מדריך למורים במערכת Moodle',
-    summary: 'מצגת אינטראקטיבית קצרה: שאלה אחת בכל שקף, צילום אמיתי ורצף לחיצות ברור.',
     keywords: ['מודל', 'Moodle', 'מדריך', 'מצגת'],
     cover: true,
     status: 'ready',

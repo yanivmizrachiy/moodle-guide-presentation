@@ -305,9 +305,11 @@ function SlideContent({
             <h1 className="font-display text-4xl font-black leading-tight text-white drop-shadow-[0_3px_14px_rgba(0,0,0,0.72)] sm:text-5xl lg:text-6xl">
               {slide.title}
             </h1>
-            <p className="mx-auto mt-3 max-w-3xl text-base font-semibold leading-relaxed text-slate-50 sm:text-lg lg:text-xl">
-              {slide.summary}
-            </p>
+            {slide.summary && (
+              <p className="mx-auto mt-3 max-w-3xl text-base font-semibold leading-relaxed text-slate-50 sm:text-lg lg:text-xl">
+                {slide.summary}
+              </p>
+            )}
           </div>
 
           <div className="mt-5 flex justify-center">
@@ -371,9 +373,11 @@ function SlideContent({
             <h1 className="font-display text-[clamp(2rem,4.3vw,4.4rem)] font-black leading-[1.02] tracking-tight text-slate-950">
               {slide.title}
             </h1>
-            <p className="mt-4 max-w-3xl text-base font-bold leading-relaxed text-slate-600 sm:text-lg lg:text-xl">
-              {slide.summary}
-            </p>
+            {slide.summary && (
+              <p className="mt-4 max-w-3xl text-base font-bold leading-relaxed text-slate-600 sm:text-lg lg:text-xl">
+                {slide.summary}
+              </p>
+            )}
           </header>
 
           <div className="mt-5 grid gap-4">

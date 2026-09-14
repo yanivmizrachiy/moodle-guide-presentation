@@ -46,10 +46,12 @@ describe('slide identity', () => {
     expect(publishedIds).toContain(FIRST_TRAINING_SLIDE_ID);
   });
 
-  it('every slide has a non-empty title and summary', () => {
+  it('every slide has a non-empty title and no blank text fields', () => {
     for (const slide of GUIDE_SLIDES) {
       expect(slide.title.trim(), `empty title on slide "${slide.id}"`).not.toBe('');
-      expect(slide.summary.trim(), `empty summary on slide "${slide.id}"`).not.toBe('');
+      if (slide.summary !== undefined) {
+        expect(slide.summary.trim(), `blank summary on slide "${slide.id}"`).not.toBe('');
+      }
     }
   });
 });
