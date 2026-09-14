@@ -488,6 +488,9 @@ export default function Guide() {
   }, []);
 
   const slide = PUBLISHED_GUIDE_SLIDES[currentIndex] ?? PUBLISHED_GUIDE_SLIDES[0];
+  // The cover is an entry gate: its single "התחל" CTA is the one way forward, so the
+  // duplicated chrome (footer next/prev, header home, section label) stays hidden there.
+  const isCover = Boolean(slide.cover);
   const allSequence = useMemo(() => PUBLISHED_GUIDE_SLIDES.map((item) => item.id), []);
   const activeSequence = mode === 'quick' ? QUICK_START_SLIDE_IDS : allSequence;
   const activePosition = activeSequence.indexOf(slide.id);
@@ -699,23 +702,29 @@ export default function Guide() {
               <Search className="h-5 w-5" />
               <span className="hidden sm:inline">חיפוש</span>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID, 'all')}
-              className="hidden gap-2 text-white hover:bg-white/10 hover:text-white md:inline-flex"
-            >
-              <Home className="h-4 w-4" />
-              התחלה
-            </Button>
+            {!isCover && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID, 'all')}
+                className="hidden gap-2 text-white hover:bg-white/10 hover:text-white md:inline-flex"
+              >
+                <Home className="h-4 w-4" />
+                התחלה
+              </Button>
+            )}
           </div>
 
-          <div className="min-w-0 text-center">
-            <p className="truncate text-xs font-black text-amber-300 sm:text-sm">
-              {safeMode === 'quick' ? 'מסלול מהיר' : currentSection?.title ?? 'Moodle'}
-            </p>
-            <p className="hidden max-w-[48vw] truncate text-xs font-bold text-white/70 sm:block">{slide.title}</p>
-          </div>
+          {isCover ? (
+            <div className="min-w-0" />
+          ) : (
+            <div className="min-w-0 text-center">
+              <p className="truncate text-xs font-black text-amber-300 sm:text-sm">
+                {safeMode === 'quick' ? 'מסלול מהיר' : currentSection?.title ?? 'Moodle'}
+              </p>
+              <p className="hidden max-w-[48vw] truncate text-xs font-bold text-white/70 sm:block">{slide.title}</p>
+            </div>
+          )}
 
           <div className="flex items-center gap-1 sm:gap-2">
             {safeMode === 'quick' ? (
@@ -805,6 +814,7 @@ export default function Guide() {
           </AnimatePresence>
         </main>
 
+        {!isCover && (
         <footer className="grid min-h-[72px] grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-white/10 bg-slate-950/30 px-3 text-white backdrop-blur-xl sm:px-5 lg:px-8">
           <div className="flex justify-start">
             <Button
@@ -853,6 +863,7 @@ export default function Guide() {
             </Button>
           </div>
         </footer>
+        )}
 
         <AnimatePresence>
           {panel && (
