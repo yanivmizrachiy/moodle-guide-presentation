@@ -132,7 +132,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
       screenshot: { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
     },
     {
-      text: 'מלאו את פרטי הכיתה במסך הזה.',
+      text: 'ממלאים את הפרטים: בית ספר, מקצוע, שכבת גיל וכיתה.',
       screenshot: { src: '46-open-space-form.png', caption: 'טופס שלב 1 לאחר מילוי הפרטים.' },
     },
     { text: 'לחצו על כפתור ההמשך באשף.' },
