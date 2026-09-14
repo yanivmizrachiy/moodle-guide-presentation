@@ -656,11 +656,13 @@ export default function Guide() {
         event.preventDefault();
         jumpToSlide(safeSequence[safeSequence.length - 1], safeMode);
       }
-      if (event.key.toLocaleLowerCase() === 'f') {
+      // event.code keeps the shortcuts on the same physical keys under a Hebrew layout,
+      // where event.key reports the Hebrew character instead of f/m.
+      if (event.key.toLocaleLowerCase() === 'f' || event.code === 'KeyF') {
         event.preventDefault();
         setPanel('search');
       }
-      if (event.key.toLocaleLowerCase() === 'm') {
+      if (event.key.toLocaleLowerCase() === 'm' || event.code === 'KeyM') {
         event.preventDefault();
         setPanel('menu');
       }
