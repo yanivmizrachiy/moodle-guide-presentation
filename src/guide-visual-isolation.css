@@ -23,7 +23,10 @@
   opacity: 1;
 }
 
-[data-guide-shell="premium-presentation"] article h1.font-display {
+/* Content slides sit on a light background, so pin the heading to ink. The cover
+ * slide has a dark gradient and its heading is intentionally white — exclude it,
+ * or the title turns near-black on near-black and disappears. */
+[data-guide-shell="premium-presentation"] article:not([data-cover]) h1.font-display {
   color: var(--guide-ink) !important;
   text-shadow: none !important;
 }

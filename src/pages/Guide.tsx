@@ -763,6 +763,7 @@ export default function Guide() {
               key={slide.id}
               ref={attachSlide}
               data-slide-id={slide.id}
+              data-cover={slide.cover ? 'true' : undefined}
               tabIndex={-1}
               aria-label={slide.title}
               custom={direction}
