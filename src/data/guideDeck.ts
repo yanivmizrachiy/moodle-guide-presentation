@@ -3,6 +3,12 @@ export type GuideScreenshot = {
   caption: string;
   /** Renders small beside/below the main capture (e.g. a login thumbnail). */
   secondary?: boolean;
+  /**
+   * Restrict the red marks to these hotspot ids (from guideHotspots.ts) for this
+   * use of the capture. Omit to show every hotspot the stem defines. Use it when
+   * a shared screen is reused across steps and each step marks a different control.
+   */
+  hotspotIds?: readonly string[];
 };
 
 export type GuideLink = {
@@ -152,7 +158,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'send-task': 'tasks',
   'student-solve-task': 'tasks',
   'quiz-settings': 'grading',
-  'task-correction': 'tasks',
+  'task-correction': 'grading',
   'assignment-submissions': 'tasks',
   'task-feedback': 'tasks',
   'student-result': 'tasks',
@@ -253,15 +259,15 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { text: 'לחצו על כפתור ההמשך באשף.' },
     {
       text: 'לחצו על סוג המרחב הרצוי.',
-      screenshot: { src: '22-wizard-step2.jpg', caption: 'שלב „סוג מרחב הלמידה”.' },
+      screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
     },
     {
       text: 'לחצו „אישור”.',
-      screenshot: { src: '24-wizard-step4.jpg', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' },
+      screenshot: { src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' },
     },
     {
       text: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
-      screenshot: { src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' },
+      screenshot: { src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.', hotspotIds: [] },
     },
   ],
   link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
@@ -337,7 +343,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איזה סוג מרחב בוחרים?',
   summary: 'האשף מציג אפשרויות כמו מרחב ריק, „שכפול תוכן שלי” ו„תוכן מוכן”. כל אפשרות ממשיכה למסלול המתאים לה.',
   steps: ['לחצו על סוג המרחב הרצוי.'],
-  screenshots: [{ src: '22-wizard-step2.jpg', caption: 'שלב „סוג מרחב הלמידה”.' }],
+  screenshots: [{ src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['סוג מרחב', 'מרחב ריק', 'שכפול תוכן שלי', 'תוכן מוכן'],
   status: 'ready',
@@ -361,7 +367,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'מה לוחצים כדי ליצור את המרחב?',
   summary: 'במסך „אישור וסיום” בודקים את הפרטים ומבצעים את פעולת היצירה.',
   steps: ['לחצו „אישור”.'],
-  screenshots: [{ src: '24-wizard-step4.jpg', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' }],
+  screenshots: [{ src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['אישור', 'סיום', 'יצירת מרחב'],
   status: 'ready',
@@ -372,7 +378,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 10',
   title: 'צריך להמתין מול המסך בזמן יצירת המרחב?',
   summary: 'לא. באשף החדש יצירת המרחב יכולה להמשיך ברקע, ואין צורך להישאר מול המסך עד לסיום.',
-  screenshots: [{ src: '39-wizard-background-create.jpg', caption: 'הודעת האשף לאחר שליחת בקשת יצירת המרחב.' }],
+  screenshots: [{ src: '39-wizard-background-create.png', caption: 'הודעת האשף לאחר שליחת בקשת יצירת המרחב.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['יצירה ברקע', 'אין צורך להמתין', 'מרחב חדש'],
   status: 'ready',
@@ -383,7 +389,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 11',
   title: 'איך יודעים שהמרחב נוצר?',
   summary: 'עדכון על סיום היצירה נשלח במייל, והתהליך עשוי להימשך עד 3 שעות. כשמתקבל העדכון — המרחב מופיע ב„מרחבי הלמידה שלי”.',
-  screenshots: [{ src: '40-wizard-notification-update.jpg', caption: 'הודעת המייל על סיום יצירת המרחב.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['הודעה', 'יצירת מרחב', 'סיום יצירה'],
   status: 'needs-capture',
@@ -395,7 +400,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 12',
   title: 'מה רואים אחרי שהמרחב נפתח?',
   summary: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
-  screenshots: [{ src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' }],
+  screenshots: [{ src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.', hotspotIds: [] }],
   link: { href: MOODLE_MY, label: 'פתיחת מרחבי הלמידה שלי' },
   keywords: ['עמוד מרחב', 'מרחב שנפתח'],
   status: 'ready',
@@ -406,7 +411,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'האשף החדש · תוכן מוכן',
   title: 'איזה תוכן מוכן אפשר להוסיף?',
   summary: '„תוכן מוכן” מאפשר ליצור מרחב עם תכנים מוכנים במקצועות ופרויקטים הזמינים במערכת, ובהם תכנים בעברית, אנגלית, מתמטיקה לחטיבה, מדע וטכנולוגיה ומשימות אוריינות מתוקשבות.',
-  screenshots: [{ src: '34-wizard-ready-content-search.jpg', caption: 'שלב „תוכן מרחב הלמידה” — שורת החיפוש, בחירת פרויקט ופריטי התוכן.' }],
+  screenshots: [{ src: '34-wizard-ready-content-search.png', caption: 'שלב „תוכן מרחב הלמידה” — שורת החיפוש, בחירת פרויקט ופריטי התוכן.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['תוכן מוכן', 'מתמטיקה לחטיבה', 'עברית', 'אנגלית', 'מדע וטכנולוגיה'],
   status: 'ready',
@@ -418,7 +423,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך מוצאים תוכן מוכן במהירות?',
   summary: 'משתמשים בשורת החיפוש החכמה כדי למצוא את התוכן המוכן הרלוונטי.',
   steps: ['הקלידו מילת חיפוש בשורת החיפוש.'],
-  screenshots: [{ src: '34-wizard-ready-content-search.jpg', caption: 'שורת החיפוש ופריטי התוכן המוכן.' }],
+  screenshots: [{ src: '34-wizard-ready-content-search.png', caption: 'שורת החיפוש ופריטי התוכן המוכן.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['חיפוש חכם', 'תוכן מוכן', 'חיפוש'],
   status: 'ready',
@@ -430,7 +435,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך משנים מתצוגת תמונות לרשימה?',
   summary: 'אפשר לשנות את תצוגת התוכן מתמונות לרשימה פשוטה כדי לסרוק את האפשרויות בדרך שנוחה לכם.',
   steps: ['לחצו על כפתור שינוי התצוגה.'],
-  screenshots: [{ src: '35-wizard-ready-content-list-toggle.jpg', caption: 'תוכן מוכן בתצוגת רשימה.' }],
+  screenshots: [{ src: '35-wizard-ready-content-list-toggle.png', caption: 'תוכן מוכן בתצוגת רשימה.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['תצוגת רשימה', 'תמונות', 'שינוי תצוגה'],
   status: 'ready',
@@ -442,7 +447,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך משכפלים מרחב שכבר יש לי?',
   summary: 'בוחרים „שכפול תוכן שלי” ואז מחפשים את מרחב הלמידה שרוצים לשכפל.',
   steps: ['בחרו „שכפול תוכן שלי”.'],
-  screenshots: [{ src: '36-wizard-clone-my-content.jpg', caption: 'רשימת המרחבים לשכפול — שם מרחב הלמידה, בית ספר ושנת לימודים.' }],
+  screenshots: [{ src: '36-wizard-clone-my-content.png', caption: 'רשימת המרחבים לשכפול — שם מרחב הלמידה, בית ספר ושנת לימודים.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['שכפול תוכן שלי', 'שכפול מרחב'],
   status: 'ready',
@@ -454,7 +459,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך מוצאים את המרחב שרוצים לשכפל?',
   summary: 'אפשר לחפש לפי מילת חיפוש ולמיין מרחבים לפי שם, בית ספר או שנת לימודים.',
   steps: ['חפשו או בחרו את המיון המתאים.'],
-  screenshots: [{ src: '37-wizard-clone-sort.jpg', caption: 'רשימת מרחבים לשכפול עם אפשרויות חיפוש ומיון.' }],
+  screenshots: [{ src: '37-wizard-clone-sort.png', caption: 'רשימת מרחבים לשכפול עם אפשרויות חיפוש ומיון.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['מיון', 'בית ספר', 'שנת לימודים', 'חיפוש מרחב'],
   status: 'ready',
@@ -465,7 +470,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'האשף החדש · שכפול',
   title: 'אפשר לשכפל מרחב משנה קודמת לבד?',
   summary: 'כן. באשף החדש ניתן לשכפל באופן עצמאי מרחב למידה משנה קודמת, ללא צורך בהגשת טופס בקשה למשרד החינוך.',
-  screenshots: [{ src: '38-wizard-clone-previous-year.jpg', caption: 'מרחב משנת תשפ"ה מסומן ברשימה — מוכן לשכפול.' }],
+  screenshots: [{ src: '38-wizard-clone-previous-year.png', caption: 'מרחב משנת תשפ"ה מסומן ברשימה — מוכן לשכפול.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['שנה קודמת', 'שכפול עצמאי', 'ללא טופס'],
   status: 'ready',
@@ -498,7 +503,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איפה נמצאים הכפתורים המרכזיים במרחב?',
   summary: 'רוב הפעולות נמצאות בתפריט המרחב, בסרגל העליון ובעמוד היחידות.',
   points: ['הגדרות.', 'משתתפים.', 'ציונים ודוחות.', 'מצב עריכה.'],
-  screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.' }],
+  screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.', hotspotIds: [] }],
   keywords: ['ממשק', 'תפריט', 'סרגל', 'כפתורים'],
   status: 'ready',
   },
@@ -508,7 +513,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'תצוגת תלמיד',
   title: 'איך תלמיד רואה את המרחב שלנו?',
   screenshots: [
-    { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד — תפריט מצומצם: מרחב־לימוד, ציונים ודוחות.' },
+    { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד — תפריט מצומצם: „מרחב־לימוד”, „ציונים” ו„דוחות”.' },
     { src: '58-student-space-topic.png', caption: 'יחידת „יחס” בתצוגת תלמיד — בוחן „ממתין לביצוע” וסימוני ההשלמה בסרגל הצד.' },
   ],
   keywords: ['תצוגת תלמיד', 'איך תלמיד רואה', 'ממתין לביצוע', 'המרחב שלנו'],
@@ -545,7 +550,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   flow: [
     {
       text: 'לוחצים „הגדרות”.',
-      screenshot: { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.' },
+      screenshot: { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.', hotspotIds: ['settings-tab'] },
     },
     {
       text: 'משנים את שדה השם.',
@@ -568,7 +573,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   flow: [
     {
       text: 'נכנסים להגדרות.',
-      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.' },
+      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.', hotspotIds: ['settings-tab'] },
     },
     {
       text: 'בוחרים תמונה.',
@@ -707,9 +712,13 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'משתתפים',
   title: 'איך רואים מי נמצא במרחב?',
   summary: 'לוחצים „משתתפים” ורואים הרשמה, תפקיד, קבוצה וגישה אחרונה.',
-  steps: ['לוחצים „משתתפים”.', 'מחפשים תלמיד או משתמשים במסנן.', 'בודקים תפקיד וקבוצה.'],
-  screenshots: [
-    { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — הרשימה עם עמודות התפקידים, הקבוצות והגישה האחרונה.' },
+  flow: [
+    { text: 'לוחצים „משתתפים”.' },
+    {
+      text: 'מחפשים תלמיד או משתמשים במסנן.',
+      screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — הרשימה עם עמודות התפקידים, הקבוצות והגישה האחרונה.' },
+    },
+    { text: 'בודקים תפקיד וקבוצה.' },
   ],
   warning: 'גישה אחרונה אינה מוכיחה למידה או השלמת פעילות.',
   keywords: ['משתתפים', 'תלמיד', 'גישה אחרונה', 'קבוצה'],
@@ -816,7 +825,8 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'students',
   eyebrow: 'מורים נוספים',
   title: 'כמה מורים יכולים להתחבר לאותו מרחב?',
-  summary: 'לא מפרסמים מספר עד שקיים נתון מחייב במקור האמת.',
+  // No teacher-facing answer is published until the owner supplies a binding
+  // number; the field is intentionally empty rather than carrying invented text.
   keywords: ['כמה מורים', 'מורים נוספים'],
   status: 'needs-fact',
   },
@@ -879,7 +889,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ניהול משימות',
   title: 'איך מסתירים משימה או תוכן מהתלמידים?',
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
-  screenshots: [{ src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.' }],
+  screenshots: [{ src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] }],
   keywords: ['הסתרה', 'משימה', 'זמינות'],
   status: 'ready',
   },
@@ -893,7 +903,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   flow: [
     {
       text: 'פותחים את תפריט ⋮ של הפעילות ולוחצים „מחיקה”.',
-      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „מחיקה” בתחתית התפריט.' },
+      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „מחיקה” בתחתית התפריט.', hotspotIds: ['delete'] },
     },
     {
       text: 'מאשרים בחלון „האם למחוק את הפעילות?”.',

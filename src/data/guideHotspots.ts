@@ -91,6 +91,15 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '49-hidden-item-menu': [
     { id: 'availability', label: 'זמינות', x: 4.5, y: 59, width: 13, height: 6 },
   ],
+  // 3200x1800 student quiz page after enrol: the "התחלת ניסיון מענה" button.
+  '59-quiz-after-enrol': [
+    { id: 'start-attempt', label: 'התחלת ניסיון מענה', x: 64.8, y: 35.3, width: 9.6, height: 4.6 },
+  ],
+  // 3200x1800 course page: the "הגדרות" tab in the space navigation. Shared with
+  // several slides, so it is marked only on steps that opt in via hotspotIds.
+  '10-course-page': [
+    { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
+  ],
   // 3200x1800 new wizard, ready-content step: the search row.
   '34-wizard-ready-content-search': [
     { id: 'search', label: 'חיפוש', x: 87.3, y: 26.0, width: 8.7, height: 4.1 },

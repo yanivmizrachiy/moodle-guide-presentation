@@ -70,8 +70,12 @@ function getSlideIndexFromUrl(): number {
 
 /* Hand-drawn red marker circles, like a teacher annotating a printout: two
  * slightly rotated, imperfect ellipse strokes over the real control. */
-function HotspotLayer({ src }: { src: string }) {
-  const hotspots = getGuideScreenshotHotspots(src);
+function HotspotLayer({ src, only }: { src: string; only?: readonly string[] }) {
+  const all = getGuideScreenshotHotspots(src);
+  // A screenshot reused across steps carries all its stem's hotspots. When a
+  // step names which controls it is about (`only`), mark just those — so a
+  // shared capture doesn't circle a button the current step never mentions.
+  const hotspots = only ? all.filter((hotspot) => only.includes(hotspot.id)) : all;
   if (hotspots.length === 0) return null;
 
   return (
@@ -109,7 +113,7 @@ function HotspotLayer({ src }: { src: string }) {
 }
 
 /** Full-size capture with the same honest failure state as the card. */
-function LightboxImage({ src, caption }: { src: string; caption: string }) {
+function LightboxImage({ src, caption, hotspotIds }: { src: string; caption: string; hotspotIds?: readonly string[] }) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
@@ -131,7 +135,7 @@ function LightboxImage({ src, caption }: { src: string; caption: string }) {
           className="block max-h-[80dvh] max-w-full rounded-xl bg-white object-contain shadow-lg"
         />
       </picture>
-      <HotspotLayer src={src} />
+      <HotspotLayer src={src} only={hotspotIds} />
     </>
   );
 }
@@ -241,7 +245,7 @@ function ScreenshotCard({
                     className="block max-h-[53vh] max-w-full bg-white object-contain"
                   />
                 </picture>
-                <HotspotLayer src={screenshot.src} />
+                <HotspotLayer src={screenshot.src} only={screenshot.hotspotIds} />
               </span>
             </span>
           )}
@@ -1145,6 +1149,7 @@ export default function Guide() {
                       key={lightbox.screenshot.src}
                       src={lightbox.screenshot.src}
                       caption={lightbox.screenshot.caption}
+                      hotspotIds={lightbox.screenshot.hotspotIds}
                     />
                   </div>
                 </div>
