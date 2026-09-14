@@ -3,7 +3,11 @@
 // Steps: {"goto":url} {"click":selector} {"fill":[sel,text]} {"press":key}
 //        {"hover":selector} {"wait":ms} {"selectIdx":[sel,index]} {"scroll":y}
 //        {"dsf":2} {"cdpshot":file} {"shot":file} {"shotFull":file}
-//        {"text":selector} {"eval":js}
+//        {"text":selector} {"eval":js} {"pages":1} {"usePage":"url substring"}
+//
+// Tabs: {"pages":1} lists every open tab; {"usePage":"moodle"} switches the
+// driver to the first tab whose URL contains the substring (the user may open
+// extra tabs himself). CDP_PORT selects the browser (9223 teacher default).
 //
 // Capture quality (SSOT.md rule 13): use {"dsf":2} then {"cdpshot":file} for
 // real 3200x1800 captures, and {"dsf":0} afterwards. The persistent context
@@ -17,12 +21,19 @@ import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const steps = JSON.parse(process.argv[2]);
-const browser = await chromium.connectOverCDP('http://localhost:9223');
-const page = browser.contexts()[0].pages()[0];
+const browser = await chromium.connectOverCDP('http://localhost:' + (process.env.CDP_PORT || '9223'));
+let page = browser.contexts()[0].pages()[0];
 let cdp = null;
 const cdpSession = async () => (cdp = cdp ?? (await page.context().newCDPSession(page)));
+const allPages = () => browser.contexts().flatMap((context) => context.pages());
 
 for (const step of steps) {
+  if (step.pages) console.log('PAGES: ' + allPages().map((p, i) => i + '=' + p.url().slice(0, 90)).join(' | '));
+  if (step.usePage) {
+    const match = allPages().find((p) => p.url().includes(step.usePage));
+    if (match) { page = match; cdp = null; console.log('usePage -> ' + page.url().slice(0, 90)); }
+    else console.log('usePage: no match for ' + step.usePage);
+  }
   if (step.goto) await page.goto(step.goto, { waitUntil: 'domcontentloaded' }).catch((e) => console.log('goto:', e.message));
   if (step.click) await page.click(step.click, { timeout: 8000 }).catch((e) => console.log('click failed:', e.message));
   if (step.fill) await page.fill(step.fill[0], step.fill[1], { timeout: 8000 }).catch((e) => console.log('fill failed:', e.message));

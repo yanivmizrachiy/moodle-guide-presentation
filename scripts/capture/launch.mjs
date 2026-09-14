@@ -12,14 +12,18 @@ import { chromium } from 'playwright';
 import os from 'node:os';
 import path from 'node:path';
 
+// A second, independent browser (e.g. a student account for student-view
+// captures) runs side by side with CDP_PORT=9224 PROFILE=student.
 const url = process.argv[2] ?? 'https://moodlemoe.lms.education.gov.il/';
-const profile = path.join(os.tmpdir(), 'moodle-guide-capture-profile');
+const port = process.env.CDP_PORT || '9223';
+const profileName = process.env.PROFILE ? `moodle-guide-capture-${process.env.PROFILE}` : 'moodle-guide-capture-profile';
+const profile = path.join(os.tmpdir(), profileName);
 const ctx = await chromium.launchPersistentContext(profile, {
   headless: false,
   viewport: { width: 1600, height: 900 },
   deviceScaleFactor: 2,
   locale: 'he-IL',
-  args: ['--remote-debugging-port=9223', '--window-size=1650,1040'],
+  args: [`--remote-debugging-port=${port}`, '--window-size=1650,1040'],
 });
 const page = ctx.pages()[0] ?? (await ctx.newPage());
 await page.goto(url, { waitUntil: 'domcontentloaded' });

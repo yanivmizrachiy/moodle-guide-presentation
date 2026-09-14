@@ -33,6 +33,7 @@ npm run check
 - צילום חדש נכנס כמקור (jpg/png) ל־`public/guide/screenshots/` ברזולוציית מכשיר מלאה (SSOT כלל 13).
 - נגזרות AVIF/WebP נוצרות רק עם `npm run shots:derive` (או `-- --all` לרענון מלא).
 - צילום חי מול Moodle: `scripts/capture/launch.mjs` (המשתמש מתחבר בעצמו) ואז `scripts/capture/steps.mjs`.
+- דפדפן שני לתצוגת תלמיד: `CDP_PORT=9224 PROFILE=student node scripts/capture/launch.mjs`, ואז אותו `steps.mjs` עם `CDP_PORT=9224`.
 
 ## פרסום
 
