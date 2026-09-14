@@ -184,3 +184,37 @@
 - מסך כלי LTI חיצוני (ניהול הכלים)
 
 התנהגות השקפים והכפתורים הפעילים נלקחת מהקוד הקנוני ב-`src/data/guideDeck.ts` וב-`src/pages/Guide.tsx`; אין מסמך כפתורים קנוני נפרד.
+
+## סבב סגירת חוסרים גדול (2026-09-14, המשך)
+
+מקור: session חי בהרשאת יניב המלאה („אני מאשר לך לבצע הכל"), דפדפן המורה (CDP 9223), כולם ‏3200×1800 ‏(CDP dsf=2). פרטים אישיים הוחלפו בערכים בדויים בעריכת פיקסלים (PIL+raqm, Arial): ‏„רות לוי", ‏0000000000, ‏student@demo.school / teacher@demo.school, ‏„בית ספר לדוגמה", ‏„דנה כהן", ‏„המרחב של רות/דן ויניב". מקורות לא-ממוסכים נשמרו מקומית בלבד (scratchpad).
+
+| קובץ | מה רואים | משולב ב־ |
+| --- | --- | --- |
+| 22-wizard-step2.png | שלב „סוג מרחב הלמידה" בעיצוב הנוכחי — שלושת המסלולים (החליף את ה-jpg הישן) | open-space-start |
+| 24-wizard-step4.png | „אישור פרטי מרחב הלמידה" בעיצוב הנוכחי עם „אישור" (החליף את ה-jpg הישן; עוגן עודכן) | open-space-start |
+| 34-wizard-ready-content-search.png | קטלוג „תוכן מוכן" — חיפוש, פרויקט מתמטיקה, 4 פריטים אמיתיים | wizard-ready-content-catalog, wizard-ready-content-search |
+| 35-wizard-ready-content-list-toggle.png | אותו קטלוג בתצוגת רשימה עם מתגי התצוגה | wizard-ready-content-list-toggle |
+| 36-wizard-clone-my-content.png | מסלול „שכפול תוכן שלי" — רשימת מרחבים (שמות פרטיים ובתי ספר הוחלפו) | wizard-clone-my-content |
+| 37-wizard-clone-sort.png | הרשימה ממוינת לפי שנת לימודים, חיפוש ומיון (ערכים בדויים) | wizard-clone-search-sort |
+| 38-wizard-clone-previous-year.png | שורת מרחב תשפ"ה מסומנת לשכפול (ערכים בדויים) | wizard-clone-previous-year |
+| 39-wizard-background-create.png | „בקשתך לפתיחת מרחב הלמידה התקבלה בהצלחה!" — עדכון במייל, עד 3 שעות | open-space-background-create |
+| 65-gradebook-grader.png | דוח ציונים: שורת תלמיד × עמודות פריטים, חיפוש ובחירת קבוצות | gradebook, export-grades |
+| 66-gradebook-export.png | „יצוא לגליון האלקטרוני של Excel" — פרטי הציון ו„הורדה" | export-grades |
+| 67-quiz-attempts-report.png | דוח תוצאות הבוחן — ניסיון שהסתיים, ציון, „הציון הגבוה ביותר" | student-attempt-count, student-highest-score |
+| 68-quiz-view-teacher.png | עמוד בוחן למורה: שיטת מתן הציון, ציון עובר 80/100, ניסיונות מענה: 1 | student-attempt-count, pass-grade |
+| 69-section-rename-pencil.png | מצב עריכה — עיפרון „עריכת שם היחידה" ליד הכותרת | space-heading |
+| 70-section-rename-field.png | שדה הכותרת פתוח עם ההנחיה Esc/Enter (רואים את ה-multilang האמיתי) | space-heading |
+| 71-groups-page.png | מסך הקבוצות — „ניהול קבוצות" עם „יצירת קבוצה" | groups |
+| 72-group-create-form.png | טופס יצירת קבוצה — „שם הקבוצה" מלא | groups |
+| 73-group-add-members.png | „הוספת/הסרת משתתפים: קבוצה 1" — „הוספה"/„הסרה" (ערכים בדויים) | groups |
+| 74-groups-two-groups.png | קבוצה 1 (1) וקבוצה 2 (0) ברשימה | groups |
+| 75-grader-group-selector-open.png | „בחירת קבוצות נראות" פתוח: כל המשתתפים / קבוצה 1 / קבוצה 2 | group-data |
+| 76-grader-group-filtered.png | הדוח מסונן לקבוצה 1 כולל „ממוצע הקבוצה" (ערכים בדויים) | group-data |
+| 77-participant-row-controls.png | שורת משתתף עם פח/עיפרון/פרטים (ערכים בדויים) | remove-participant |
+| 78-unenrol-confirm-dialog.png | חלון „ביטול שיוך לתפקיד בקורס" (ערכים בדויים) | remove-participant |
+| 80-activity-menu-move.png | תפריט עריכת פעילות: הגדרות/העברה/זמינות/שכפול/תפקידים והרשאות/מחיקה | move-task |
+| 81-move-activity-modal.png | חלון „הזזת פעילות" — עץ היעדים | move-task |
+| 82-move-activity-result.png | הפעילות אחרי ההעברה במקומה החדש | move-task |
+
+הערות אמת: (1) יצירת מרחב בדיקה אמיתית בוצעה באשף — „מתמטיקה ז' 1 - יניב רז - תשפ"ז"; ההודעה מעידה: עדכון במייל, עד 3 שעות (צילום המייל עצמו יסגור את M29). (2) רצף הסרת המשתתף צולם עד חלון האישור; האישור עצמו בוטל בכוונה כדי לא להסיר את חשבון הבדיקה — הלחיצה האחרונה נותרה למשתמש. (3) קבוצה 1/קבוצה 2 נותרו במרחב כדי שהמדריך ישקף את המצב בפועל. (4) המשימה „יחס - בסיסי" הוזזה והוחזרה למקומה המקורי — סדר הפעילויות לא השתנה. (5) 02/28/29 הישנים כבר הוסרו בסבב קודם; 22/24 הישנים (958–1200px) נמחקו והוחלפו.

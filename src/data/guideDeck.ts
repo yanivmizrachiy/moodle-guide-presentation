@@ -338,11 +338,10 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך בוחרים תוכן מוכן למרחב?',
   summary: 'לאחר בחירת „תוכן מוכן” מוצגים מקצועות ופרויקטים זמינים. בוחרים את התוכן שמתאים למרחב.',
   steps: ['בחרו את התוכן הרצוי.'],
-  screenshots: [{ src: '23-wizard-content-selection.jpg', caption: 'המסך שמוביל לבחירת תוכן מוכן מתוך האשף החדש.' }],
+  screenshots: [{ src: '34-wizard-ready-content-search.png', caption: 'שלב „תוכן מרחב הלמידה” — בחירת פרויקט ותוכן מוכן.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['בחירת תוכן', 'תוכן מוכן', 'מקצועות', 'פרויקטים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M01',
+  status: 'ready',
   },
   {
   id: 'open-space-confirm',
@@ -365,8 +364,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '39-wizard-background-create.jpg', caption: 'הודעת האשף לאחר שליחת בקשת יצירת המרחב.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['יצירה ברקע', 'אין צורך להמתין', 'מרחב חדש'],
-  status: 'needs-capture',
-  missingCaptureId: 'M28',
+  status: 'ready',
   },
   {
   id: 'open-space-created-notification',
@@ -400,8 +398,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '34-wizard-ready-content-search.jpg', caption: 'קטלוג תוכן מוכן באשף החדש.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['תוכן מוכן', 'מתמטיקה לחטיבה', 'עברית', 'אנגלית', 'מדע וטכנולוגיה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M23',
+  status: 'ready',
   },
   {
   id: 'wizard-ready-content-search',
@@ -413,8 +410,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '34-wizard-ready-content-search.jpg', caption: 'שורת החיפוש ופריטי התוכן המוכן.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['חיפוש חכם', 'תוכן מוכן', 'חיפוש'],
-  status: 'needs-capture',
-  missingCaptureId: 'M23',
+  status: 'ready',
   },
   {
   id: 'wizard-ready-content-list-toggle',
@@ -426,8 +422,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '35-wizard-ready-content-list-toggle.jpg', caption: 'תוכן מוכן בתצוגת רשימה.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['תצוגת רשימה', 'תמונות', 'שינוי תצוגה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M24',
+  status: 'ready',
   },
   {
   id: 'wizard-clone-my-content',
@@ -439,8 +434,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '36-wizard-clone-my-content.jpg', caption: 'מסלול „שכפול תוכן שלי” באשף החדש.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['שכפול תוכן שלי', 'שכפול מרחב'],
-  status: 'needs-capture',
-  missingCaptureId: 'M25',
+  status: 'ready',
   },
   {
   id: 'wizard-clone-search-sort',
@@ -452,8 +446,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '37-wizard-clone-sort.jpg', caption: 'רשימת מרחבים לשכפול עם אפשרויות חיפוש ומיון.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['מיון', 'בית ספר', 'שנת לימודים', 'חיפוש מרחב'],
-  status: 'needs-capture',
-  missingCaptureId: 'M26',
+  status: 'ready',
   },
   {
   id: 'wizard-clone-previous-year',
@@ -464,8 +457,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '38-wizard-clone-previous-year.jpg', caption: 'מסך האשף במהלך בחירת מרחב לשכפול משנה קודמת.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['שנה קודמת', 'שכפול עצמאי', 'ללא טופס'],
-  status: 'needs-capture',
-  missingCaptureId: 'M27',
+  status: 'ready',
   },
   {
   id: 'self-enrol-auto',
@@ -657,9 +649,18 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים כותרת?',
   summary: 'מפעילים עריכה, פותחים את עריכת הכותרת, משנים ושומרים.',
+  flow: [
+    {
+      text: 'מפעילים את מתג „עריכה” ולוחצים על סמל העיפרון שליד הכותרת.',
+      screenshot: { src: '69-section-rename-pencil.png', caption: 'מצב עריכה — סמל העיפרון ליד כותרת היחידה.' },
+    },
+    {
+      text: 'מקלידים את הכותרת החדשה ומקישים Enter לשמירה.',
+      screenshot: { src: '70-section-rename-field.png', caption: 'שדה עריכת הכותרת פתוח — Enter לשמירה, Esc לביטול.' },
+    },
+  ],
   keywords: ['כותרת', 'שם יחידה', 'עריכה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M05',
+  status: 'ready',
   },
   {
   id: 'participants',
@@ -681,9 +682,18 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'משתתפים',
   title: 'איך מסירים משתתף?',
   summary: 'מסירים את השיוך של המשתמש למרחב ומאשרים את הפעולה.',
+  flow: [
+    {
+      text: 'בעמוד „משתתפים” לוחצים על סמל הפח בשורת המשתמש.',
+      screenshot: { src: '77-participant-row-controls.png', caption: 'שורת המשתמש עם סמלי הפח, העיפרון והפרטים.' },
+    },
+    {
+      text: 'בחלון האישור לוחצים „ביטול שיוך לתפקיד בקורס”.',
+      screenshot: { src: '78-unenrol-confirm-dialog.png', caption: 'חלון האישור — „ביטול שיוך לתפקיד בקורס” או „ביטול”.' },
+    },
+  ],
   keywords: ['הסרה', 'ביטול שיוך', 'משתתפים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M07',
+  status: 'ready',
   },
   {
   id: 'groups',
@@ -691,9 +701,26 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'קבוצות',
   title: 'איך מחלקים תלמידים לקבוצות?',
   summary: 'פותחים את ניהול הקבוצות, יוצרים קבוצה ומוסיפים אליה תלמידים.',
+  flow: [
+    {
+      text: 'בעמוד „משתתפים” בוחרים „קבוצות” ולוחצים „יצירת קבוצה”.',
+      screenshot: { src: '71-groups-page.png', caption: 'מסך הקבוצות — אזור „ניהול קבוצות” עם „יצירת קבוצה”.' },
+    },
+    {
+      text: 'מזינים את שם הקבוצה ולוחצים „שמירת השינויים”.',
+      screenshot: { src: '72-group-create-form.png', caption: 'טופס יצירת הקבוצה עם שדה „שם הקבוצה”.' },
+    },
+    {
+      text: 'בוחרים את הקבוצה, לוחצים „הוספת/הסרת משתתפים מקבוצה”, מסמנים תלמיד ולוחצים „הוספה”.',
+      screenshot: { src: '73-group-add-members.png', caption: 'מסך הוספת המשתתפים — בוחרים תלמיד ולוחצים „הוספה”.' },
+    },
+    {
+      text: 'הקבוצות מופיעות ברשימה עם מספר החברים בכל קבוצה.',
+      screenshot: { src: '74-groups-two-groups.png', caption: 'רשימת הקבוצות עם מספר החברים בכל אחת.' },
+    },
+  ],
   keywords: ['קבוצות', 'חלוקה לקבוצות'],
-  status: 'needs-capture',
-  missingCaptureId: 'M08',
+  status: 'ready',
   },
   {
   id: 'group-data',
@@ -701,9 +728,18 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'קבוצות',
   title: 'איך מורה רואה נתונים של קבוצה מסוימת?',
   summary: 'בוחרים את הקבוצה במסך הנתונים ורואים רק את הנתונים הרלוונטיים לה.',
+  flow: [
+    {
+      text: 'בדוח הציונים פותחים את „בחירת קבוצות נראות” ובוחרים קבוצה.',
+      screenshot: { src: '75-grader-group-selector-open.png', caption: 'בורר „בחירת קבוצות נראות” פתוח עם רשימת הקבוצות.' },
+    },
+    {
+      text: 'הדוח מציג עכשיו רק את תלמידי הקבוצה שנבחרה.',
+      screenshot: { src: '76-grader-group-filtered.png', caption: 'דוח הציונים מסונן לקבוצה שנבחרה, כולל „ממוצע הקבוצה”.' },
+    },
+  ],
   keywords: ['קבוצה', 'מסנן', 'נתונים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M09',
+  status: 'ready',
   },
   {
   id: 'add-teacher',
@@ -816,6 +852,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   ],
   screenshots: [
     { src: '33-quiz-question-behaviour.jpg', caption: 'השדה „ציון "עובר"” באזור הציון של הגדרות הבוחן.' },
+    { src: '68-quiz-view-teacher.png', caption: 'עמוד הבוחן למורה: „ציון עובר: 80.00 מתוך 100.00” ושיטת מתן הציון.' },
     { src: '56-quiz-retry.png', caption: 'תצוגת התלמיד: „ציון עובר: 80.00 מתוך 100.00” והתג „נכשל” באדום.' },
   ],
   keywords: ['ציון עובר', 'עובר', 'נכשל', 'ציון'],
@@ -967,11 +1004,23 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'spaces',
   eyebrow: 'סידור משימות',
   title: 'איך גוררים משימה ממקום למקום?',
-  summary: 'תופסים את ידית הגרירה, גוררים ליעד ומשחררים.',
-  screenshots: [{ src: '06-course-edit-on.jpg', caption: 'מרחב במצב עריכה — כאן מופיעות ידיות העריכה והגרירה.' }],
-  keywords: ['גרירה', 'הזזה', 'משימה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M17',
+  summary: 'במצב עריכה פותחים את תפריט המשימה, בוחרים „העברה” ובוחרים את המיקום החדש.',
+  flow: [
+    {
+      text: 'במצב עריכה פותחים את תפריט שלוש הנקודות של המשימה ולוחצים „העברה”.',
+      screenshot: { src: '80-activity-menu-move.png', caption: 'תפריט המשימה במצב עריכה — „העברה” בין הפעולות.' },
+    },
+    {
+      text: 'בחלון „הזזת פעילות” בוחרים אחרי איזו פעילות למקם את המשימה.',
+      screenshot: { src: '81-move-activity-modal.png', caption: 'חלון „הזזת פעילות” — עץ היחידות והפעילויות לבחירת היעד.' },
+    },
+    {
+      text: 'המשימה עברה למקומה החדש.',
+      screenshot: { src: '82-move-activity-result.png', caption: 'המשימה במיקומה החדש מיד לאחר ההעברה.' },
+    },
+  ],
+  keywords: ['גרירה', 'הזזה', 'העברה', 'משימה'],
+  status: 'ready',
   },
   {
   id: 'import-task',
@@ -1069,9 +1118,18 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ביצועי תלמיד',
   title: 'איך רואים כמה פעמים תלמיד ניסה לפתור משימה?',
   summary: 'פותחים את מסך התוצאות של המשימה ורואים את רשימת הניסיונות.',
+  flow: [
+    {
+      text: 'בעמוד הבוחן רואים את „ניסיונות מענה” ולוחצים „תוצאות”.',
+      screenshot: { src: '68-quiz-view-teacher.png', caption: 'עמוד הבוחן למורה — „ניסיונות מענה: 1”, שיטת מתן הציון וציון עובר.' },
+    },
+    {
+      text: 'בטבלה רואים לכל תלמיד את הניסיונות, מועדי ההתחלה והסיום והציון של כל ניסיון.',
+      screenshot: { src: '67-quiz-attempts-report.png', caption: 'דוח „תוצאות” — שורת ניסיון לכל תלמיד עם מצב, זמנים וציון.' },
+    },
+  ],
   keywords: ['מספר ניסיונות', 'ביצועי תלמיד'],
-  status: 'needs-capture',
-  missingCaptureId: 'M21',
+  status: 'ready',
   },
   {
   id: 'student-highest-score',
@@ -1079,9 +1137,12 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ביצועי תלמיד',
   title: 'איך רואים את הציון הגבוה ביותר של תלמיד במשימה?',
   summary: 'במסך התוצאות משווים בין הניסיונות ורואים את הציון הגבוה ביותר.',
+  points: ['כששיטת מתן הציון היא „הציון הגבוה ביותר”, הציון בבוחן הוא הגבוה מבין הניסיונות.', 'בדוח התוצאות אפשר להציג ניסיון מענה אחד שהסתיים עבור כל משתמש — הציון הגבוה ביותר.'],
+  screenshots: [
+    { src: '67-quiz-attempts-report.png', caption: 'דוח התוצאות — „שיטת מתן הציונים עבור בוחן זה הוא הציון הגבוה ביותר”.' },
+  ],
   keywords: ['ציון גבוה ביותר', 'ניסיונות', 'ביצועים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M21',
+  status: 'ready',
   },
   {
   id: 'gradebook',
@@ -1090,10 +1151,12 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך רואים ציונים של תלמידים?',
   summary: 'כל שורה היא תלמיד וכל עמודה היא פריט ציון או סיכום.',
   points: ['מאתרים תלמיד.', 'מאתרים משימה.', 'בודקים ציון או מצב.', 'בודקים סיכום רק אחרי בדיקת המשקלים.'],
+  screenshots: [
+    { src: '65-gradebook-grader.png', caption: 'דוח הציונים — שורה לכל תלמיד ועמודה לכל פריט ציון, עם חיפוש ובחירת קבוצות.' },
+  ],
   warning: 'תא ריק אינו הוכחה לאי־הגשה.',
   keywords: ['יומן ציונים', 'ציון', 'תא ריק'],
-  status: 'needs-capture',
-  missingCaptureId: 'M22',
+  status: 'ready',
   },
   {
   id: 'export-grades',
@@ -1101,11 +1164,20 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ייצוא',
   title: 'איך מורידים דוח ציונים לכיתה?',
   summary: 'פותחים „ציונים” → „יצוא”, בוחרים פורמט ופריטים ומורידים.',
-  steps: ['פותחים „ציונים” ובוחרים „יצוא”.', 'בוחרים Excel או CSV.', 'מסמנים את הפריטים הנחוצים.', 'מורידים ובודקים את הקובץ.'],
+  flow: [
+    {
+      text: 'פותחים „ציונים” ובוחרים „יצוא”.',
+      screenshot: { src: '65-gradebook-grader.png', caption: 'לשונית „ציונים” במרחב — מכאן עוברים ל„יצוא”.' },
+    },
+    {
+      text: 'בוחרים פורמט, למשל „יצוא לגליון האלקטרוני של Excel”, ומסמנים את הפריטים הנחוצים.',
+      screenshot: { src: '66-gradebook-export.png', caption: 'מסך היצוא — בחירת הפורמט וסימון פריטי הציון.' },
+    },
+    { text: 'לוחצים „הורדה” ובודקים את הקובץ.' },
+  ],
   warning: 'קובץ ציונים עשוי להכיל מידע אישי ויש לשמור אותו במקום מאובטח.',
   keywords: ['ייצוא ציונים', 'Excel', 'CSV'],
-  status: 'needs-capture',
-  missingCaptureId: 'M22',
+  status: 'ready',
   },
   {
   id: 'report-chooser',
