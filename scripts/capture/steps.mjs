@@ -20,8 +20,10 @@ for (const step of steps) {
   if (step.wait) await page.waitForTimeout(step.wait);
   if (step.selectIdx) await page.locator(step.selectIdx[0]).selectOption({ index: step.selectIdx[1] }).catch((e) => console.log('select failed:', e.message));
   if (step.scroll !== undefined) await page.evaluate((y) => window.scrollTo({ top: y }), step.scroll);
-  if (step.shot) await page.screenshot({ path: step.shot });
-  if (step.shotFull) await page.screenshot({ path: step.shotFull, fullPage: true });
+  // scale:'device' captures at the real 2x pixel density; the Playwright
+  // default ('css') silently halves the resolution and text turns to mush.
+  if (step.shot) await page.screenshot({ path: step.shot, scale: 'device' });
+  if (step.shotFull) await page.screenshot({ path: step.shotFull, fullPage: true, scale: 'device' });
   if (step.text) console.log(await page.locator(step.text).first().innerText().catch(() => '(not found)'));
   if (step.eval) console.log(JSON.stringify(await page.evaluate(step.eval).catch((e) => e.message)));
 }
