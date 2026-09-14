@@ -38,6 +38,10 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '41-space-settings': [
     { id: 'fullname', label: 'השם המלא של מרחב־הלימוד', x: 26.8, y: 35.8, width: 30, height: 7.4 },
   ],
+  // 3200x1800 settings form bottom: the save button.
+  '43-space-settings-save': [
+    { id: 'save', label: 'שמירת השינויים והצגתם', x: 43.5, y: 85.5, width: 13, height: 5.6 },
+  ],
   // 3200x1800 settings: the course-image files box.
   '44-space-image': [
     { id: 'image-box', label: 'תמונת מרחב־הלימוד', x: 41.3, y: 5.6, width: 16.4, height: 24.5 },

@@ -542,11 +542,19 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים את שם מרחב הלימוד?',
   summary: 'נכנסים להגדרות, משנים את שם המרחב ושומרים.',
-  steps: ['לוחצים „הגדרות”.', 'משנים את שדה השם.', 'לוחצים „שמירת שינויים”.'],
-  screenshots: [
-    { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.' },
-    { src: '41-space-settings.png', caption: 'עריכת הגדרות המרחב — השם המלא, השם הקצר וקטגוריית המרחב.' },
-    { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
+  flow: [
+    {
+      text: 'לוחצים „הגדרות”.',
+      screenshot: { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.' },
+    },
+    {
+      text: 'משנים את שדה השם.',
+      screenshot: { src: '41-space-settings.png', caption: 'עריכת הגדרות המרחב — השם המלא, השם הקצר וקטגוריית המרחב.' },
+    },
+    {
+      text: 'לוחצים „שמירת שינויים”.',
+      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
+    },
   ],
   keywords: ['שם', 'שינוי שם', 'הגדרות'],
   status: 'ready',
@@ -557,8 +565,19 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים את התמונה הראשית של המרחב?',
   summary: 'נכנסים להגדרות, בוחרים תמונה ושומרים.',
-  screenshots: [
-    { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.' },
+  flow: [
+    {
+      text: 'נכנסים להגדרות.',
+      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.' },
+    },
+    {
+      text: 'בוחרים תמונה.',
+      screenshot: { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.' },
+    },
+    {
+      text: 'שומרים.',
+      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
+    },
   ],
   keywords: ['תמונה', 'תמונת מרחב', 'הגדרות'],
   status: 'ready',
