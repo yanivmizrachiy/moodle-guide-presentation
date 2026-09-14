@@ -118,6 +118,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'quick-start': 'start',
   workflow: 'start',
   interface: 'space',
+  'student-space-view': 'space',
   'archive-space': 'space',
   'self-learning-space': 'space',
   'rename-space': 'space',
@@ -570,6 +571,18 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   points: ['הגדרות.', 'משתתפים.', 'ציונים ודוחות.', 'מצב עריכה.'],
   screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.' }],
   keywords: ['ממשק', 'תפריט', 'סרגל', 'כפתורים'],
+  status: 'ready',
+  },
+  {
+  id: 'student-space-view',
+  section: 'spaces',
+  eyebrow: 'תצוגת תלמיד',
+  title: 'איך תלמיד רואה את המרחב שלנו?',
+  screenshots: [
+    { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד — תפריט מצומצם: מרחב־לימוד, ציונים ודוחות.' },
+    { src: '58-student-space-topic.png', caption: 'יחידת „יחס” בתצוגת תלמיד — בוחן „ממתין לביצוע” וסימוני ההשלמה בסרגל הצד.' },
+  ],
+  keywords: ['תצוגת תלמיד', 'איך תלמיד רואה', 'ממתין לביצוע', 'המרחב שלנו'],
   status: 'ready',
   },
   {
