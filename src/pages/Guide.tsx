@@ -240,19 +240,23 @@ function ScreenshotCard({
               הצילום לא נטען. אין מוצג תחליף.
             </span>
           ) : (
-            <span className="relative block overflow-hidden bg-white">
-              <picture>
-                <source type="image/avif" srcSet={screenshotSources(screenshot.src).avif} />
-                <img
-                  src={screenshotSources(screenshot.src).webp}
-                  alt={screenshot.caption}
-                  loading="eager"
-                  decoding="async"
-                  onError={() => setFailed(true)}
-                  className="block max-h-[53vh] w-full bg-white object-contain"
-                />
-              </picture>
-              <HotspotLayer src={screenshot.src} />
+            // The inner relative wrapper hugs the painted image, so hotspot
+            // percentages land on the real control (w-full letterboxing drifted them).
+            <span className="block overflow-hidden bg-white">
+              <span className="relative mx-auto block w-fit max-w-full">
+                <picture>
+                  <source type="image/avif" srcSet={screenshotSources(screenshot.src).avif} />
+                  <img
+                    src={screenshotSources(screenshot.src).webp}
+                    alt={screenshot.caption}
+                    loading="eager"
+                    decoding="async"
+                    onError={() => setFailed(true)}
+                    className="block max-h-[53vh] max-w-full bg-white object-contain"
+                  />
+                </picture>
+                <HotspotLayer src={screenshot.src} />
+              </span>
             </span>
           )}
 
