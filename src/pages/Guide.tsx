@@ -200,10 +200,10 @@ function ScreenshotCard({
           style={{ transform: 'translateZ(-36px) scale(.93)' }}
         />
 
-        <span
-          className="guide-shot-surface relative block overflow-hidden rounded-[28px] border border-white/70 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.28),0_10px_24px_rgba(15,23,42,0.18)]"
-          style={{ transform: reducedMotion ? undefined : 'translateZ(24px)' }}
-        >
+        {/* No resting translateZ: a persistent 3D offset makes the GPU rasterize the
+            screenshot and stretch it ~1.6% through the perspective, blurring it. The
+            hover tilt on the parent still works; at rest the image stays pixel-perfect. */}
+        <span className="guide-shot-surface relative block overflow-hidden rounded-[28px] border border-white/70 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.28),0_10px_24px_rgba(15,23,42,0.18)]">
           <span className="flex items-center gap-2 border-b border-slate-200/90 bg-gradient-to-b from-white to-slate-100 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full bg-rose-400 shadow-inner" />
             <span className="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-inner" />

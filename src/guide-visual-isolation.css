@@ -66,12 +66,13 @@
   perspective-origin: 50% 42%;
 }
 
+/* No will-change here: a permanently promoted layer is rasterized once and
+ * re-scaled by the perspective, softening the screenshot inside. */
 [data-guide-shell="premium-presentation"] .guide-shot-card {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  will-change: transform;
 }
 
 [data-guide-shell="premium-presentation"] .guide-shot-surface {
@@ -128,7 +129,4 @@
     transition-duration: 0.01ms !important;
   }
 
-  [data-guide-shell="premium-presentation"] .guide-shot-card {
-    will-change: auto;
-  }
 }
