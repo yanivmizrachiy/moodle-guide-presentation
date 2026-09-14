@@ -82,6 +82,8 @@ function getModeFromUrl(): DeckMode {
     : 'all';
 }
 
+/* Hand-drawn red marker circles, like a teacher annotating a printout: two
+ * slightly rotated, imperfect ellipse strokes over the real control. */
 function HotspotLayer({ src }: { src: string }) {
   const hotspots = getGuideScreenshotHotspots(src);
   if (hotspots.length === 0) return null;
@@ -89,20 +91,32 @@ function HotspotLayer({ src }: { src: string }) {
   return (
     <span className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
       {hotspots.map((hotspot) => (
-        <span
+        <svg
           key={hotspot.id}
-          className="absolute rounded-xl border-[3px] border-amber-300 bg-amber-300/10 shadow-[0_0_0_4px_rgba(15,23,42,0.28),0_0_24px_rgba(251,191,36,0.55)]"
+          className="absolute overflow-visible"
           style={{
             left: `${hotspot.x}%`,
             top: `${hotspot.y}%`,
             width: `${hotspot.width}%`,
             height: `${hotspot.height}%`,
           }}
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
         >
-          <span className="absolute -top-8 right-0 max-w-[240px] rounded-lg bg-slate-950/92 px-2 py-1 text-[10px] font-black leading-tight text-white shadow-lg">
-            {hotspot.label}
-          </span>
-        </span>
+          <title>{hotspot.label}</title>
+          <ellipse
+            cx="50" cy="50" rx="49" ry="44"
+            fill="none" stroke="#dc2626" strokeWidth="3.4"
+            strokeLinecap="round" vectorEffect="non-scaling-stroke"
+            transform="rotate(-3 50 50)" opacity="0.92"
+          />
+          <ellipse
+            cx="51" cy="48.5" rx="47" ry="46"
+            fill="none" stroke="#dc2626" strokeWidth="2.2"
+            strokeLinecap="round" vectorEffect="non-scaling-stroke"
+            transform="rotate(2.5 50 50)" opacity="0.55"
+          />
+        </svg>
       ))}
     </span>
   );
