@@ -710,6 +710,19 @@ export default function Guide() {
     if (panel === 'search') window.setTimeout(() => searchInputRef.current?.focus(), 30);
   }, [panel]);
 
+  // Slide numbers for the TOC and search results, matching the footer counter.
+  const slideNumberOf = useMemo(() => new Map(sequence.map((id, index) => [id, index + 1])), [sequence]);
+
+  // Opening the TOC lands on the current question, so the reader always knows
+  // where they are inside the six chapters without scrolling to find out.
+  useEffect(() => {
+    if (panel !== 'menu') return;
+    const frame = requestAnimationFrame(() => {
+      document.querySelector('[data-toc-current="true"]')?.scrollIntoView({ block: 'center' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [panel]);
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
@@ -985,6 +998,7 @@ export default function Guide() {
                                         key={item.id}
                                         onClick={() => jumpToSlide(item.id)}
                                         aria-current={item.id === slide.id ? 'page' : undefined}
+                                        data-toc-current={item.id === slide.id ? 'true' : undefined}
                                         className={cn(
                                           'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
                                           item.id === slide.id
@@ -992,7 +1006,17 @@ export default function Guide() {
                                             : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-900'
                                         )}
                                       >
-                                        <span>{item.title}</span>
+                                        <span className="flex min-w-0 items-center gap-2.5">
+                                          <span
+                                            className={cn(
+                                              'inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[11px] font-black tabular-nums',
+                                              item.id === slide.id ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
+                                            )}
+                                          >
+                                            {slideNumberOf.get(item.id)}
+                                          </span>
+                                          <span>{item.title}</span>
+                                        </span>
                                         <ArrowLeft className="h-4 w-4 shrink-0" />
                                       </button>
                                     ))}
@@ -1031,7 +1055,12 @@ export default function Guide() {
                               <p className="text-xs font-black text-blue-700">{item.eyebrow}</p>
                               <p className="mt-1 text-base font-black text-slate-950">{item.title}</p>
                             </div>
-                            <ArrowLeft className="h-5 w-5 shrink-0 text-blue-700" />
+                            <span className="flex shrink-0 items-center gap-2">
+                              <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-blue-100 px-1 text-[11px] font-black tabular-nums text-blue-800">
+                                {slideNumberOf.get(item.id)}
+                              </span>
+                              <ArrowLeft className="h-5 w-5 text-blue-700" />
+                            </span>
                           </button>
                         ))}
                         {searchResults.length === 0 && (
