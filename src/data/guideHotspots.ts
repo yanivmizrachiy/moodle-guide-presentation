@@ -79,6 +79,18 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
     { id: 'delete', label: 'מחיקה', x: 5.2, y: 80.8, width: 13.4, height: 7.6 },
   ],
+  // 3200x1800 course page in edit mode: the add-activity button at the section end.
+  '15-add-activity-button': [
+    { id: 'add-activity', label: 'הוספת משאב או פעילות', x: 36, y: 84, width: 12, height: 5.6 },
+  ],
+  // 3200x1800 delete-confirmation dialog: the red confirm button.
+  '50-delete-confirm': [
+    { id: 'confirm-delete', label: 'מחיקה', x: 34.5, y: 22, width: 6, height: 4.8 },
+  ],
+  // 3200x1800 hidden-item kebab menu: the "זמינות" entry.
+  '49-hidden-item-menu': [
+    { id: 'availability', label: 'זמינות', x: 4.5, y: 59, width: 13, height: 6 },
+  ],
   // 3200x1800 new wizard, ready-content step: the search row.
   '34-wizard-ready-content-search': [
     { id: 'search', label: 'חיפוש', x: 87.3, y: 26.0, width: 8.7, height: 4.1 },
