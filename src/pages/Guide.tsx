@@ -22,7 +22,6 @@ import {
   Maximize2,
   Menu,
   Minimize2,
-  PlayCircle,
   Search,
   X,
 } from 'lucide-react';
@@ -34,14 +33,12 @@ import {
   GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
   PUBLISHED_GUIDE_SLIDES,
-  QUICK_START_SLIDE_IDS,
   type GuideScreenshot,
   type GuideSlide,
 } from '@/data/guideDeck';
 import { getGuideScreenshotHotspots } from '@/data/guideHotspots';
 
 type Panel = 'menu' | 'search' | null;
-type DeckMode = 'all' | 'quick';
 
 type LightboxState = {
   screenshot: GuideScreenshot;
@@ -69,17 +66,6 @@ function getSlideIndexFromUrl(): number {
   const slideId = new URLSearchParams(window.location.search).get('slide');
   const index = PUBLISHED_GUIDE_SLIDES.findIndex((slide) => slide.id === slideId);
   return index >= 0 ? index : 0;
-}
-
-function getModeFromUrl(): DeckMode {
-  if (typeof window === 'undefined') return 'all';
-  const params = new URLSearchParams(window.location.search);
-  const requestedMode = params.get('mode');
-  const requestedSlide = params.get('slide');
-
-  return requestedMode === 'quick' && requestedSlide && QUICK_START_SLIDE_IDS.includes(requestedSlide)
-    ? 'quick'
-    : 'all';
 }
 
 /* Hand-drawn red marker circles, like a teacher annotating a printout: two
@@ -567,7 +553,6 @@ function SlideContent({
 export default function Guide() {
   const reducedMotion = Boolean(useReducedMotion());
   const [currentIndex, setCurrentIndex] = useState(getSlideIndexFromUrl);
-  const [mode, setMode] = useState<DeckMode>(getModeFromUrl);
   const [panel, setPanel] = useState<Panel>(null);
   const [query, setQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -587,14 +572,10 @@ export default function Guide() {
   // The cover is an entry gate: its single "התחל" CTA is the one way forward, so the
   // duplicated chrome (footer next/prev, header home, section label) stays hidden there.
   const isCover = Boolean(slide.cover);
-  const allSequence = useMemo(() => PUBLISHED_GUIDE_SLIDES.map((item) => item.id), []);
-  const activeSequence = mode === 'quick' ? QUICK_START_SLIDE_IDS : allSequence;
-  const activePosition = activeSequence.indexOf(slide.id);
-  const safeMode: DeckMode = activePosition >= 0 ? mode : 'all';
-  const safeSequence = safeMode === 'quick' ? QUICK_START_SLIDE_IDS : allSequence;
-  const safePosition = safeSequence.indexOf(slide.id);
-  const canGoPrevious = safePosition > 0;
-  const canGoNext = safePosition >= 0 && safePosition < safeSequence.length - 1;
+  const sequence = useMemo(() => PUBLISHED_GUIDE_SLIDES.map((item) => item.id), []);
+  const position = sequence.indexOf(slide.id);
+  const canGoPrevious = position > 0;
+  const canGoNext = position >= 0 && position < sequence.length - 1;
   const currentSection = GUIDE_SECTIONS.find((section) => section.id === slide.section);
 
   const searchResults = useMemo(() => {
@@ -616,33 +597,29 @@ export default function Guide() {
     });
   }, [query]);
 
-  function writeUrl(slideId: string, nextMode: DeckMode, replace = false) {
+  function writeUrl(slideId: string, replace = false) {
     const url = new URL(window.location.href);
     url.searchParams.set('slide', slideId);
-    if (nextMode === 'quick') url.searchParams.set('mode', 'quick');
-    else url.searchParams.delete('mode');
     window.history[replace ? 'replaceState' : 'pushState']({}, '', url);
   }
 
-  function jumpToSlide(slideId: string, requestedMode: DeckMode = 'all', replace = false) {
+  function jumpToSlide(slideId: string, replace = false) {
     const index = PUBLISHED_GUIDE_SLIDES.findIndex((item) => item.id === slideId);
     if (index < 0) return;
 
     setDirection(index >= currentIndex ? 1 : -1);
-    const nextMode = requestedMode === 'quick' && QUICK_START_SLIDE_IDS.includes(slideId) ? 'quick' : 'all';
-    setMode(nextMode);
     setCurrentIndex(index);
     setPanel(null);
     setQuery('');
-    writeUrl(slideId, nextMode, replace);
+    writeUrl(slideId, replace);
   }
 
   function goBy(delta: number) {
-    if (safePosition < 0) return;
-    const nextId = safeSequence[safePosition + delta];
+    if (position < 0) return;
+    const nextId = sequence[position + delta];
     if (!nextId) return;
     setDirection(delta > 0 ? 1 : -1);
-    jumpToSlide(nextId, safeMode);
+    jumpToSlide(nextId);
   }
 
   async function toggleFullscreen() {
@@ -656,7 +633,6 @@ export default function Guide() {
       const nextIndex = getSlideIndexFromUrl();
       setDirection(nextIndex >= currentIndex ? 1 : -1);
       setCurrentIndex(nextIndex);
-      setMode(getModeFromUrl());
       setPanel(null);
       setLightbox(null);
     };
@@ -710,22 +686,24 @@ export default function Guide() {
   }, [slide.id]);
 
   useEffect(() => {
-    if (safeMode !== mode) setMode(safeMode);
     document.title = `${slide.title} | מדריך Moodle למורים`;
 
-    // Prefetch along the sequence the reader is actually walking. In quick mode the
-    // next slide is the next quick-start entry, not the next slide in deck order.
-    for (const neighbourPosition of [safePosition - 1, safePosition + 1]) {
-      const neighbourId = safeSequence[neighbourPosition];
+    // Prefetch the neighbouring slides' screenshots, flow screens included.
+    for (const neighbourPosition of [position - 1, position + 1]) {
+      const neighbourId = sequence[neighbourPosition];
       if (!neighbourId) continue;
       const neighbour = PUBLISHED_GUIDE_SLIDES.find((item) => item.id === neighbourId);
-      for (const screenshot of neighbour?.screenshots ?? []) {
+      const shots = [
+        ...(neighbour?.screenshots ?? []),
+        ...(neighbour?.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
+      ];
+      for (const screenshot of shots) {
         const image = new Image();
         image.decoding = 'async';
         image.src = imageUrl(screenshot.src);
       }
     }
-  }, [mode, safeMode, safePosition, safeSequence, slide.id, slide.title]);
+  }, [position, sequence, slide.id, slide.title]);
 
   useEffect(() => {
     if (panel === 'search') window.setTimeout(() => searchInputRef.current?.focus(), 30);
@@ -754,11 +732,11 @@ export default function Guide() {
       }
       if (event.key === 'Home') {
         event.preventDefault();
-        jumpToSlide(FIRST_GUIDE_SLIDE_ID, 'all');
+        jumpToSlide(FIRST_GUIDE_SLIDE_ID);
       }
       if (event.key === 'End') {
         event.preventDefault();
-        jumpToSlide(safeSequence[safeSequence.length - 1], safeMode);
+        jumpToSlide(sequence[sequence.length - 1]);
       }
       // event.code keeps the shortcuts on the same physical keys under a Hebrew layout,
       // where event.key reports the Hebrew character instead of f/m.
@@ -774,9 +752,9 @@ export default function Guide() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [lightbox, panel, safeMode, safePosition, safeSequence]);
+  }, [lightbox, panel, position, sequence]);
 
-  const progress = safePosition >= 0 ? ((safePosition + 1) / safeSequence.length) * 100 : 0;
+  const progress = position >= 0 ? ((position + 1) / sequence.length) * 100 : 0;
   const transition = reducedMotion
     ? { duration: 0.01 }
     : { type: 'spring' as const, stiffness: 170, damping: 24, mass: 0.72 };
@@ -802,7 +780,7 @@ export default function Guide() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID, 'all')}
+                onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
                 className="hidden gap-2 text-white hover:bg-white/10 hover:text-white md:inline-flex"
               >
                 <Home className="h-4 w-4" />
@@ -816,33 +794,13 @@ export default function Guide() {
           ) : (
             <div className="min-w-0 text-center">
               <p className="truncate text-xs font-black text-amber-300 sm:text-sm">
-                {safeMode === 'quick' ? 'מסלול מהיר' : currentSection?.title ?? 'Moodle'}
+                {currentSection?.title ?? 'Moodle'}
               </p>
               <p className="hidden max-w-[48vw] truncate text-xs font-bold text-white/70 sm:block">{slide.title}</p>
             </div>
           )}
 
           <div className="flex items-center gap-1 sm:gap-2">
-            {safeMode === 'quick' ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => jumpToSlide(slide.id, 'all', true)}
-                className="hidden text-white/80 hover:bg-white/10 hover:text-white sm:inline-flex"
-              >
-                כל השקופיות
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => jumpToSlide(QUICK_START_SLIDE_IDS[0], 'quick')}
-                className="hidden gap-2 text-white/80 hover:bg-white/10 hover:text-white sm:inline-flex"
-              >
-                <PlayCircle className="h-4 w-4" />
-                מסלול מהיר
-              </Button>
-            )}
             <Button
               variant="ghost"
               size="icon"
@@ -860,7 +818,7 @@ export default function Guide() {
             The slide article is re-created on every navigation, so the announcement
             lives here instead. */}
         <p aria-live="polite" aria-atomic="true" className="sr-only">
-          {`${slide.title} — שקף ${safePosition + 1} מתוך ${safeSequence.length}`}
+          {`${slide.title} — שקף ${position + 1} מתוך ${sequence.length}`}
         </p>
 
         <main className="relative flex min-h-0 items-center justify-center overflow-hidden p-0 sm:p-3 lg:p-4">
@@ -904,7 +862,7 @@ export default function Guide() {
               <SlideContent
                 slide={slide}
                 onOpenScreenshot={setLightbox}
-                onStart={() => jumpToSlide(FIRST_TRAINING_SLIDE_ID, 'all')}
+                onStart={() => jumpToSlide(FIRST_TRAINING_SLIDE_ID)}
               />
             </m.article>
           </AnimatePresence>
@@ -936,7 +894,7 @@ export default function Guide() {
               תוכן
             </Button>
             <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
-              <div className="text-xs font-black text-white/90">{safePosition + 1} מתוך {safeSequence.length}</div>
+              <div className="text-xs font-black text-white/90">{position + 1} מתוך {sequence.length}</div>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/15">
                 <m.div
                   className="h-full rounded-full bg-amber-400"
@@ -991,16 +949,9 @@ export default function Guide() {
 
                 {panel === 'menu' ? (
                   <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-7">
-                    <div className="mb-6 grid gap-3 sm:grid-cols-2">
+                    <div className="mb-6 grid gap-3">
                       <button
-                        onClick={() => jumpToSlide(QUICK_START_SLIDE_IDS[0], 'quick')}
-                        className="flex items-center gap-4 rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 text-right transition hover:-translate-y-0.5 hover:shadow-lg"
-                      >
-                        <PlayCircle className="h-9 w-9 shrink-0 text-amber-600" />
-                        <span className="text-lg font-black text-slate-950">מסלול מהיר</span>
-                      </button>
-                      <button
-                        onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID, 'all')}
+                        onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
                         className="flex items-center gap-4 rounded-2xl border-2 border-slate-200 bg-white p-5 text-right transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg"
                       >
                         <Home className="h-9 w-9 shrink-0 text-blue-700" />
@@ -1015,12 +966,14 @@ export default function Guide() {
                         return (
                           <div key={section.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
                             <h3 className="text-lg font-black text-slate-950">{section.title}</h3>
-                            <p className="mt-1 text-xs font-bold leading-relaxed text-slate-500">{section.description}</p>
+                            {section.description && (
+                              <p className="mt-1 text-xs font-bold leading-relaxed text-slate-500">{section.description}</p>
+                            )}
                             <div className="mt-4 grid gap-2">
                               {sectionSlides.map((item) => (
                                 <button
                                   key={item.id}
-                                  onClick={() => jumpToSlide(item.id, 'all')}
+                                  onClick={() => jumpToSlide(item.id)}
                                   aria-current={item.id === slide.id ? 'page' : undefined}
                                   className={cn(
                                     'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
@@ -1058,7 +1011,7 @@ export default function Guide() {
                         {searchResults.map((item) => (
                           <button
                             key={item.id}
-                            onClick={() => jumpToSlide(item.id, 'all')}
+                            onClick={() => jumpToSlide(item.id)}
                             className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-right transition hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
                           >
                             <div className="min-w-0">

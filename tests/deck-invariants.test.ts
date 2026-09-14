@@ -8,8 +8,6 @@ import {
   GUIDE_SECTIONS,
   GUIDE_SLIDES,
   PUBLISHED_GUIDE_SLIDES,
-  QUICK_START_CANDIDATES,
-  QUICK_START_SLIDE_IDS,
 } from '@/data/guideDeck';
 import { GUIDE_SCREENSHOT_HOTSPOTS, isValidHotspot } from '@/data/guideHotspots';
 
@@ -122,21 +120,6 @@ describe('screenshots', () => {
 });
 
 describe('routes', () => {
-  it('quick-start candidates reference real slide ids', () => {
-    const known = new Set(allIds);
-    for (const id of QUICK_START_CANDIDATES) {
-      expect(known, `quick-start candidate "${id}" does not exist in the deck`).toContain(id);
-    }
-    expect(new Set(QUICK_START_CANDIDATES).size).toBe(QUICK_START_CANDIDATES.length);
-  });
-
-  it('the quick-start route is non-empty and only contains published slides', () => {
-    expect(QUICK_START_SLIDE_IDS.length).toBeGreaterThan(0);
-    for (const id of QUICK_START_SLIDE_IDS) {
-      expect(publishedIds).toContain(id);
-    }
-  });
-
   it('external links are https and labeled', () => {
     for (const slide of GUIDE_SLIDES) {
       if (!slide.link) continue;
