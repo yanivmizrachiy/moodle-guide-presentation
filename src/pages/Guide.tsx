@@ -449,16 +449,24 @@ function SlideContent({
           <div
             className={cn(
               'grid content-center gap-5 lg:py-2',
-              (slide.screenshots?.length ?? 0) > 1 ? 'md:grid-cols-2' : 'grid-cols-1'
+              // A secondary capture renders small under the main one instead of
+              // splitting the slide into two equal columns.
+              (slide.screenshots?.length ?? 0) > 1 && !slide.screenshots?.some((s) => s.secondary)
+                ? 'md:grid-cols-2'
+                : 'grid-cols-1'
             )}
           >
             {slide.screenshots?.map((screenshot) => (
-              <ScreenshotCard
+              <div
                 key={screenshot.src}
-                screenshot={screenshot}
-                slideTitle={slide.title}
-                onOpen={onOpenScreenshot}
-              />
+                className={cn(screenshot.secondary && 'mx-auto w-full max-w-[400px]')}
+              >
+                <ScreenshotCard
+                  screenshot={screenshot}
+                  slideTitle={slide.title}
+                  onOpen={onOpenScreenshot}
+                />
+              </div>
             ))}
           </div>
         )}

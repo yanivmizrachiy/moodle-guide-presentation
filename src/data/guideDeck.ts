@@ -1,6 +1,8 @@
 export type GuideScreenshot = {
   src: string;
   caption: string;
+  /** Renders small beside/below the main capture (e.g. a login thumbnail). */
+  secondary?: boolean;
 };
 
 export type GuideLink = {
@@ -108,11 +110,13 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'opening',
   eyebrow: 'פתיחת מרחב למידה · שלב 1',
   title: 'איך פותחים מרחב למידה במודל?',
-  summary: 'מתחילים במסך הכניסה של Moodle משרד החינוך. בכל שקף במקטע הזה מבצעים פעולה אחת בלבד.',
-  steps: ['לאחר ההזדהות לחצו על כפתור הכניסה למערכת.'],
-  screenshots: [{ src: '01-login.png', caption: 'מסך הכניסה האמיתי ל-Moodle של משרד החינוך.' }],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
-  keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל'],
+  summary: 'בחרו אם לפתוח מרחב למידה עם תלמידים או ללא תלמידים.',
+  screenshots: [
+    { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
+    { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.', secondary: true },
+  ],
+  link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
+  keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל', 'עם תלמידים', 'ללא תלמידים'],
   status: 'ready',
   },
   {
