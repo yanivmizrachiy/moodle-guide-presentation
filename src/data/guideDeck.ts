@@ -1101,7 +1101,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     },
     {
       text: 'עונים על השאלות, עמוד אחרי עמוד.',
-      screenshot: { src: '64-quiz-question.png', caption: 'עמוד שאלה בבוחן — בחירת תשובה ו„העמוד הבא”.' },
+      screenshot: { src: '64-quiz-question.png', caption: 'עמוד שאלה בבוחן — הזנת התשובה ו„העמוד הבא”.' },
     },
     {
       text: 'בסיום לוחצים „שמירה וסיום” ואז „הגשה סופית”.',
@@ -1295,7 +1295,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   flow: [
     {
       text: 'פותחים „ציונים” ובוחרים „יצוא”.',
-      screenshot: { src: '65-gradebook-grader.png', caption: 'לשונית „ציונים” במרחב — מכאן עוברים ל„יצוא”.' },
+      screenshot: { src: '65-gradebook-grader.png', caption: 'דוח הציונים בלשונית „ציונים” במרחב — נקודת המוצא ל„יצוא”.' },
     },
     {
       text: 'בוחרים פורמט, למשל „יצוא לגליון האלקטרוני של Excel”, ומסמנים את הפריטים הנחוצים.',
@@ -1334,7 +1334,13 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ניהול למידה',
   title: 'איך נכנסים לדוח „ניהול למידה”?',
   summary: 'פותחים „דוחות” ובוחרים „ניהול למידה”, אם הוא זמין במרחב.',
-  screenshots: [{ src: '18-reports.jpg', caption: 'עמוד הדוחות כולל „ניהול למידה”.' }],
+  flow: [
+    { text: 'פותחים „דוחות”.' },
+    {
+      text: 'בוחרים „ניהול למידה”, אם הוא זמין במרחב.',
+      screenshot: { src: '18-reports.jpg', caption: 'עמוד הדוחות כולל „ניהול למידה”.' },
+    },
+  ],
   keywords: ['ניהול למידה', 'גרפים', 'ממוצע'],
   status: 'ready',
   },
