@@ -39,6 +39,15 @@ const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
 const MOODLE_MY = 'https://moodlemoe.lms.education.gov.il/my/';
 const MOODLE_WIZARD = 'https://moodlemoe.lms.education.gov.il/local/auto_course_create/wizard.php';
 
+/**
+ * Fixed presentation attribution, shown on the cover and the opening slide.
+ * Content source of truth — do not hard-code these lines in the renderer.
+ */
+export const GUIDE_ATTRIBUTION = {
+  district: 'הדרכה במחוז ירושלים והעיר ירושלים - מנח״י, בהובלת איילת קריספין',
+  site: 'האתר מנוהל ע״י יניב רז · מדריך מחוזי חט״ב בעיר ירושלים',
+} as const;
+
 /** Slide 1: the presentation cover. */
 export const FIRST_GUIDE_SLIDE_ID = 'cover';
 
@@ -233,7 +242,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 12',
   title: 'מה רואים אחרי שהמרחב נפתח?',
   summary: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
-  screenshots: [{ src: '10-course-page.jpg', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' }],
+  screenshots: [{ src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' }],
   link: { href: MOODLE_MY, label: 'פתיחת מרחבי הלמידה שלי' },
   keywords: ['עמוד מרחב', 'מרחב שנפתח'],
   status: 'ready',
@@ -415,7 +424,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איפה נמצאים הכפתורים המרכזיים במרחב?',
   summary: 'רוב הפעולות נמצאות בתפריט המרחב, בסרגל העליון ובעמוד היחידות.',
   points: ['הגדרות.', 'משתתפים.', 'ציונים ודוחות.', 'מצב עריכה.'],
-  screenshots: [{ src: '10-course-page.jpg', caption: 'תפריט המרחב והיחידות בעמוד.' }],
+  screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.' }],
   keywords: ['ממשק', 'תפריט', 'סרגל', 'כפתורים'],
   status: 'ready',
   },
@@ -449,7 +458,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'נכנסים להגדרות, משנים את שם המרחב ושומרים.',
   steps: ['לוחצים „הגדרות”.', 'משנים את שדה השם.', 'לוחצים „שמירת שינויים”.'],
   screenshots: [
-    { src: '10-course-page.jpg', caption: 'כפתור „הגדרות” בתפריט המרחב.' },
+    { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.' },
     { src: '41-space-settings.png', caption: 'עריכת הגדרות המרחב — השם המלא, השם הקצר וקטגוריית המרחב.' },
     { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
   ],
@@ -629,8 +638,8 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'מפעילים עריכה, לוחצים „הוספת משאב או פעילות” ובוחרים את הסוג.',
   steps: ['מפעילים עריכה.', 'לוחצים „הוספת משאב או פעילות”.', 'בוחרים סוג.', 'שומרים ובודקים.'],
   screenshots: [
-    { src: '15-add-activity-button.jpg', caption: 'כפתור „+ הוספת משאב או פעילות”.' },
-    { src: '16-activity-chooser.jpg', caption: 'בורר הפעילויות והמשאבים.' },
+    { src: '15-add-activity-button.png', caption: 'כפתור „+ הוספת משאב או פעילות”.' },
+    { src: '16-activity-chooser.png', caption: 'בורר הפעילויות והמשאבים.' },
     { src: '17-activity-chooser-more.jpg', caption: 'אפשרויות נוספות בבורר.' },
   ],
   keywords: ['פעילות', 'משאב', 'קובץ', 'מטלה', 'בוחן'],
@@ -732,7 +741,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך בודקים את המרחב כתלמיד?',
   summary: 'מחליפים תפקיד לתלמיד ובודקים לפני ששולחים קישור או משימה.',
   steps: ['מכבים עריכה.', 'פותחים את תפריט המשתמש.', 'בוחרים „החלפת תפקיד ל...” ואז „תלמיד”.', 'בודקים וחוזרים לתפקיד הרגיל.'],
-  screenshots: [{ src: '09-user-menu.jpg', caption: 'תפריט המשתמש — מכאן מגיעים להחלפת תפקיד.' }],
+  screenshots: [{ src: '09-user-menu.png', caption: 'תפריט המשתמש — מכאן מגיעים להחלפת תפקיד.' }],
   warning: 'לבדיקת הרשמה או הרשאות מיוחדות משתמשים בחשבון בדיקה מאושר.',
   keywords: ['תצוגת תלמיד', 'החלפת תפקיד', 'בדיקה'],
   status: 'ready',
@@ -898,7 +907,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'עריכה',
   title: 'איפה רואים את פעולות העריכה בעמוד הבית?',
   summary: 'במצב עריכה מופיעות פעולות הוספה ועריכה ישירות בעמוד.',
-  screenshots: [{ src: '05-home-edit-on.jpg', caption: 'עמוד הבית במצב עריכה עם פעולות ההוספה והעריכה.' }],
+  screenshots: [{ src: '05-home-edit-on.png', caption: 'עמוד הבית במצב עריכה עם פעולות ההוספה והעריכה.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['עמוד הבית', 'מצב עריכה', 'הוספת משבצת'],
   status: 'ready',

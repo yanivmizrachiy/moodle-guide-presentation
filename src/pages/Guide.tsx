@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 import {
   FIRST_GUIDE_SLIDE_ID,
   FIRST_TRAINING_SLIDE_ID,
+  GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
   PUBLISHED_GUIDE_SLIDES,
   QUICK_START_SLIDE_IDS,
@@ -275,10 +276,10 @@ function SlideContent({
 
         <div className="relative z-10 w-full border-b border-amber-300/50 bg-slate-950/88 px-4 py-4 text-center shadow-[0_12px_36px_rgba(0,0,0,0.24)] sm:px-8 sm:py-5">
           <p className="text-[clamp(1.05rem,2vw,1.65rem)] font-black leading-tight text-amber-200">
-            הדרכה במחוז ירושלים והעיר ירושלים - מנח״י, בהובלת איילת קריספין
+            {GUIDE_ATTRIBUTION.district}
           </p>
           <p className="mt-1.5 text-[clamp(.95rem,1.5vw,1.25rem)] font-bold leading-relaxed text-white">
-            האתר מנוהל ע״י יניב רז · מדריך מחוזי חט״ב בעיר ירושלים
+            {GUIDE_ATTRIBUTION.site}
           </p>
         </div>
 
@@ -357,10 +358,10 @@ function SlideContent({
               <div className="min-w-0">
                 <p className="text-xs font-black text-blue-800">מדריך Moodle למורים</p>
                 <p className="mt-0.5 text-xs font-bold leading-relaxed text-slate-600">
-                  הדרכה במחוז ירושלים והעיר ירושלים - מנח״י, בהובלת איילת קריספין
+                  {GUIDE_ATTRIBUTION.district}
                 </p>
                 <p className="mt-0.5 text-xs font-bold leading-relaxed text-slate-600">
-                  האתר מנוהל ע״י יניב רז · מדריך מחוזי חט״ב בעיר ירושלים
+                  {GUIDE_ATTRIBUTION.site}
                 </p>
               </div>
             </div>
