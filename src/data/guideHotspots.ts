@@ -34,6 +34,10 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '33-quiz-question-behaviour': [
     { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 11.8, width: 15.8, height: 10.4 },
   ],
+  // 3200x1800 home page in edit mode: the "עריכה" toggle, top-left corner.
+  '05-home-edit-on': [
+    { id: 'edit-toggle', label: 'עריכה', x: 3.4, y: 2.2, width: 6.6, height: 6 },
+  ],
   // 3200x1800 activity kebab menu: the availability and delete entries.
   '42-activity-menu': [
     { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
