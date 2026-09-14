@@ -26,6 +26,19 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '24-wizard-step4': [
     { id: 'confirm-button', label: 'אישור', x: 2.6, y: 83.5, width: 8.6, height: 13.5 },
   ],
+  // 958x910: the blue "רשום אותי" button, measured ~598-686px x, ~402-440px y.
+  '28-selfenrol-student-view': [
+    { id: 'enrol-me', label: 'רשום אותי', x: 60.2, y: 41.6, width: 13.4, height: 9.2 },
+  ],
+  // 958x797: the "אין הגבלה" select beside "מספר נסיונות מותרים".
+  '33-quiz-question-behaviour': [
+    { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 11.8, width: 15.8, height: 10.4 },
+  ],
+  // 3200x1800 activity kebab menu: the availability and delete entries.
+  '42-activity-menu': [
+    { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
+    { id: 'delete', label: 'מחיקה', x: 5.2, y: 80.8, width: 13.4, height: 7.6 },
+  ],
 });
 
 export function isValidHotspot(hotspot: GuideHotspot) {
