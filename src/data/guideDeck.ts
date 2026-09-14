@@ -24,6 +24,8 @@ export type GuideFlowStep = {
 export type GuideSlide = {
   id: string;
   section: string;
+  /** Smaller TOC heading; filled from SLIDE_TOPICS during normalization. */
+  topic?: string;
   eyebrow: string;
   title: string;
   /** Optional: slide text exists only when the owner dictated it (SSOT.md rules 11-12). */
@@ -74,6 +76,103 @@ export const GUIDE_SECTIONS: GuideSection[] = [
   { id: 'students', title: 'תלמידים ומשתמשים במרחב', description: '' },
 ];
 
+/** Smaller heading inside a chapter; the TOC groups questions under these. */
+export type GuideTopic = { id: string; section: string; title: string };
+
+export const GUIDE_TOPICS: GuideTopic[] = [
+  { id: 'opening', section: 'spaces', title: 'פתיחת מרחב למידה' },
+  { id: 'wizard', section: 'spaces', title: 'האשף החדש' },
+  { id: 'start', section: 'spaces', title: 'התחלה' },
+  { id: 'space', section: 'spaces', title: 'המרחב' },
+  { id: 'editing', section: 'spaces', title: 'עריכה, ייבוא ועדכונים' },
+  { id: 'tasks', section: 'tasks-grades', title: 'משימות והערכה' },
+  { id: 'monitoring', section: 'tasks-grades', title: 'מעקב וציונים' },
+  { id: 'support', section: 'tasks-grades', title: 'בדיקה ותמיכה' },
+  { id: 'students-join', section: 'students', title: 'הצטרפות תלמידים' },
+  { id: 'participants', section: 'students', title: 'משתתפים' },
+  { id: 'groups', section: 'students', title: 'קבוצות' },
+  { id: 'teachers', section: 'students', title: 'מורים נוספים' },
+];
+
+// One place to file every slide under its smaller heading.
+export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
+  cover: 'opening',
+  'open-space-start': 'opening',
+  'open-space-my-courses': 'opening',
+  'open-space-wizard': 'opening',
+  'open-space-group-choice': 'opening',
+  'open-space-details-empty': 'opening',
+  'open-space-details-check': 'opening',
+  'open-space-type': 'opening',
+  'open-space-content': 'opening',
+  'open-space-confirm': 'opening',
+  'open-space-background-create': 'opening',
+  'open-space-created-notification': 'opening',
+  'open-space-result': 'opening',
+  'wizard-ready-content-catalog': 'wizard',
+  'wizard-ready-content-search': 'wizard',
+  'wizard-ready-content-list-toggle': 'wizard',
+  'wizard-clone-my-content': 'wizard',
+  'wizard-clone-search-sort': 'wizard',
+  'wizard-clone-previous-year': 'wizard',
+  'quick-start': 'start',
+  workflow: 'start',
+  interface: 'space',
+  'archive-space': 'space',
+  'self-learning-space': 'space',
+  'rename-space': 'space',
+  'space-image': 'space',
+  'space-heading': 'space',
+  'edit-mode': 'editing',
+  'add-content': 'editing',
+  'organize-content': 'editing',
+  'hide-task': 'editing',
+  'delete-task': 'editing',
+  'digital-task-icon': 'editing',
+  'drag-task': 'editing',
+  'import-task': 'editing',
+  'content-updates-meaning': 'editing',
+  'content-updates': 'editing',
+  'student-view': 'editing',
+  'external-tools': 'editing',
+  'home-edit-controls': 'editing',
+  'unit-menu': 'editing',
+  'section-menu-actions': 'editing',
+  'hidden-items-appearance': 'editing',
+  'activity-chooser-more': 'editing',
+  'send-task': 'tasks',
+  'quiz-settings': 'tasks',
+  'task-correction': 'tasks',
+  'assignment-submissions': 'tasks',
+  'task-feedback': 'tasks',
+  'student-result': 'tasks',
+  'student-correct-space': 'monitoring',
+  logs: 'monitoring',
+  'student-attempt-count': 'monitoring',
+  'student-highest-score': 'monitoring',
+  gradebook: 'monitoring',
+  'export-grades': 'monitoring',
+  'report-chooser': 'monitoring',
+  completion: 'monitoring',
+  'learning-management': 'monitoring',
+  notifications: 'monitoring',
+  'common-mistakes': 'support',
+  recovery: 'support',
+  'final-checklist': 'support',
+  'self-enrol-auto': 'students-join',
+  'self-enrol-troubleshoot-method': 'students-join',
+  'self-enrol-troubleshoot-settings': 'students-join',
+  'self-enrol-student': 'students-join',
+  'self-enrol-success': 'students-join',
+  'task-link-first-enrol': 'students-join',
+  participants: 'participants',
+  'remove-participant': 'participants',
+  groups: 'groups',
+  'group-data': 'groups',
+  'add-teacher': 'teachers',
+  'teacher-limit': 'teachers',
+};
+
 function toModernScreenshotFilename(src: string) {
   return src.replace(/\.[^.]+$/, '.avif');
 }
@@ -81,6 +180,7 @@ function toModernScreenshotFilename(src: string) {
 function normalizeSlide(slide: GuideSlide): GuideSlide {
   return {
     ...slide,
+    topic: SLIDE_TOPICS[slide.id],
     status:
       slide.missingCaptureId && slide.status === 'ready'
         ? ('needs-capture' as const)

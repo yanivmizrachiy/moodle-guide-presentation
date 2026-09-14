@@ -7,7 +7,9 @@ import {
   FIRST_TRAINING_SLIDE_ID,
   GUIDE_SECTIONS,
   GUIDE_SLIDES,
+  GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
+  SLIDE_TOPICS,
 } from '@/data/guideDeck';
 import { GUIDE_SCREENSHOT_HOTSPOTS, isValidHotspot } from '@/data/guideHotspots';
 
@@ -35,6 +37,23 @@ describe('slide identity', () => {
   it('every slide belongs to a declared section', () => {
     for (const slide of GUIDE_SLIDES) {
       expect(sectionIds, `unknown section "${slide.section}" on slide "${slide.id}"`).toContain(slide.section);
+    }
+  });
+
+  it('every slide files under a topic of its own chapter', () => {
+    const topicById = new Map(GUIDE_TOPICS.map((topic) => [topic.id, topic]));
+    for (const topic of GUIDE_TOPICS) {
+      expect(topic.title.trim()).not.toBe('');
+      expect(sectionIds, `topic "${topic.id}" points at unknown section`).toContain(topic.section);
+    }
+    for (const slide of GUIDE_SLIDES) {
+      const topic = slide.topic ? topicById.get(slide.topic) : undefined;
+      expect(topic, `slide "${slide.id}" has no topic in SLIDE_TOPICS`).toBeDefined();
+      expect(topic?.section, `slide "${slide.id}" topic belongs to another chapter`).toBe(slide.section);
+    }
+    const knownIds = new Set(GUIDE_SLIDES.map((slide) => slide.id));
+    for (const key of Object.keys(SLIDE_TOPICS)) {
+      expect(knownIds, `SLIDE_TOPICS has stale slide id "${key}"`).toContain(key);
     }
   });
 

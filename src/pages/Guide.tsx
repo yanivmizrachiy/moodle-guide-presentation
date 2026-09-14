@@ -32,6 +32,7 @@ import {
   FIRST_TRAINING_SLIDE_ID,
   GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
+  GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
   type GuideScreenshot,
   type GuideSlide,
@@ -963,30 +964,42 @@ export default function Guide() {
                       {GUIDE_SECTIONS.map((section) => {
                         const sectionSlides = PUBLISHED_GUIDE_SLIDES.filter((item) => item.section === section.id);
                         if (sectionSlides.length === 0) return null;
+                        const sectionTopics = GUIDE_TOPICS.filter((topic) => topic.section === section.id);
                         return (
                           <div key={section.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-                            <h3 className="text-lg font-black text-slate-950">{section.title}</h3>
+                            <h3 className="text-xl font-black text-slate-950">{section.title}</h3>
                             {section.description && (
                               <p className="mt-1 text-xs font-bold leading-relaxed text-slate-500">{section.description}</p>
                             )}
-                            <div className="mt-4 grid gap-2">
-                              {sectionSlides.map((item) => (
-                                <button
-                                  key={item.id}
-                                  onClick={() => jumpToSlide(item.id)}
-                                  aria-current={item.id === slide.id ? 'page' : undefined}
-                                  className={cn(
-                                    'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
-                                    item.id === slide.id
-                                      ? 'bg-blue-800 text-white shadow-md'
-                                      : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-900'
-                                  )}
-                                >
-                                  <span>{item.title}</span>
-                                  <ArrowLeft className="h-4 w-4 shrink-0" />
-                                </button>
-                              ))}
-                            </div>
+                            {sectionTopics.map((topic) => {
+                              const topicSlides = sectionSlides.filter((item) => item.topic === topic.id);
+                              if (topicSlides.length === 0) return null;
+                              return (
+                                <div key={topic.id} className="mt-4">
+                                  <h4 className="border-b border-slate-200 pb-1 text-sm font-black text-blue-800">
+                                    {topic.title}
+                                  </h4>
+                                  <div className="mt-2 grid gap-2">
+                                    {topicSlides.map((item) => (
+                                      <button
+                                        key={item.id}
+                                        onClick={() => jumpToSlide(item.id)}
+                                        aria-current={item.id === slide.id ? 'page' : undefined}
+                                        className={cn(
+                                          'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold transition',
+                                          item.id === slide.id
+                                            ? 'bg-blue-800 text-white shadow-md'
+                                            : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-900'
+                                        )}
+                                      >
+                                        <span>{item.title}</span>
+                                        <ArrowLeft className="h-4 w-4 shrink-0" />
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         );
                       })}
