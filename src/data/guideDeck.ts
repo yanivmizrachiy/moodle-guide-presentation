@@ -150,6 +150,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'hidden-items-appearance': 'editing',
   'activity-chooser-more': 'editing',
   'send-task': 'tasks',
+  'student-solve-task': 'tasks',
   'quiz-settings': 'grading',
   'task-correction': 'tasks',
   'assignment-submissions': 'tasks',
@@ -754,6 +755,28 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   keywords: ['שליחת משימה', 'קישור משימה', 'שיתוף'],
   status: 'needs-capture',
   missingCaptureId: 'M11',
+  },
+  {
+  id: 'student-solve-task',
+  section: 'tasks-grades',
+  eyebrow: 'תצוגת תלמיד',
+  title: 'איך תלמיד פותר משימה במרחב?',
+  flow: [
+    {
+      text: 'פותחים את המשימה ולוחצים „התחלת ניסיון מענה”.',
+      screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן בתצוגת תלמיד עם „התחלת ניסיון מענה”.' },
+    },
+    {
+      text: 'עונים על השאלות, עמוד אחרי עמוד.',
+      screenshot: { src: '64-quiz-question.png', caption: 'עמוד שאלה בבוחן — בחירת תשובה ו„העמוד הבא”.' },
+    },
+    {
+      text: 'בסיום לוחצים „שמירה וסיום” ואז „הגשה סופית”.',
+      screenshot: { src: '55-quiz-review.png', caption: '„סקירת ניסיון מענה” לאחר ההגשה הסופית.' },
+    },
+  ],
+  keywords: ['תלמיד פותר', 'התחלת ניסיון מענה', 'הגשה סופית'],
+  status: 'ready',
   },
   {
   id: 'quiz-settings',
