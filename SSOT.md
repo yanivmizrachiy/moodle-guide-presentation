@@ -44,6 +44,7 @@
 - ממשק המצגת: `src/pages/Guide.tsx`
 - עיצוב: `src/index.css` ו-`src/guide-visual-isolation.css`
 - צילומי מסך ולוגו אמיתיים: `public/guide/`
+- בדיקות שלמות אוטומטיות של המצגת: `tests/deck-invariants.test.ts`
 - מעקב צילומים חסרים: `docs/GUIDE_MISSING_CAPTURES.md`
 - מניפסט screenshots: `docs/GUIDE_SCREENSHOTS_MANIFEST.md`
 - היסטוריית ההעברה: `MIGRATION_MANIFEST.md`

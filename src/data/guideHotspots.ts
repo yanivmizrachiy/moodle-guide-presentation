@@ -22,7 +22,7 @@ export type GuideHotspot = {
  */
 export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHotspot[]>> = Object.freeze({});
 
-function isValidHotspot(hotspot: GuideHotspot) {
+export function isValidHotspot(hotspot: GuideHotspot) {
   return (
     hotspot.id.trim().length > 0 &&
     hotspot.label.trim().length > 0 &&

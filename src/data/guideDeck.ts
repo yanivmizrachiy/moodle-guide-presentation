@@ -954,7 +954,9 @@ export const PUBLISHED_GUIDE_SLIDES = GUIDE_SLIDES.filter(
 
 const PUBLISHED_SLIDE_IDS = new Set(PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id));
 
-const QUICK_START_CANDIDATES = [
+// Exported so the deck-invariants tests can catch a typo'd candidate id, which
+// would otherwise silently vanish from the quick-start route.
+export const QUICK_START_CANDIDATES = [
   FIRST_TRAINING_SLIDE_ID,
   'open-space-my-courses',
   'open-space-wizard',

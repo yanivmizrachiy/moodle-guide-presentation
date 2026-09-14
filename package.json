@@ -5,30 +5,33 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "build": "vite build",
     "audit:ssot": "node scripts/ssot-check.mjs",
-    "check": "npm run typecheck && npm run audit:ssot && npm run build"
+    "check": "npm run typecheck && npm run audit:ssot && npm run test && npm run build"
   },
   "dependencies": {
+    "@fontsource-variable/heebo": "^5.3.0",
     "@radix-ui/react-slot": "^1.2.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
     "motion": "^12.38.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
-    "vite": "^5.4.19"
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
   }
 }
