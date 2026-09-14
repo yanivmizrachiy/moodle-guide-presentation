@@ -369,6 +369,31 @@ function SlideContent({
   const hasFlow = flow.length > 0;
   const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
 
+  const linkRow = (
+    <div className="flex flex-wrap items-center gap-3 pt-1">
+      <Button
+        asChild
+        size="lg"
+        className="h-12 gap-2 rounded-2xl bg-slate-950 px-6 font-black text-white shadow-[0_12px_28px_rgba(15,23,42,0.20)] hover:bg-blue-900"
+      >
+        <a href={link.href} target="_blank" rel="noopener noreferrer">
+          {link.label}
+          <ExternalLink className="h-4 w-4" />
+        </a>
+      </Button>
+      <Button
+        size="lg"
+        variant="outline"
+        onClick={() => void copyLink(link.href)}
+        aria-label="העתקת הקישור"
+        className="h-12 gap-2 rounded-2xl border-slate-300 bg-white/80 px-5 font-black text-slate-700 hover:bg-slate-100"
+      >
+        {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+        {copied ? 'הקישור הועתק' : 'העתקת הקישור'}
+      </Button>
+    </div>
+  );
+
   return (
     <div className="relative min-h-full overflow-hidden bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_0%_100%,rgba(251,191,36,0.12),transparent_28%),linear-gradient(180deg,#ffffff,#f8fafc)] p-4 sm:p-6 lg:p-8">
       <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-blue-400/10 blur-3xl" />
@@ -451,28 +476,7 @@ function SlideContent({
               </aside>
             )}
 
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <Button
-                asChild
-                size="lg"
-                className="h-12 gap-2 rounded-2xl bg-slate-950 px-6 font-black text-white shadow-[0_12px_28px_rgba(15,23,42,0.20)] hover:bg-blue-900"
-              >
-                <a href={link.href} target="_blank" rel="noopener noreferrer">
-                  {link.label}
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => void copyLink(link.href)}
-                aria-label="העתקת הקישור"
-                className="h-12 gap-2 rounded-2xl border-slate-300 bg-white/80 px-5 font-black text-slate-700 hover:bg-slate-100"
-              >
-                {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
-                {copied ? 'הקישור הועתק' : 'העתקת הקישור'}
-              </Button>
-            </div>
+            {!hasFlow && linkRow}
 
             {hasFlow && (
               <section aria-label="רצף הפעולות" className="mt-2">
@@ -494,6 +498,7 @@ function SlideContent({
                           {step.text}
                         </span>
                       </div>
+                      {index === 0 && linkRow}
                       {step.screenshot && (
                         <ScreenshotCard
                           screenshot={step.screenshot}

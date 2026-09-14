@@ -121,15 +121,15 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'opening',
   eyebrow: 'פתיחת מרחב למידה · שלב 1',
   title: 'איך פותחים מרחב למידה במודל?',
-  summary: 'בחרו אם לפתוח מרחב למידה עם תלמידים או ללא תלמידים.',
   flow: [
-    {
-      text: 'נכנסים לעמוד פתיחת מרחב.',
-      screenshot: { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
-    },
+    { text: 'נכנסים לעמוד פתיחת מרחב.' },
     {
       text: 'מתחברים באמצעות סיסמת משרד החינוך.',
       screenshot: { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.' },
+    },
+    {
+      text: 'בחרו אם לפתוח מרחב למידה עם תלמידים או ללא תלמידים.',
+      screenshot: { src: '45-open-space-choice.png', caption: 'פתיחת מרחב למידה' },
     },
   ],
   link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
