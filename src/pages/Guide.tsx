@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  Copy,
   Expand,
   ExternalLink,
   Home,
@@ -267,6 +268,36 @@ function SlideContent({
   onOpenScreenshot: (state: LightboxState) => void;
   onStart: () => void;
 }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copyLink(href: string) {
+    // Success feedback only when the copy really happened.
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(href);
+      ok = true;
+    } catch {
+      // Clipboard API can be blocked (e.g. embedded views); fall back to the
+      // selection-based copy, which works inside a user gesture.
+      const helper = document.createElement('textarea');
+      helper.value = href;
+      helper.style.position = 'fixed';
+      helper.style.opacity = '0';
+      document.body.appendChild(helper);
+      helper.select();
+      try {
+        ok = document.execCommand('copy');
+      } catch {
+        ok = false;
+      }
+      helper.remove();
+    }
+    if (ok) {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
   if (slide.cover) {
     return (
       <div className="relative flex min-h-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white">
@@ -329,7 +360,6 @@ function SlideContent({
 
   const hasScreenshots = Boolean(slide.screenshots?.length);
   const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
-  const isFirst = slide.id === FIRST_TRAINING_SLIDE_ID;
 
   return (
     <div className="relative min-h-full overflow-hidden bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_0%_100%,rgba(251,191,36,0.12),transparent_28%),linear-gradient(180deg,#ffffff,#f8fafc)] p-4 sm:p-6 lg:p-8">
@@ -343,30 +373,8 @@ function SlideContent({
         )}
       >
         <div className="flex min-w-0 flex-col justify-center">
-          {isFirst && (
-            <div className="mb-4 flex items-center gap-3 rounded-2xl border border-blue-100 bg-white/80 p-3 shadow-sm backdrop-blur">
-              <picture className="block shrink-0">
-                <source type="image/webp" srcSet={`${import.meta.env.BASE_URL}guide/jerusalem-math-logo.webp`} />
-                <img
-                  src={`${import.meta.env.BASE_URL}guide/jerusalem-math-logo.png`}
-                  alt="יחידת מתמטיקה — מחוז ירושלים והעיר ירושלים"
-                  width={96}
-                  height={96}
-                  className="h-14 w-14 rounded-full bg-white object-contain p-1 shadow-md ring-2 ring-amber-300"
-                />
-              </picture>
-              <div className="min-w-0">
-                <p className="text-xs font-black text-blue-800">מדריך Moodle למורים</p>
-                <p className="mt-0.5 text-xs font-bold leading-relaxed text-slate-600">
-                  {GUIDE_ATTRIBUTION.district}
-                </p>
-                <p className="mt-0.5 text-xs font-bold leading-relaxed text-slate-600">
-                  {GUIDE_ATTRIBUTION.site}
-                </p>
-              </div>
-            </div>
-          )}
-
+          {/* The attribution card lives on the cover; repeating it here pushed the
+              slide title down, so the title now starts at the top. */}
           <header>
             <div className="mb-3 inline-flex w-fit items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-800 shadow-sm">
               {slide.eyebrow}
@@ -430,7 +438,7 @@ function SlideContent({
               </aside>
             )}
 
-            <div className="pt-1">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <Button
                 asChild
                 size="lg"
@@ -440,6 +448,16 @@ function SlideContent({
                   {link.label}
                   <ExternalLink className="h-4 w-4" />
                 </a>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => void copyLink(link.href)}
+                aria-label="העתקת הקישור"
+                className="h-12 gap-2 rounded-2xl border-slate-300 bg-white/80 px-5 font-black text-slate-700 hover:bg-slate-100"
+              >
+                {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+                {copied ? 'הקישור הועתק' : 'העתקת הקישור'}
               </Button>
             </div>
           </div>
