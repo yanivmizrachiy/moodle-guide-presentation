@@ -117,6 +117,22 @@ describe('screenshots', () => {
     }
   });
 
+  it('every rendered screenshot src (classic and flow) is a modern .avif with real siblings', () => {
+    // The renderer serves `src` as the avif <source> and `src.replace(ext,'.webp')`
+    // as the <img> fallback. If a raw .jpg/.png src survives normalization, the
+    // avif source points at a possibly-deleted original and the card hard-fails.
+    // So after normalization every referenced src must be .avif and both the
+    // .avif and .webp files must exist on disk.
+    for (const slide of PUBLISHED_GUIDE_SLIDES) {
+      for (const screenshot of shotsOf(slide)) {
+        expect(screenshot.src, `slide "${slide.id}" renders a non-avif src "${screenshot.src}"`).toMatch(/\.avif$/);
+        const stem = stemOf(screenshot.src);
+        expect(screenshotFiles, `rendered avif "${stem}.avif" missing (slide "${slide.id}")`).toContain(`${stem}.avif`);
+        expect(screenshotFiles, `rendered webp "${stem}.webp" missing (slide "${slide.id}")`).toContain(`${stem}.webp`);
+      }
+    }
+  });
+
   it('screenshot captions and flow texts are non-empty', () => {
     for (const slide of GUIDE_SLIDES) {
       for (const screenshot of shotsOf(slide)) {

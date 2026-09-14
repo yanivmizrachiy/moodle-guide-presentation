@@ -206,6 +206,17 @@ function normalizeSlide(slide: GuideSlide): GuideSlide {
       ...screenshot,
       src: toModernScreenshotFilename(screenshot.src),
     })),
+    // Flow-step screenshots go through the exact same extension normalization as
+    // the classic array. Without this a raw .jpg/.png src reaches the <picture>
+    // avif <source> verbatim; if that original file is ever renamed or dropped
+    // the source 404s and the card shows its "failed to load" state even though
+    // the .avif/.webp siblings exist. Normalizing to .avif keeps both the avif
+    // source and its .webp fallback pointing at files the audit guarantees.
+    flow: slide.flow?.map((step) =>
+      step.screenshot
+        ? { ...step, screenshot: { ...step.screenshot, src: toModernScreenshotFilename(step.screenshot.src) } }
+        : step
+    ),
   };
 }
 
