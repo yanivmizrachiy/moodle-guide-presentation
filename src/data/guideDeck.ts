@@ -110,7 +110,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך פותחים מרחב למידה במודל?',
   summary: 'מתחילים במסך הכניסה של Moodle משרד החינוך. בכל שקף במקטע הזה מבצעים פעולה אחת בלבד.',
   steps: ['לאחר ההזדהות לחצו על כפתור הכניסה למערכת.'],
-  screenshots: [{ src: '01-login.jpg', caption: 'מסך הכניסה האמיתי ל-Moodle של משרד החינוך.' }],
+  screenshots: [{ src: '01-login.png', caption: 'מסך הכניסה האמיתי ל-Moodle של משרד החינוך.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל'],
   status: 'ready',
