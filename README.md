@@ -4,36 +4,39 @@
 
 ## מקור האמת היחיד
 
-- תוכן וסדר השקפים: `src/content/deck.ts`
-- סימונים חזותיים מאומתים: `src/content/hotspots.ts`
-- צילומי המקור: `assets/source/screenshots/`
-- לוגו המקור: `assets/source/brand/jerusalem-math-logo.png`
-- ממשק המצגת: `src/Guide.tsx`
+- תוכן, סדר, סטטוס ושיוך השקפים: `src/data/guideDeck.ts`
+- סימונים חזותיים מאומתים: `src/data/guideHotspots.ts`
+- ממשק המצגת: `src/pages/Guide.tsx`
+- עיצוב: `src/index.css` ו־`src/guide-visual-isolation.css`
+- צילומי המסך והלוגו האמיתיים: `public/guide/`
+- כללי הפרויקט: `SSOT.md`
+- הנחיות Claude Code: `CLAUDE.md`
 
-`public/assets/` ו־`dist/` הם תוצרים שנוצרים אוטומטית ואינם נשמרים ב־Git. אין לערוך אותם.
+אין ליצור מקור תוכן נוסף ואין ליצור צילומי דמה. צילום חסר נשאר מסומן כ־`needs-capture` עד שקיים צילום אמיתי.
 
-## עריכה עתידית
-
-1. משנים טקסט, סדר או מצב פרסום רק ב־`src/content/deck.ts`.
-2. צילום חדש נשמר פעם אחת בלבד כ־JPG/PNG בתוך `assets/source/screenshots/`.
-3. מריצים `npm run check`.
-4. פותחים Pull Request. פרסום ל־GitHub Pages מתבצע אוטומטית אחרי merge ל־`main`.
-
-## פיתוח
+## עבודה מקומית
 
 ```bash
 npm ci
 npm run dev
 ```
 
-בדיקה מלאה:
+בדיקה מלאה לפני כל שינוי:
 
 ```bash
 npm run check
-npx playwright install chromium
-npm run test:e2e
 ```
 
-## הפרדה מהמוצר הקודם
+## פרסום
 
-הריפו הזה מכיל את המצגת בלבד. הוא אינו מכיל Teacher Hub, ‏LTI, תלמידים, ציונים, Supabase, Render או נתוני משתמשים. מקור ההעברה הראשוני הוא `yanivmizrachiy/www` ב־commit `112ecaf0b25b4fdd72e1b8aac0e4dbf0b4018ce6`.
+GitHub Pages נבנה אוטומטית מ־`main` באמצעות GitHub Actions.
+
+כתובת היעד:
+`https://yanivmizrachiy.github.io/moodle-guide-presentation/`
+
+## מקור ההעברה
+
+המצגת הופרדה מתוך `yanivmizrachiy/www` בנקודת המקור:
+`112ecaf0b25b4fdd72e1b8aac0e4dbf0b4018ce6`.
+
+הריפו הזה מיועד למצגת בלבד ואינו מכיל Teacher Hub, ‏LTI, ‏Supabase, תלמידים, ציונים או backend.

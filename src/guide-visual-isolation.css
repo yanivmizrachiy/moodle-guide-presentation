@@ -1,0 +1,131 @@
+/* Standalone Moodle Guide visual isolation.
+ * Scope every rule to the Guide shell so Teacher Hub CSS cannot leak in and
+ * Guide presentation styles cannot leak out. */
+
+[data-guide-shell="premium-presentation"] {
+  --guide-ink: #020617;
+  --guide-muted: #475569;
+  --guide-white: #ffffff;
+  --guide-gold: #fbbf24;
+  --guide-blue: #1d4ed8;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[data-guide-shell="premium-presentation"] h1,
+[data-guide-shell="premium-presentation"] h2,
+[data-guide-shell="premium-presentation"] h3,
+[data-guide-shell="premium-presentation"] p,
+[data-guide-shell="premium-presentation"] span,
+[data-guide-shell="premium-presentation"] li,
+[data-guide-shell="premium-presentation"] figcaption {
+  opacity: 1;
+}
+
+[data-guide-shell="premium-presentation"] article h1.font-display {
+  color: var(--guide-ink) !important;
+  text-shadow: none !important;
+}
+
+[data-guide-shell="premium-presentation"] > header button,
+[data-guide-shell="premium-presentation"] > footer button {
+  color: #ffffff !important;
+}
+
+[data-guide-shell="premium-presentation"] > footer button[class*="bg-amber-400"] {
+  background-color: var(--guide-gold) !important;
+  color: var(--guide-ink) !important;
+}
+
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] h2,
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] h3,
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] span[class*="text-slate-950"] {
+  color: var(--guide-ink) !important;
+}
+
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] input {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  caret-color: var(--guide-blue) !important;
+}
+
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] input::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+/* Screenshot cards are deliberately 3D without WebGL. The outer stage owns
+ * perspective, the button owns rotation, and the clipped inner surface sits
+ * forward in Z-space. This keeps the screenshots crisp and GPU-friendly. */
+[data-guide-shell="premium-presentation"] .guide-shot-stage {
+  perspective: 1600px;
+  perspective-origin: 50% 42%;
+}
+
+[data-guide-shell="premium-presentation"] .guide-shot-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  will-change: transform;
+}
+
+[data-guide-shell="premium-presentation"] .guide-shot-surface {
+  backface-visibility: hidden;
+  transform-style: flat;
+  isolation: isolate;
+}
+
+[data-guide-shell="premium-presentation"] .guide-shot-card img {
+  image-rendering: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+[data-guide-shell="premium-presentation"] button,
+[data-guide-shell="premium-presentation"] a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 640px) {
+  [data-guide-shell="premium-presentation"] article h1.font-display {
+    font-size: clamp(1.9rem, 8.5vw, 3rem) !important;
+    line-height: 1.04 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] .guide-shot-stage {
+    perspective: 1100px;
+  }
+
+
+}
+
+@media (max-height: 560px) and (min-width: 641px) {
+  [data-guide-shell="premium-presentation"] article h1.font-display {
+    font-size: clamp(1.9rem, 4.5vw, 3.1rem) !important;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-guide-shell="premium-presentation"] *,
+  [data-guide-shell="premium-presentation"] *::before,
+  [data-guide-shell="premium-presentation"] *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-guide-shell="premium-presentation"] .guide-shot-card {
+    will-change: auto;
+  }
+}
