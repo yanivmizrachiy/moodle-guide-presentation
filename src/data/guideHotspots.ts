@@ -38,6 +38,10 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '05-home-edit-on': [
     { id: 'edit-toggle', label: 'עריכה', x: 3.4, y: 2.2, width: 6.6, height: 6 },
   ],
+  // 3200x1800 student quiz page after submission: the "ניסיון חדש" button.
+  '56-quiz-retry': [
+    { id: 'new-attempt', label: 'ניסיון חדש', x: 63, y: 33.2, width: 9.4, height: 7.6 },
+  ],
   // 3200x1800 activity kebab menu: the availability and delete entries.
   '42-activity-menu': [
     { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
