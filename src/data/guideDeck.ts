@@ -69,29 +69,35 @@ export const FIRST_GUIDE_SLIDE_ID = 'cover';
 /** Slide 2: where the training itself begins, and where Quick Start starts. */
 export const FIRST_TRAINING_SLIDE_ID = 'open-space-start';
 
-// Three big chapters, dictated by the owner (2026-09-14).
+// Chapter structure per the owner's master spec (2026-09-14): main topics
+// with question sub-topics; the opening flow keeps its own chapter.
 export const GUIDE_SECTIONS: GuideSection[] = [
-  { id: 'spaces', title: 'מרחבי לימוד', description: '' },
-  { id: 'tasks-grades', title: 'משימות וציונים', description: '' },
-  { id: 'students', title: 'תלמידים ומשתמשים במרחב', description: '' },
+  { id: 'opening', title: 'פתיחת מרחב למידה', description: '' },
+  { id: 'space-management', title: 'ניהול מרחב הלמידה', description: '' },
+  { id: 'users-roles', title: 'משתמשים ותפקידים', description: '' },
+  { id: 'editing', title: 'מצב עריכה וניהול תוכן', description: '' },
+  { id: 'tasks-grades', title: 'משימות, ניסיונות וציונים', description: '' },
+  { id: 'monitoring', title: 'מעקב אחר פעילות', description: '' },
 ];
 
 /** Smaller heading inside a chapter; the TOC groups questions under these. */
 export type GuideTopic = { id: string; section: string; title: string };
 
 export const GUIDE_TOPICS: GuideTopic[] = [
-  { id: 'opening', section: 'spaces', title: 'פתיחת מרחב למידה' },
-  { id: 'wizard', section: 'spaces', title: 'האשף החדש' },
-  { id: 'start', section: 'spaces', title: 'התחלה' },
-  { id: 'space', section: 'spaces', title: 'המרחב' },
-  { id: 'editing', section: 'spaces', title: 'עריכה, ייבוא ועדכונים' },
+  { id: 'opening', section: 'opening', title: 'התהליך המלא' },
+  { id: 'wizard', section: 'opening', title: 'האשף החדש' },
+  { id: 'start', section: 'opening', title: 'התחלה' },
+  { id: 'space', section: 'space-management', title: 'המרחב' },
+  { id: 'students-join', section: 'users-roles', title: 'הצטרפות תלמידים' },
+  { id: 'participants', section: 'users-roles', title: 'משתתפים' },
+  { id: 'groups', section: 'users-roles', title: 'קבוצות' },
+  { id: 'teachers', section: 'users-roles', title: 'מורים נוספים' },
+  { id: 'editing', section: 'editing', title: 'עריכה וניהול תוכן' },
+  { id: 'imports', section: 'editing', title: 'ייבוא ועדכונים' },
   { id: 'tasks', section: 'tasks-grades', title: 'משימות והערכה' },
-  { id: 'monitoring', section: 'tasks-grades', title: 'מעקב וציונים' },
-  { id: 'support', section: 'tasks-grades', title: 'בדיקה ותמיכה' },
-  { id: 'students-join', section: 'students', title: 'הצטרפות תלמידים' },
-  { id: 'participants', section: 'students', title: 'משתתפים' },
-  { id: 'groups', section: 'students', title: 'קבוצות' },
-  { id: 'teachers', section: 'students', title: 'מורים נוספים' },
+  { id: 'grading', section: 'tasks-grades', title: 'ניסיונות וציון עובר' },
+  { id: 'monitoring', section: 'monitoring', title: 'יומנים, ציונים ודוחות' },
+  { id: 'support', section: 'monitoring', title: 'בדיקה ותמיכה' },
 ];
 
 // One place to file every slide under its smaller heading.
@@ -119,6 +125,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   workflow: 'start',
   interface: 'space',
   'student-space-view': 'space',
+  'pass-grade': 'grading',
   'archive-space': 'space',
   'self-learning-space': 'space',
   'rename-space': 'space',
@@ -132,9 +139,9 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'unhide-task': 'editing',
   'digital-task-icon': 'editing',
   'drag-task': 'editing',
-  'import-task': 'editing',
-  'content-updates-meaning': 'editing',
-  'content-updates': 'editing',
+  'import-task': 'imports',
+  'content-updates-meaning': 'imports',
+  'content-updates': 'imports',
   'student-view': 'editing',
   'external-tools': 'editing',
   'home-edit-controls': 'editing',
@@ -143,7 +150,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'hidden-items-appearance': 'editing',
   'activity-chooser-more': 'editing',
   'send-task': 'tasks',
-  'quiz-settings': 'tasks',
+  'quiz-settings': 'grading',
   'task-correction': 'tasks',
   'assignment-submissions': 'tasks',
   'task-feedback': 'tasks',
@@ -179,10 +186,17 @@ function toModernScreenshotFilename(src: string) {
   return src.replace(/\.[^.]+$/, '.avif');
 }
 
+const TOPIC_SECTION: Readonly<Record<string, string>> = Object.fromEntries(
+  GUIDE_TOPICS.map((topic) => [topic.id, topic.section])
+);
+
 function normalizeSlide(slide: GuideSlide): GuideSlide {
+  const topic = SLIDE_TOPICS[slide.id];
   return {
     ...slide,
-    topic: SLIDE_TOPICS[slide.id],
+    topic,
+    // Single filing source: the topic map decides the chapter as well.
+    section: (topic && TOPIC_SECTION[topic]) || slide.section,
     status:
       slide.missingCaptureId && slide.status === 'ready'
         ? ('needs-capture' as const)
@@ -247,9 +261,11 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 2',
   title: 'איפה לוחצים כדי לפתוח מרחב חדש?',
-  summary: 'אחרי ההתחברות מגיעים ל„מרחבי־הלימוד שלי”. הכניסה לתהליך היא „פתיחת מרחב כיתתי”.',
-  steps: ['לחצו „פתיחת מרחב כיתתי”.'],
-  screenshots: [{ src: '02-my-courses-home.jpg', caption: 'המסך „מרחבי־הלימוד שלי” עם הקישור „פתיחת מרחב כיתתי”.' }],
+  summary: 'אחרי ההתחברות מגיעים ל„מרחבי הלמידה שלי”. הכניסה לתהליך היא „מרחב חדש”.',
+  steps: ['לחצו „מרחב חדש”.'],
+  screenshots: [
+    { src: '61-my-courses-new.png', caption: '„מרחבי הלמידה שלי” בעיצוב החדש — הכפתור „מרחב חדש” והסבר הסיור המודרך.' },
+  ],
   link: { href: MOODLE_MY, label: 'פתיחת מרחבי הלמידה שלי' },
   keywords: ['מרחבי הלמידה שלי', 'פתיחת מרחב כיתתי'],
   status: 'ready',
@@ -536,10 +552,10 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [
     { src: '53-student-enrol.png', caption: 'שלב 1 — „רשום אותי”.' },
     { src: '54-student-enrolled.png', caption: 'שלב 2 — ההרשמה הושלמה.' },
+    { src: '59-quiz-after-enrol.png', caption: 'שלב 3 — פותחים שוב את קישור המשימה והבוחן נפתח: „התחלת ניסיון מענה”.' },
   ],
   keywords: ['קישור למשימה', 'רשום אותי', 'הרשמה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M12',
+  status: 'ready',
   },
   {
   id: 'quick-start',
@@ -756,6 +772,26 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   status: 'ready',
   },
   {
+  id: 'pass-grade',
+  section: 'tasks-grades',
+  eyebrow: 'הגדרות משימה',
+  title: 'איך מגדירים לתלמיד מהו ציון עובר במשימה?',
+  summary: 'בהגדרות הבוחן, באזור הציון, קובעים את הערך בשדה „ציון "עובר"”.',
+  steps: [
+    'פותחים את הגדרות הבוחן.',
+    'נכנסים לאזור „ציון”.',
+    'מזינים ערך בשדה „ציון "עובר"” (בנקודות, למשל 80 מתוך 100).',
+    'שומרים.',
+    'התלמיד רואה את מצבו מול ציון העובר: „בוצע” בירוק או „נכשל” באדום.',
+  ],
+  screenshots: [
+    { src: '33-quiz-question-behaviour.jpg', caption: 'השדה „ציון "עובר"” באזור הציון של הגדרות הבוחן.' },
+    { src: '56-quiz-retry.png', caption: 'תצוגת התלמיד: „ציון עובר: 80.00 מתוך 100.00” והתג „נכשל” באדום.' },
+  ],
+  keywords: ['ציון עובר', 'עובר', 'נכשל', 'ציון'],
+  status: 'ready',
+  },
+  {
   id: 'task-correction',
   section: 'tasks-grades',
   eyebrow: 'הגדרות משימה',
@@ -795,9 +831,12 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'תוצאה',
   title: 'איך תלמיד יודע אם עבר או נכשל במשימה?',
   summary: 'לאחר ההגשה התלמיד רואה את מסך התוצאה: ירוק מציין עבר, אדום מציין נכשל.',
+  screenshots: [
+    { src: '56-quiz-retry.png', caption: 'אחרי ההגשה: „בוצע” בירוק ו„נכשל” באדום מול ציון העובר.' },
+    { src: '60-student-grade-report.png', caption: '„דוח ציוני התלמיד במרחב־לימוד זה” — „ציונים” בתפריט התלמיד.' },
+  ],
   keywords: ['עבר', 'נכשל', 'ירוק', 'אדום', 'תוצאה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M14',
+  status: 'ready',
   },
   {
   id: 'edit-mode',
@@ -887,9 +926,11 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'זיהוי משימה',
   title: 'איך מזהים משימה מתוקשבת?',
   summary: 'משימה מתוקשבת מסומנת באייקון ורוד.',
+  screenshots: [
+    { src: '58-student-space-topic.png', caption: 'הבוחן „יחס - בסיסי” עם האייקון הוורוד ביחידת ההוראה.' },
+  ],
   keywords: ['אייקון ורוד', 'משימה מתוקשבת'],
-  status: 'needs-capture',
-  missingCaptureId: 'M16',
+  status: 'ready',
   },
   {
   id: 'drag-task',

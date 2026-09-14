@@ -30,9 +30,14 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '53-student-enrol': [
     { id: 'enrol-me', label: 'רשום אותי', x: 57.2, y: 47.4, width: 9.6, height: 9.8 },
   ],
-  // 958x797: the "אין הגבלה" select beside "מספר נסיונות מותרים".
+  // 958x797: the attempts select and the pass-grade field above it.
   '33-quiz-question-behaviour': [
     { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 11.8, width: 15.8, height: 10.4 },
+    { id: 'pass-grade', label: 'ציון "עובר"', x: 47.5, y: 5.4, width: 24, height: 8 },
+  ],
+  // 3200x1800 new my-courses page: the "מרחב חדש" button.
+  '61-my-courses-new': [
+    { id: 'new-space', label: 'מרחב חדש', x: 22.4, y: 20.4, width: 10.6, height: 7.6 },
   ],
   // 3200x1800 home page in edit mode: the "עריכה" toggle, top-left corner.
   '05-home-edit-on': [
