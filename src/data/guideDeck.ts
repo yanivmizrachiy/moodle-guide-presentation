@@ -462,11 +462,11 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     },
     {
       text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
-      screenshot: { src: '28-selfenrol-student-view.jpg', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
+      screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
     },
     {
       text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
-      screenshot: { src: '29-selfenrol-success-studentview.jpg', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
+      screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
     },
     {
       text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
@@ -509,7 +509,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'מה התלמיד לוחץ בפעם הראשונה?',
   summary: 'אחרי שהתלמיד מקבל את קישור המרחב ומגיע למסך ההצטרפות, הוא משלים את הרישום למרחב.',
   steps: ['לחצו „רשום אותי”.'],
-  screenshots: [{ src: '28-selfenrol-student-view.jpg', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' }],
+  screenshots: [{ src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['רשום אותי', 'קישור למרחב', 'תלמיד'],
   status: 'ready',
@@ -520,7 +520,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'הצטרפות תלמיד',
   title: 'איך יודעים שההרשמה הצליחה?',
   summary: 'אחרי ההרשמה התלמיד רואה הודעת הצלחה ונכנס למרחב.',
-  screenshots: [{ src: '29-selfenrol-success-studentview.jpg', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' }],
+  screenshots: [{ src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['הרשמה הצליחה', 'תלמיד', 'שיוך עצמי'],
   status: 'ready',
@@ -533,8 +533,8 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'תחילה נרשמים למרחב, ואז פותחים שוב את הקישור הישיר למשימה.',
   steps: ['לוחצים „רשום אותי”.', 'מסיימים את ההרשמה למרחב.', 'פותחים שוב את קישור המשימה.', 'המשימה נפתחת.'],
   screenshots: [
-    { src: '28-selfenrol-student-view.jpg', caption: 'שלב 1 — „רשום אותי”.' },
-    { src: '29-selfenrol-success-studentview.jpg', caption: 'שלב 2 — ההרשמה הושלמה.' },
+    { src: '53-student-enrol.png', caption: 'שלב 1 — „רשום אותי”.' },
+    { src: '54-student-enrolled.png', caption: 'שלב 2 — ההרשמה הושלמה.' },
   ],
   keywords: ['קישור למשימה', 'רשום אותי', 'הרשמה'],
   status: 'needs-capture',
@@ -684,7 +684,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { text: 'שולחים למורה הנוסף את הקישור הישיר למרחב הלימוד.' },
     {
       text: 'המורה הנוסף פותח את הקישור, מתחבר ולוחץ „רשום אותי”.',
-      screenshot: { src: '28-selfenrol-student-view.jpg', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.' },
+      screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.' },
     },
     {
       text: 'מנהל המרחב נכנס ל„משתמשים” ופותח את רשימת המשתתפים.',

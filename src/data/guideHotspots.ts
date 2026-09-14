@@ -26,9 +26,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '24-wizard-step4': [
     { id: 'confirm-button', label: 'אישור', x: 2.6, y: 83.5, width: 8.6, height: 13.5 },
   ],
-  // 958x910: the blue "רשום אותי" button, measured ~598-686px x, ~402-440px y.
-  '28-selfenrol-student-view': [
-    { id: 'enrol-me', label: 'רשום אותי', x: 60.2, y: 41.6, width: 13.4, height: 9.2 },
+  // 3200x1800: the blue "רשום אותי" button on the current space's enrol page.
+  '53-student-enrol': [
+    { id: 'enrol-me', label: 'רשום אותי', x: 57.2, y: 47.4, width: 9.6, height: 9.8 },
   ],
   // 958x797: the "אין הגבלה" select beside "מספר נסיונות מותרים".
   '33-quiz-question-behaviour': [
