@@ -59,6 +59,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '05-home-edit-on': [
     { id: 'edit-toggle', label: 'עריכה', x: 3.4, y: 2.2, width: 6.6, height: 6 },
   ],
+  // 400x62 top-bar crop: the "מצב עריכה" toggle sits on the left.
+  '03-topbar-edit-off': [
+    { id: 'edit-toggle', label: 'מצב עריכה', x: 5, y: 20, width: 36, height: 56 },
+  ],
+  '04-topbar-edit-on': [
+    { id: 'edit-toggle', label: 'מצב עריכה', x: 5, y: 20, width: 36, height: 56 },
+  ],
   // 3200x1800 student quiz page after submission: the "ניסיון חדש" button.
   '56-quiz-retry': [
     { id: 'new-attempt', label: 'ניסיון חדש', x: 63, y: 33.2, width: 9.4, height: 7.6 },

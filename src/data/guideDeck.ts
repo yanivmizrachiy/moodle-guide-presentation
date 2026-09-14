@@ -84,9 +84,9 @@ export const GUIDE_SECTIONS: GuideSection[] = [
 export type GuideTopic = { id: string; section: string; title: string };
 
 export const GUIDE_TOPICS: GuideTopic[] = [
-  { id: 'opening', section: 'opening', title: 'התהליך המלא' },
-  { id: 'wizard', section: 'opening', title: 'האשף החדש' },
-  { id: 'start', section: 'opening', title: 'התחלה' },
+  { id: 'opening', section: 'opening', title: 'שלב אחר שלב' },
+  { id: 'wizard', section: 'opening', title: 'תוכן מוכן ושכפול' },
+  { id: 'start', section: 'opening', title: 'סדר עבודה' },
   { id: 'space', section: 'space-management', title: 'המרחב' },
   { id: 'students-join', section: 'users-roles', title: 'הצטרפות תלמידים' },
   { id: 'participants', section: 'users-roles', title: 'משתתפים' },
