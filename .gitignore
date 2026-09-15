@@ -5,4 +5,5 @@ dist/
 .DS_Store
 .claude/settings.local.json
 .claude/TASK_CONTEXT.md
+.claude/TASK_BASELINE.json
 *.tmp
