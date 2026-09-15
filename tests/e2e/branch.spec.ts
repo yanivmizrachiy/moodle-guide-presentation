@@ -33,26 +33,39 @@ test.describe('two-path branch', () => {
     await expect(withPath.locator('svg title')).toHaveText(['עם קבוצת לימוד']);
   });
 
-  // REQ-CONTENT-008: the "without study group" path is a real vertical process,
-  // not a screenshot list — two ordered steps joined by the canonical down-arrow,
-  // and no red circle at all (it carries no capture).
-  test('the without-group path is a vertical flow with a down arrow and no card circle', async ({ page }) => {
+  // REQ-CONTENT-008/009: the "without study group" card is a real vertical process
+  // that continues downward, in one source, into the full add-students how-to —
+  // opening steps, then sending the link and the student's enrolment on real
+  // captures — joined by the canonical down-arrows, with no red circle.
+  test('the without-group card continues downward into the real add-students flow', async ({ page }) => {
     await page.goto('./?slide=open-space-two-paths');
     const withoutPath = page.getByRole('region', { name: 'ללא קבוצת לימוד' });
     const step1 = withoutPath.getByText('המרחב מתחיל ללא תלמידים.');
-    const step2 = withoutPath.getByText('אפשר לצרף תלמידים למרחב גם מאוחר יותר.');
+    const sendLink = withoutPath.getByText('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.');
+    const enrol = withoutPath.getByText('התלמיד לוחץ על הכפתור „רשום אותי”.');
     await expect(step1).toBeVisible();
-    await expect(step2).toBeVisible();
+    await expect(sendLink).toBeVisible();
+    await expect(enrol).toBeVisible();
 
-    // A genuine top-to-bottom sequence: step 2 sits below step 1.
-    const b1 = await step1.boundingBox();
-    const b2 = await step2.boundingBox();
-    if (!b1 || !b2) throw new Error('without-group flow steps have no layout boxes');
-    expect(b2.y).toBeGreaterThan(b1.y);
+    // A genuine top-to-bottom sequence: the enrolment continuation sits below the opener.
+    const bTop = await step1.boundingBox();
+    const bEnrol = await enrol.boundingBox();
+    if (!bTop || !bEnrol) throw new Error('without-group flow steps have no layout boxes');
+    expect(bEnrol.y).toBeGreaterThan(bTop.y);
 
-    // The canonical double down-arrow between the two steps.
-    await expect(withoutPath.locator('svg.lucide-chevrons-down')).toHaveCount(1);
-    // No red hotspot circle in this path.
+    // Multiple canonical down-arrows carry the card downward through its steps.
+    expect(await withoutPath.locator('svg.lucide-chevrons-down').count()).toBeGreaterThanOrEqual(2);
+
+    // The real Moodle captures actually load inside the card.
+    const images = withoutPath.locator('img');
+    const count = await images.count();
+    expect(count).toBeGreaterThan(0);
+    for (let index = 0; index < count; index += 1) {
+      const width = await images.nth(index).evaluate((el) => (el as HTMLImageElement).naturalWidth);
+      expect(width, `capture ${index} failed to load`).toBeGreaterThan(0);
+    }
+
+    // Explicit-opt-in policy: none of these captures request a focus, so no red circle.
     await expect(withoutPath.locator('svg title')).toHaveCount(0);
   });
 });

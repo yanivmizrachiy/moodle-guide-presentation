@@ -195,7 +195,6 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'open-space-my-courses': 'opening',
   'open-space-wizard': 'opening',
   'open-space-two-paths': 'opening',
-  'self-enrol-auto': 'opening',
   'open-space-group-choice': 'opening',
   'open-space-details-empty': 'opening',
   'open-space-details-check': 'opening',
@@ -265,7 +264,6 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'final-checklist': 'support',
   'late-enrol-link': 'students-join',
   'self-enrol-troubleshoot-method': 'students-join',
-  'self-enrol-troubleshoot-settings': 'students-join',
   'self-enrol-student': 'students-join',
   'self-enrol-success': 'students-join',
   'task-link-first-enrol': 'students-join',
@@ -423,40 +421,30 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         flow: [
           { text: 'המרחב מתחיל ללא תלמידים.' },
           { text: 'אפשר לצרף תלמידים למרחב גם מאוחר יותר.' },
+          { text: 'המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.' },
+          {
+            text: 'התלמיד פותח את הקישור ומתחבר למערכת.',
+            screenshot: { src: '01-login.png', caption: 'התחברות באמצעות סיסמת משרד החינוך.' },
+          },
+          {
+            text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
+            screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
+          },
+          {
+            text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
+            screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
+          },
+          {
+            text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
+            screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
+          },
+          { text: 'לכל משתתף במרחב מוגדר תפקיד, למשל „תלמיד” או „מורה”.' },
         ],
       },
     ],
   },
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['עם קבוצת לימוד', 'ללא קבוצת לימוד', 'עם תלמידים', 'ללא תלמידים', 'שתי דרכים'],
-  status: 'ready',
-  },
-  {
-  id: 'self-enrol-auto',
-  eyebrow: 'הצטרפות תלמידים',
-  title: 'איך מצרפים תלמידים חדשים למרחב הלימוד?',
-  flow: [
-    { text: 'המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.' },
-    {
-      text: 'התלמיד פותח את הקישור ומתחבר למערכת.',
-      screenshot: { src: '01-login.png', caption: 'התחברות באמצעות סיסמת משרד החינוך.' },
-    },
-    {
-      text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
-      screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
-    },
-    {
-      text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
-      screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
-    },
-    {
-      text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
-      screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
-    },
-    { text: 'לכל משתתף במרחב מוגדר תפקיד, למשל „תלמיד” או „מורה”.' },
-  ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
-  keywords: ['מצרפים תלמידים', 'רישום עצמי', 'קישור למרחב', 'רשום אותי', 'משתמשים', 'תפקיד'],
   status: 'ready',
   },
   {
@@ -687,6 +675,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'הצטרפות מאוחרת',
   title: 'צירוף תלמידים מאוחר יותר',
   summary: '„ללא תלמידים” אינו מצב קבוע — אפשר לצרף תלמידים למרחב גם מאוחר יותר באמצעות קישור המרחב.',
+  // Single source (REQ-CONTENT-009): the student-side self-enrol continuation
+  // (login → „רשום אותי” → success → רשימת המשתתפים) is taught once, in the
+  // open-space-two-paths „ללא קבוצת לימוד” card. This slide keeps only its unique
+  // part — copying the space URL from the browser address bar — which is M12.
   flow: [
     {
       text: 'המורה פותח את מרחב הלמידה המדויק.',
@@ -697,18 +689,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     // (M12, distinct from M11). Truth before design — no fake address bar.
     { text: 'מעתיק את כתובת האינטרנט של המרחב משורת הכתובת של הדפדפן.' },
     { text: 'שולח את הקישור לתלמידים.' },
-    {
-      text: 'התלמיד פותח את הקישור ולוחץ „רשום אותי”.',
-      screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
-    },
-    {
-      text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
-      screenshot: {
-        src: '54-student-enrolled.png',
-        caption: '„נרשמתם לקורס בהצלחה” — תצוגת התלמיד לאחר ההרשמה.',
-        hotspotIds: ['enrolled-ok'],
-      },
-    },
   ],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['צירוף תלמידים מאוחר', 'קישור למרחב', 'הצטרפות מאוחרת', 'ללא תלמידים'],
@@ -719,22 +699,19 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'self-enrol-troubleshoot-method',
   eyebrow: 'פתרון תקלה · שיוך עצמי',
   title: 'מה בודקים אם תלמיד לא מצליח להירשם?',
-  summary: 'במרחב שנפתח ללא קבוצת לימוד הרישום העצמי אמור להיות פעיל אוטומטית. אם תלמיד אינו מצליח להצטרף, בודקים ששיטת „שיוך עצמי (תלמיד)” פעילה.',
-  steps: ['בדקו שסמל העין של „שיוך עצמי (תלמיד)” פתוח.'],
-  screenshots: [{ src: '26-selfenrol-methods-list.jpg', caption: '„שיוך עצמי (תלמיד)” ברשימת שיטות השיוך.' }],
+  summary: 'במרחב שנפתח ללא קבוצת לימוד הרישום העצמי אמור להיות פעיל אוטומטית. אם תלמיד אינו מצליח להצטרף, בודקים שלב אחר שלב את שיטת „שיוך עצמי (תלמיד)” ואת הגדרותיה.',
+  flow: [
+    {
+      text: 'בודקים שסמל העין של „שיוך עצמי (תלמיד)” פתוח — כלומר השיטה פעילה.',
+      screenshot: { src: '26-selfenrol-methods-list.jpg', caption: '„שיוך עצמי (תלמיד)” ברשימת שיטות השיוך.' },
+    },
+    {
+      text: 'פותחים את הגדרות „שיוך עצמי” ובודקים ש„האם לאפשר רישום למשתמשים חדשים?” פעיל.',
+      screenshot: { src: '27-selfenrol-settings.jpg', caption: 'הגדרות „שיוך עצמי” עם אפשרות הרישום למשתמשים חדשים.' },
+    },
+  ],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
-  keywords: ['שיוך עצמי', 'פתרון תקלה', 'עין פתוחה'],
-  status: 'ready',
-  },
-  {
-  id: 'self-enrol-troubleshoot-settings',
-  eyebrow: 'פתרון תקלה · שיוך עצמי',
-  title: 'איזו הגדרה בודקים אם הרישום העצמי לא עובד?',
-  summary: 'אם יש תקלה ברישום העצמי, בודקים בהגדרות השיוך שהאפשרות לרישום משתמשים חדשים פעילה.',
-  steps: ['בדקו את „האם לאפשר רישום למשתמשים חדשים?”.'],
-  screenshots: [{ src: '27-selfenrol-settings.jpg', caption: 'הגדרות „שיוך עצמי” עם אפשרות הרישום למשתמשים חדשים.' }],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
-  keywords: ['שיוך עצמי', 'רישום משתמשים חדשים', 'פתרון תקלה'],
+  keywords: ['שיוך עצמי', 'פתרון תקלה', 'עין פתוחה', 'רישום משתמשים חדשים'],
   status: 'ready',
   },
   {

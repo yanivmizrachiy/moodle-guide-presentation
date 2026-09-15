@@ -10,7 +10,6 @@ import {
   Home,
   List,
   Maximize2,
-  Menu,
   Minimize2,
   Search,
   ToggleRight,
@@ -561,25 +560,19 @@ export default function Guide() {
       >
         <header className="flex min-h-16 items-center justify-between gap-3 border-b border-white/10 bg-slate-950/30 px-3 text-white backdrop-blur-xl sm:px-5 lg:px-8">
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-            <Button variant="ghost" size="sm" aria-label="תוכן העניינים" onClick={() => setPanel('menu')} className="gap-2 text-white hover:bg-white/10 hover:text-white">
-              <Menu className="h-5 w-5" />
-              <span className="hidden sm:inline">תוכן</span>
+            <Button
+              size="lg"
+              aria-label="תוכן העניינים"
+              onClick={() => setPanel('menu')}
+              className="gap-2 rounded-xl bg-red-600 font-black text-white shadow-md ring-1 ring-red-300/40 hover:bg-red-700 hover:text-white focus-visible:ring-2 focus-visible:ring-red-300"
+            >
+              <Home className="h-6 w-6" />
+              <span className="hidden text-base sm:inline">תוכן העניינים</span>
             </Button>
             <Button variant="ghost" size="sm" aria-label="חיפוש במצגת" onClick={() => setPanel('search')} className="gap-2 text-white hover:bg-white/10 hover:text-white">
               <Search className="h-5 w-5" />
               <span className="hidden sm:inline">חיפוש</span>
             </Button>
-            {!isCover && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
-                className="hidden gap-2 text-white hover:bg-white/10 hover:text-white md:inline-flex"
-              >
-                <Home className="h-4 w-4" />
-                התחלה
-              </Button>
-            )}
           </div>
 
           {isCover ? (

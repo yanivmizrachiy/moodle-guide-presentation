@@ -331,18 +331,29 @@ describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
     expect(isValidBranch(twoPaths!.branch!)).toBe(true);
   });
 
-  it("the 'without study group' path is a vertical flow of the two owner steps in order, with no screenshot", () => {
+  it("the 'without study group' path is a vertical flow that opens with the two owner steps", () => {
     const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'ללא קבוצת לימוד');
     expect(path, "the 'ללא קבוצת לימוד' path is missing").toBeDefined();
-    expect(path!.flow?.map((step) => step.text)).toEqual([
+    const texts = (path!.flow ?? []).map((step) => step.text);
+    expect(texts.slice(0, 2)).toEqual([
       'המרחב מתחיל ללא תלמידים.',
       'אפשר לצרף תלמידים למרחב גם מאוחר יותר.',
     ]);
-    // Converted away from steps/screenshots into a real vertical flow, so this
-    // path carries no capture and therefore no red circle at all.
-    expect(path!.steps ?? [], 'the without-group path still carries steps').toEqual([]);
-    expect(path!.screenshots ?? [], 'the without-group path still carries a screenshot').toEqual([]);
-    expect((path!.flow ?? []).some((step) => step.screenshot)).toBe(false);
+    // A real vertical flow, not a steps/screenshots list.
+    expect(path!.steps ?? [], 'the without-group path still carries a steps[] list').toEqual([]);
+    expect(path!.screenshots ?? [], 'the without-group path still carries a top-level screenshot').toEqual([]);
+  });
+
+  it("the card continues downward into the real add-students how-to (REQ-CONTENT-009)", () => {
+    const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'ללא קבוצת לימוד');
+    const texts = (path!.flow ?? []).map((step) => step.text);
+    // The enrolment continuation the owner asked for, in one source.
+    expect(texts).toContain('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.');
+    expect(texts).toContain('התלמיד לוחץ על הכפתור „רשום אותי”.');
+    // Backed by the real Moodle captures, moved here (not invented).
+    const stems = (path!.flow ?? [])
+      .flatMap((step) => (step.screenshot ? [stemOf(step.screenshot.src)] : []));
+    expect(stems).toEqual(['01-login', '53-student-enrol', '54-student-enrolled', '47-participants-list']);
   });
 
   it("the 'with study group' path requests only its own card's focus", () => {
@@ -353,21 +364,23 @@ describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
   });
 });
 
-describe('adding students follows the opening choice (REQ-CONTENT-009)', () => {
-  it('the published slide right after open-space-two-paths teaches adding students', () => {
-    const order = PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id);
-    const index = order.indexOf('open-space-two-paths');
-    expect(index, 'open-space-two-paths is not published').toBeGreaterThanOrEqual(0);
-    expect(order[index + 1]).toBe('self-enrol-auto');
+describe('add-students guidance has a single source (REQ-CONTENT-009)', () => {
+  it('there is no separate self-enrol-auto slide duplicating the card', () => {
+    expect(GUIDE_SLIDES.some((slide) => slide.id === 'self-enrol-auto')).toBe(false);
+    expect(Object.keys(SLIDE_TOPICS)).not.toContain('self-enrol-auto');
   });
 
-  it('self-enrol-auto is filed in the opening chapter, so no chapter jump occurs', () => {
-    const slide = GUIDE_SLIDES.find((candidate) => candidate.id === 'self-enrol-auto');
-    expect(slide?.section).toBe('opening');
-  });
-
-  it('the add-students guide exists exactly once (moved, not duplicated)', () => {
-    expect(GUIDE_SLIDES.filter((slide) => slide.id === 'self-enrol-auto').length).toBe(1);
+  it('every enrolment teaching step lives in exactly one place across the deck', () => {
+    const allStepTexts = GUIDE_SLIDES.flatMap((slide) => [
+      ...(slide.flow ?? []).map((step) => step.text),
+      ...(slide.branch?.paths ?? []).flatMap((path) => (path.flow ?? []).map((step) => step.text)),
+    ]);
+    const count = (needle: string) => allStepTexts.filter((text) => text === needle).length;
+    // Single source (REQ-CONTENT-009): the add-students how-to is taught once, in
+    // the open-space-two-paths card — never re-taught by another slide.
+    expect(count('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.'), 'send-link step duplicated').toBe(1);
+    expect(count('התלמיד לוחץ על הכפתור „רשום אותי”.'), 'enrol step duplicated').toBe(1);
+    expect(count('התלמיד רואה שההרשמה הצליחה ונכנס למרחב.'), 'success step duplicated').toBe(1);
   });
 });
 
