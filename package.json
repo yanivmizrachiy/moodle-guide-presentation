@@ -12,6 +12,7 @@
     "audit:ssot": "node scripts/ssot-check.mjs",
     "context:task": "node scripts/build-task-context.mjs",
     "audit:scope": "node scripts/task-scope-check.mjs",
+    "task:advance": "node scripts/advance-task.mjs",
     "shots:derive": "node scripts/derive-screenshots.mjs",
     "check": "npm run typecheck && npm run audit:ssot && npm run context:task && npm run audit:scope && npm run test && npm run build"
   },
