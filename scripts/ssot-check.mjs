@@ -23,6 +23,21 @@ for (const relative of required) {
   if (!fs.existsSync(path.join(root, relative))) errors.push(`Missing required SSOT item: ${relative}`);
 }
 
+const ssotPath = path.join(root, 'SSOT.md');
+const ssot = fs.existsSync(ssotPath) ? fs.readFileSync(ssotPath, 'utf8') : '';
+const requirementIds = [...ssot.matchAll(/\[(REQ-[A-Z]+-\d{3})\]/g)].map((match) => match[1]);
+const requirementSet = new Set(requirementIds);
+if (requirementSet.size !== requirementIds.length) {
+  const seen = new Set();
+  const duplicates = new Set();
+  for (const id of requirementIds) {
+    if (seen.has(id)) duplicates.add(id);
+    seen.add(id);
+  }
+  errors.push(`SSOT requirement ids must be unique; duplicates: ${[...duplicates].join(', ')}`);
+}
+if (!requirementIds.length) errors.push('SSOT must contain stable REQ-* requirement ids.');
+
 const dataDir = path.join(root, 'src/data');
 if (fs.existsSync(dataDir)) {
   const decks = fs.readdirSync(dataDir).filter((name) => /^guideDeck.*\.ts$/i.test(name));
@@ -68,10 +83,22 @@ if (fs.existsSync(queuePath)) {
     if (!tasks.length) errors.push('Task queue must contain tasks.');
     if (new Set(ids).size !== ids.length) errors.push('Task queue task ids must be unique.');
     const allowedStatuses = new Set(['next', 'pending', 'done', 'blocked']);
+    const coveredRequirements = new Set();
+
     for (const task of tasks) {
       if (!task.id || !task.title || !task.goal) errors.push(`Task ${task.id ?? '<missing-id>'} is missing id/title/goal.`);
       if (!allowedStatuses.has(task.status)) errors.push(`Task ${task.id ?? '<missing-id>'} has invalid status ${task.status}.`);
+      if (!Array.isArray(task.requirements)) errors.push(`Task ${task.id ?? '<missing-id>'} must define a requirements array.`);
+      for (const requirement of task.requirements ?? []) {
+        if (!requirementSet.has(requirement)) errors.push(`Task ${task.id} references unknown SSOT requirement ${requirement}.`);
+        coveredRequirements.add(requirement);
+      }
     }
+
+    for (const requirement of requirementIds) {
+      if (!coveredRequirements.has(requirement)) errors.push(`Canonical SSOT requirement has no execution coverage: ${requirement}.`);
+    }
+
     const next = tasks.filter((task) => task.status === 'next');
     if (next.length !== 1) {
       errors.push(`Task queue must contain exactly one next task; found ${next.length}.`);
@@ -80,6 +107,7 @@ if (fs.existsSync(queuePath)) {
       if (!Array.isArray(active.read_first) || !active.read_first.length) errors.push(`Active task ${active.id} needs read_first paths.`);
       if (!Array.isArray(active.acceptance) || !active.acceptance.length) errors.push(`Active task ${active.id} needs acceptance criteria.`);
       if (!Array.isArray(active.checks) || !active.checks.includes('npm run check')) errors.push(`Active task ${active.id} must require npm run check.`);
+      if (!(active.requirements?.length || active.audit_all_requirements)) errors.push(`Active task ${active.id} needs canonical requirement ids or audit_all_requirements.`);
       for (const relative of active.read_first ?? []) {
         if (!fs.existsSync(path.join(root, relative))) errors.push(`Active task read_first path does not exist: ${relative}`);
       }
@@ -108,4 +136,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('SSOT audit passed: one canonical deck, real assets, minimal-context execution contract, and standalone boundaries preserved.');
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, minimal-context execution contract, and standalone boundaries preserved.`);
