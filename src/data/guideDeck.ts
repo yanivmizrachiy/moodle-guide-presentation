@@ -430,11 +430,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
           },
           {
             text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
-            screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
+            screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
           },
           {
             text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
-            screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
+            screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.', hotspotIds: ['enrolled-ok'] },
           },
           {
             text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
@@ -736,22 +736,21 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'task-link-first-enrol',
   eyebrow: 'קישור למשימה',
-  title: 'מה קורה אם תלמיד לא רשום ונכנס דרך קישור למשימה?',
+  title: 'מה רואה תלמיד שלא רשום למרחב ונכנס למשימה דרך קישור?',
   summary: 'תחילה נרשמים למרחב, ואז פותחים שוב את הקישור הישיר למשימה.',
   flow: [
     {
-      text: 'לוחצים „רשום אותי”.',
-      screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.' },
+      text: 'רואים מסך שבו צריך להירשם למרחב, ולוחצים „רשום אותי”.',
+      screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
     },
     {
-      text: 'מסיימים את ההרשמה למרחב.',
-      screenshot: { src: '54-student-enrolled.png', caption: 'הודעת ההצלחה — „נרשמתם לקורס בהצלחה”.' },
+      text: 'רואים את ההודעה „נרשמתם לקורס בהצלחה”.',
+      screenshot: { src: '54-student-enrolled.png', caption: 'הודעת ההצלחה — „נרשמתם לקורס בהצלחה”.', hotspotIds: ['enrolled-ok'] },
     },
     {
-      text: 'פותחים שוב את קישור המשימה.',
-      screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן עם הכפתור „התחלת ניסיון מענה”.' },
+      text: 'פותחים שוב את קישור המשימה ולוחצים „התחלת ניסיון מענה”.',
+      screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן עם הכפתור „התחלת ניסיון מענה”.', hotspotIds: ['start-attempt'] },
     },
-    { text: 'המשימה נפתחת.' },
   ],
   keywords: ['קישור למשימה', 'רשום אותי', 'הרשמה'],
   status: 'ready',

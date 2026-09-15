@@ -65,7 +65,7 @@ test.describe('two-path branch', () => {
       expect(width, `capture ${index} failed to load`).toBeGreaterThan(0);
     }
 
-    // Explicit-opt-in policy: none of these captures request a focus, so no red circle.
-    await expect(withoutPath.locator('svg title')).toHaveCount(0);
+    // The enrol action buttons are marked red — „רשום אותי" and the success banner.
+    await expect(withoutPath.locator('svg title')).toHaveText(['רשום אותי', 'נרשמתם לקורס בהצלחה']);
   });
 });
