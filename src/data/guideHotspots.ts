@@ -109,7 +109,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1800 participants list: the roles column (each participant's תפקיד).
   '47-participants-list': [
     { id: 'users-selector', label: 'משתתפים רשומים', x: 66.6, y: 24.7, width: 13.1, height: 3.8 },
-    { id: 'roles-column', label: 'תפקיד', x: 41, y: 76, width: 11, height: 10 },
+    { id: 'roles-column', label: 'עמודת „תפקידים”', x: 36.5, y: 69.5, width: 10.5, height: 16 },
   ],
   // 3200x1800 role editor open: the role picker with its options.
   '62-role-options': [

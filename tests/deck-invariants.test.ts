@@ -396,7 +396,7 @@ describe('add-students guidance has a single source (REQ-CONTENT-009)', () => {
     expect(count('המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.'), 'copy-link step duplicated').toBe(1);
     expect(count('המורה שולח לתלמיד את הקישור שהועתק.'), 'send-link step duplicated').toBe(1);
     expect(count('התלמיד לוחץ על הכפתור „רשום אותי”.'), 'enrol step duplicated').toBe(1);
-    expect(count('התלמיד רואה שההרשמה הצליחה ונכנס למרחב.'), 'success step duplicated').toBe(1);
+    expect(count('לתלמיד מופיעה הודעת ההצלחה והוא נכנס למרחב.'), 'success step duplicated').toBe(1);
   });
 });
 

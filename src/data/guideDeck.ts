@@ -470,11 +470,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
             screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
           },
           {
-            text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
+            text: 'לתלמיד מופיעה הודעת ההצלחה והוא נכנס למרחב.',
             screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.', hotspotIds: ['enrolled-ok'] },
           },
           {
-            text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
+            text: 'המורה נכנס ל„משתתפים” והתלמיד מופיע ברשימת המשתתפים במרחב.',
             screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
           },
           { text: 'לכל משתתף במרחב מוגדר תפקיד, למשל „תלמיד” או „מורה”.' },
@@ -526,7 +526,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים את ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
+      text: 'נפתחת ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
       screenshot: {
         src: '40-wizard-notification-update.png',
         caption: 'פעמון ההתראות במודל עם ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
@@ -535,7 +535,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     { text: 'דרך נוספת: נכנסים ל„מרחבי הלמידה שלי”.' },
     {
-      text: 'רואים ברשימה אילו מרחבים פתחנו השנה וקיימים.',
+      text: 'נפתחת רשימת המרחבים שפתחנו השנה והקיימים.',
       screenshot: {
         src: '61-my-courses-new.png',
         caption: 'עמוד „מרחבי הלמידה שלי” — רשימת המרחבים הקיימים.',
@@ -859,7 +859,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
     },
     {
-      text: 'התלמיד רואה את ההודעה „נרשמתם לקורס בהצלחה”.',
+      text: 'לתלמיד מופיעה ההודעה „נרשמתם לקורס בהצלחה”.',
       screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת התלמיד לאחר ההרשמה.', hotspotIds: ['enrolled-ok'] },
     },
     { text: 'התלמיד נכנס למרחב.' },
@@ -879,7 +879,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
     },
     {
-      text: 'התלמיד רואה את ההודעה „נרשמתם לקורס בהצלחה”.',
+      text: 'לתלמיד מופיעה ההודעה „נרשמתם לקורס בהצלחה”.',
       screenshot: { src: '54-student-enrolled.png', caption: 'הודעת ההצלחה — „נרשמתם לקורס בהצלחה”.', hotspotIds: ['enrolled-ok'] },
     },
     { text: 'התלמיד פותח שוב את קישור המשימה.' },
@@ -901,35 +901,16 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — לשונית „משתתפים”.', hotspotIds: ['participants-tab'] },
     },
     {
-      text: 'רואים את רשימת המשתתפים — כל מי שהצטרף למרחב. לכל משתתף יש סיווג: תלמיד או מורה, וכן ההרשמה, הקבוצה והגישה האחרונה.',
+      text: 'נפתחת רשימת המשתתפים — כל מי שהצטרף למרחב. לכל משתתף יש סיווג: תלמיד או מורה, וכן ההרשמה, הקבוצה והגישה האחרונה.',
       screenshot: {
         src: '47-participants-list.png',
         caption: 'רשימת המשתתפים — עמודת התפקידים (תלמיד/מורה), הקבוצות והגישה האחרונה.',
         hotspotIds: ['roles-column'],
       },
     },
-    {
-      text: 'לוחצים על סמל העיפרון בעמודת התפקידים.',
-      screenshot: { src: '48-role-edit-pencil.png', caption: 'עריכת התפקיד בשורה — בורר התפקיד עם שמירה וביטול.' },
-    },
-    {
-      text: 'בוחרים תפקיד מהרשימה — למשל „מורה”.',
-      screenshot: {
-        src: '62-role-options.png',
-        caption: 'עריכת התפקיד בשורה — בחירת התפקיד החדש.',
-        hotspotIds: ['role-select'],
-      },
-    },
-    { text: 'בתחתית הטופס לוחצים על „שמירת שינויים”.' },
-    {
-      text: 'רואים בעמודת התפקידים את התפקיד המעודכן — „תלמיד, מורה”.',
-      screenshot: {
-        src: '63-role-teacher-saved.png',
-        caption: 'לאחר השמירה — עמודת התפקידים מציגה „תלמיד, מורה”.',
-        hotspotIds: ['updated-role'],
-      },
-    },
   ],
+  // Changing a participant's role is taught once, where it belongs: „איך
+  // מצרפים מורה נוסף למרחב הלימוד?". This slide only answers who is in the space.
   warning: 'גישה אחרונה אינה מוכיחה למידה או השלמת פעילות.',
   keywords: ['משתתפים', 'תלמיד', 'גישה אחרונה', 'קבוצה'],
   status: 'ready',
@@ -1034,7 +1015,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים את התלמיד שנוסף ברשימה „חברי הקבוצה”.',
+      text: 'התלמיד שנוסף מופיע ברשימה „חברי הקבוצה”.',
       screenshot: {
         src: '73-group-add-members.png',
         caption: 'מסך הוספת המשתתפים — בוחרים תלמיד ולוחצים „הוספה”.',
@@ -1042,7 +1023,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים את הקבוצות ברשימה עם מספר החברים בכל קבוצה.',
+      text: 'נפתחת רשימת הקבוצות עם מספר החברים בכל קבוצה.',
       screenshot: { src: '74-groups-two-groups.png', caption: 'רשימת הקבוצות עם מספר החברים בכל אחת.' },
     },
   ],
@@ -1078,7 +1059,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים שהדוח מציג רק את תלמידי הקבוצה שנבחרה.',
+      text: 'הדוח מציג רק את תלמידי הקבוצה שנבחרה.',
       screenshot: { src: '76-grader-group-filtered.png', caption: 'דוח הציונים מסונן לקבוצה שנבחרה, כולל „ממוצע הקבוצה”.' },
     },
   ],
@@ -1120,7 +1101,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — לשונית „משתתפים”.', hotspotIds: ['participants-tab'] },
     },
     {
-      text: 'רואים את רשימת המשתתפים ואת עמודת התפקידים.',
+      text: 'נפתחת רשימת המשתתפים עם עמודת התפקידים.',
       screenshot: {
         src: '47-participants-list.png',
         caption: 'עמוד „משתתפים” — רשימת המשתתפים והתפקידים.',
@@ -1320,7 +1301,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     { text: 'לוחצים Enter כדי לשמור את השם.' },
-    { text: 'רואים את השם החדש במרחב.' },
+    { text: 'השם החדש מופיע במרחב.' },
   ],
   keywords: ['שינוי שם משימה', 'שם פעילות', 'עריכת משימה'],
   status: 'ready',
@@ -1404,7 +1385,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] },
     },
     {
-      text: 'רואים את התג „מוסתר בפני תלמידים” על הפריט.',
+      text: 'על הפריט מופיע התג „מוסתר בפני תלמידים”.',
       screenshot: {
         src: '99-hidden-item.png',
         caption: 'התוצאה — התג „מוסתר בפני תלמידים” על הפריט.',
@@ -1528,7 +1509,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים את המשימה במיקומה החדש.',
+      text: 'המשימה מופיעה במיקומה החדש.',
       screenshot: {
         src: '82-move-activity-result.png',
         caption: 'המשימה במיקומה החדש מיד לאחר ההעברה.',
@@ -1727,7 +1708,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '85-import-confirm.png', caption: '„אישור ותצוגה” — סקירת מה ייובא, לפני שלב „ביצוע יבוא”.' },
     },
     { text: 'מבצעים את שלב „ביצוע יבוא”.' },
-    { text: 'רואים את שלב „הושלם”.' },
+    { text: 'מופיע שלב „הושלם”.' },
   ],
   keywords: ['ייבוא', 'שימוש חוזר בתכנים', 'מרחב אחר'],
   // M18 still needs-capture: steps 1–4 of the import wizard are real captures;
@@ -1881,7 +1862,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     { text: 'בסיום לוחצים על „שמירה וסיום”.' },
     { text: 'לוחצים על „הגשה סופית”.' },
     {
-      text: 'רואים את „סקירת ניסיון מענה” לאחר ההגשה הסופית.',
+      text: 'נפתחת „סקירת ניסיון מענה” לאחר ההגשה הסופית.',
       screenshot: { src: '55-quiz-review.png', caption: '„סקירת ניסיון מענה” לאחר ההגשה הסופית.' },
     },
   ],
@@ -1967,7 +1948,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '58-student-space-topic.png', caption: 'המשימה ביחידה — „ממתין לביצוע”.' },
     },
     {
-      text: 'רואים בעמוד המשימה „בוצע” בירוק או „נכשל” באדום מול ציון העובר.',
+      text: 'בעמוד המשימה מופיע „בוצע” בירוק או „נכשל” באדום מול ציון העובר.',
       screenshot: {
         src: '56-quiz-retry.png',
         caption: '„בוצע” בירוק מציין שהמשימה הוגשה; „נכשל” באדום מציין שהציון לא הגיע לציון העובר — בדוגמה הזו התלמיד נכשל.',
@@ -1975,7 +1956,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     { text: 'לוחצים על „ציונים” בתפריט התלמיד.' },
     {
-      text: 'רואים ב„דוח ציוני התלמיד במרחב־לימוד זה” את הציון במשימה.',
+      text: 'ב„דוח ציוני התלמיד במרחב־לימוד זה” מופיע הציון במשימה.',
       screenshot: {
         src: '60-student-grade-report.png',
         caption: '„דוח ציוני התלמיד במרחב־לימוד זה” — „ציונים” בתפריט התלמיד.',
@@ -2061,11 +2042,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '88-quiz-settings-save.png', caption: 'סוף טופס ההגדרות — כפתורי השמירה והביטול.', hotspotIds: ['save'] },
     },
     {
-      text: 'רואים בעמוד הבוחן „ציון עובר: 80.00 מתוך 100.00”.',
+      text: 'בעמוד הבוחן מופיע „ציון עובר: 80.00 מתוך 100.00”.',
       screenshot: { src: '89-quiz-tabs-settings.png', caption: 'עמוד הבוחן למורה: „ציון עובר: 80.00 מתוך 100.00” ושיטת מתן הציון.', hotspotIds: ['pass-grade-line'] },
     },
     {
-      text: 'רואים בתצוגת התלמיד את מצבו מול ציון העובר: „בוצע” בירוק או „נכשל” באדום.',
+      text: 'בתצוגת התלמיד מופיע מצבו מול ציון העובר: „בוצע” בירוק או „נכשל” באדום.',
       screenshot: { src: '56-quiz-retry.png', caption: 'תצוגת התלמיד: „ציון עובר: 80.00 מתוך 100.00” והתג „נכשל” באדום.' },
     },
   ],
@@ -2119,7 +2100,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'בטבלה רואים מי ביצע, איזו פעולה ובאיזה תאריך ושעה.',
+      text: 'בטבלה מופיעים מי ביצע, איזו פעולה ובאיזה תאריך ושעה.',
       screenshot: {
         src: '52-logs-table.png',
         caption: 'טבלת יומני המעקב — מי ביצע, איזו פעולה, תאריך ושעה.',
@@ -2153,7 +2134,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'בעמודת „זמן” רואים לכל פעולה את התאריך ואת השעה.',
+      text: 'בעמודת „זמן” מופיעים לכל פעולה התאריך והשעה.',
       screenshot: {
         src: '52-logs-table.png',
         caption: 'עמודת „זמן” בטבלת יומני המעקב — תאריך ושעה לכל אירוע.',
@@ -2171,7 +2152,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   flow: [
     { text: 'לוחצים על הבוחן במרחב־הלימוד.' },
     {
-      text: 'בעמוד הבוחן רואים את „ניסיונות מענה”.',
+      text: 'בעמוד הבוחן מופיע „ניסיונות מענה”.',
       screenshot: {
         src: '68-quiz-view-teacher.png',
         caption: 'עמוד הבוחן למורה — „ניסיונות מענה: 1”, שיטת מתן הציון וציון עובר.',
@@ -2186,7 +2167,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'בטבלה רואים לכל תלמיד את הניסיונות, מועדי ההתחלה והסיום והציון של כל ניסיון.',
+      text: 'בטבלה מופיעים לכל תלמיד הניסיונות, מועדי ההתחלה והסיום והציון של כל ניסיון.',
       screenshot: { src: '67-quiz-attempts-report.png', caption: 'דוח „תוצאות” — שורת ניסיון לכל תלמיד עם מצב, זמנים וציון.' },
     },
   ],
@@ -2217,7 +2198,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '90-course-tabs.png', caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.', hotspotIds: ['grades-tab'] },
     },
     {
-      text: 'רואים את דוח הציונים.',
+      text: 'נפתח דוח הציונים.',
       screenshot: { src: '65-gradebook-grader.png', caption: 'דוח הציונים — שורה לכל תלמיד ועמודה לכל פריט ציון, עם חיפוש ובחירת קבוצות.' },
     },
     { text: 'מאתרים את התלמיד בשורות.' },
@@ -2243,7 +2224,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'רואים את דוח הציונים.',
+      text: 'נפתח דוח הציונים.',
       screenshot: {
         src: '65-gradebook-grader.png',
         caption: 'דוח הציונים בלשונית „ציונים” במרחב — נקודת המוצא ל„יצוא”.',
@@ -2306,7 +2287,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '91-reports-list.png', caption: 'רשימת הדוחות של המרחב.', hotspotIds: ['learning-management-link'] },
     },
     {
-      text: 'רואים את „סיכום הלמידה במרחב”.',
+      text: 'נפתח „סיכום הלמידה במרחב”.',
       screenshot: { src: '98-learning-summary.png', caption: '„סיכום הלמידה במרחב”: מספר התלמידים בקורס, אחוז ההשלמה וממוצע הציונים.' },
     },
   ],
@@ -2320,12 +2301,12 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   flow: [
     { text: 'לוחצים על סמל הפעמון בסרגל העליון.' },
     {
-      text: 'רואים את פאנל ההתראות.',
+      text: 'נפתח פאנל ההתראות.',
       screenshot: { src: '11-notifications.jpg', caption: 'פאנל ההתראות.' },
     },
     { text: 'לוחצים על סמל בועת המסרים בסרגל העליון.' },
     {
-      text: 'רואים את פאנל המסרים.',
+      text: 'נפתח פאנל המסרים.',
       screenshot: { src: '12-messages.jpg', caption: 'פאנל המסרים.' },
     },
   ],

@@ -44,20 +44,15 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
  * A use can request one verified target; the policy helper caps the visible result
  * at one so a page never gets covered in competing red circles. */
 /**
- * A step that marks one small control is shown as a close-up of that control:
- * on a full-page capture a button is a few pixels wide, and the red circle is
- * easy to miss. Larger targets (a table, a section, a whole form area) keep the
- * full screen, and any use can override with `zoom`.
+ * A capture is shown WHOLE by default, with the red circle and the arrow on the
+ * control: the teacher has to see where on the page that control sits, which a
+ * close-up destroys. A use may opt into a close-up with `zoom: true` — only for
+ * a control that stands alone on an otherwise empty part of the screen.
  */
-const SMALL_TARGET = { width: 22, height: 14 };
-
 export function focusHotspot(screenshot: GuideScreenshot) {
-  if (screenshot.zoom === false) return null;
+  if (screenshot.zoom !== true) return null;
   const hotspots = getVisibleGuideHotspots(screenshot.src, screenshot.hotspotIds);
-  if (hotspots.length !== 1) return null;
-  const [hotspot] = hotspots;
-  const small = hotspot.width <= SMALL_TARGET.width && hotspot.height <= SMALL_TARGET.height;
-  return screenshot.zoom || small ? hotspot : null;
+  return hotspots.length === 1 ? hotspots[0] : null;
 }
 
 /**
@@ -228,11 +223,7 @@ export function ScreenshotCard({
   onOpen: (state: LightboxState) => void;
   /** In a flow the step text already labels the screen; skip the caption bar. */
   hideCaption?: boolean;
-  /**
-   * A step in a click chain may close in on the control it tells you to press.
-   * A slide-level capture never does: there the point is to see the whole page
-   * and where the control sits on it.
-   */
+  /** A flow step honours a capture that explicitly asks for a close-up. */
   zoomable?: boolean;
 }) {
   const reducedMotion = Boolean(useReducedMotion());
@@ -243,7 +234,7 @@ export function ScreenshotCard({
   const rotateY = useSpring(rotateYRaw, { stiffness: 210, damping: 24, mass: 0.55 });
   const rotateX = useSpring(rotateXRaw, { stiffness: 210, damping: 24, mass: 0.55 });
   const [failed, setFailed] = useState(false);
-  const focus = zoomable || screenshot.zoom === true ? focusHotspot(screenshot) : null;
+  const focus = zoomable ? focusHotspot(screenshot) : null;
 
   function resetTilt() {
     pointerX.set(0);
