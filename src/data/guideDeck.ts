@@ -69,7 +69,21 @@ export type GuideSlide = {
   branch?: GuideBranch;
   /** Marks a procedure performable only while Moodle edit mode is on (REQ-GUIDE-005). */
   requiresEditMode?: boolean;
+  /** Renders the interactive guide-side edit-mode teaching toggle (REQ-CONTENT-004). */
+  editModeDemo?: boolean;
+  /** Renders the emphasized group of edit-mode-dependent operations, derived from requiresEditMode (REQ-CONTENT-004). */
+  editModeGroup?: boolean;
 };
+
+/**
+ * REQ-CONTENT-004 — owner-locked captions of the guide-side teaching toggle.
+ * When the control is OFF it shows the off line; when ON, the on line.
+ * The wording is locked by the owner; the invariant tests pin it verbatim.
+ */
+export const EDIT_MODE_TOGGLE_COPY = {
+  off: 'כך מכבים את מצב העריכה',
+  on: 'כך מדליקים את מצב העריכה',
+} as const;
 
 export type GuideSection = {
   id: string;
@@ -102,7 +116,14 @@ export function isEditModeMetadataConsistent(slide: GuideSlide): boolean {
   if (slide.requiresEditMode === undefined) return true;
   if (typeof slide.requiresEditMode !== 'boolean') return false;
   if (!slide.requiresEditMode) return true;
-  return (slide.steps?.length ?? 0) > 0 || (slide.flow?.length ?? 0) > 0 || slide.branch !== undefined;
+  // An action can also be taught by a single annotated real screenshot
+  // (e.g. one click inside the edit-mode activity menu).
+  return (
+    (slide.steps?.length ?? 0) > 0 ||
+    (slide.flow?.length ?? 0) > 0 ||
+    slide.branch !== undefined ||
+    (slide.screenshots?.length ?? 0) > 0
+  );
 }
 
 const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
@@ -147,6 +168,7 @@ export const GUIDE_TOPICS: GuideTopic[] = [
   { id: 'participants', section: 'users-roles', title: 'משתתפים' },
   { id: 'groups', section: 'users-roles', title: 'קבוצות' },
   { id: 'teachers', section: 'users-roles', title: 'מורים נוספים' },
+  { id: 'edit-mode-basics', section: 'editing', title: 'מה זה מצב עריכה?' },
   { id: 'editing', section: 'editing', title: 'עריכה וניהול תוכן' },
   { id: 'imports', section: 'editing', title: 'ייבוא ועדכונים' },
   { id: 'tasks', section: 'tasks-grades', title: 'משימות והערכה' },
@@ -187,7 +209,8 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'rename-space': 'space',
   'space-image': 'space',
   'space-heading': 'space',
-  'edit-mode': 'editing',
+  'edit-mode': 'edit-mode-basics',
+  'edit-mode-dependent': 'edit-mode-basics',
   'add-content': 'editing',
   'organize-content': 'editing',
   'hide-task': 'editing',
@@ -707,6 +730,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     },
   ],
   keywords: ['כותרת', 'שם יחידה', 'עריכה'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -996,6 +1020,19 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { text: 'מכבים ובודקים.' },
   ],
   keywords: ['מצב עריכה', 'עריכה', 'שינוי'],
+  editModeDemo: true,
+  status: 'ready',
+  },
+  {
+  id: 'edit-mode-dependent',
+  section: 'spaces',
+  eyebrow: 'מצב עריכה · תלות',
+  title: 'אילו פעולות אפשר לבצע רק כשמצב העריכה דולק?',
+  // The emphasized group derives its list from every published slide flagged
+  // requiresEditMode, so the visual grouping and the machine signal can never
+  // drift apart (REQ-CONTENT-004, REQ-GUIDE-005).
+  editModeGroup: true,
+  keywords: ['מצב עריכה', 'פעולות עריכה', 'תלות במצב עריכה'],
   status: 'ready',
   },
   {
@@ -1017,6 +1054,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { text: 'שומרים ובודקים.' },
   ],
   keywords: ['פעילות', 'משאב', 'קובץ', 'מטלה', 'בוחן'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -1038,6 +1076,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
   screenshots: [{ src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] }],
   keywords: ['הסתרה', 'משימה', 'זמינות'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -1058,6 +1097,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     },
   ],
   keywords: ['מחיקה', 'משימה', 'הסתרה'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -1074,6 +1114,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { text: 'בוחרים „זמינות”.' },
   ],
   keywords: ['הצגה מחדש', 'מוסתר', 'זמינות', 'הצג'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -1109,6 +1150,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     },
   ],
   keywords: ['גרירה', 'הזזה', 'העברה', 'משימה'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {
@@ -1230,6 +1272,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
     { src: '32-updates-list-expanded.jpg', caption: 'רשימת העדכונים וידית הגרירה.' },
   ],
   keywords: ['עדכונים', 'גרירה', 'תוכן ארצי'],
+  requiresEditMode: true,
   status: 'needs-capture',
   missingCaptureId: 'M19',
   },
@@ -1391,6 +1434,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   ],
   points: ['למבחן חד־פעמי בוחרים ניסיון אחד.', 'לתרגול בוחרים „אין הגבלה”.'],
   keywords: ['ניסיונות', 'פעם אחת', 'מבחן', 'בוחן', 'ניסיון חדש'],
+  requiresEditMode: true,
   status: 'ready',
   },
   {

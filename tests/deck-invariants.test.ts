@@ -11,6 +11,7 @@ import {
   GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
   SLIDE_TOPICS,
+  EDIT_MODE_TOGGLE_COPY,
   isValidBranch,
   isValidBranchPath,
   isEditModeMetadataConsistent,
@@ -265,10 +266,42 @@ describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
     expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true })).toBe(false);
     expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true, steps: [] })).toBe(false);
     expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true, flow: [{ text: 't' }] })).toBe(true);
+    expect(
+      isEditModeMetadataConsistent({
+        ...base,
+        requiresEditMode: true,
+        screenshots: [{ src: 'x.png', caption: 'c' }],
+      })
+    ).toBe(true);
     expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: false })).toBe(true);
     expect(
       isEditModeMetadataConsistent({ ...base, requiresEditMode: 'yes' as unknown as boolean })
     ).toBe(false);
+  });
+
+  it('the edit-mode teaching copy stays exactly as the owner locked it (REQ-CONTENT-004)', () => {
+    expect(EDIT_MODE_TOGGLE_COPY.off).toBe('כך מכבים את מצב העריכה');
+    expect(EDIT_MODE_TOGGLE_COPY.on).toBe('כך מדליקים את מצב העריכה');
+  });
+
+  it('the edit-mode dependent group is backed by published, flagged procedures', () => {
+    const groupSlides = GUIDE_SLIDES.filter((slide) => slide.editModeGroup);
+    if (groupSlides.length === 0) return;
+    const dependent = PUBLISHED_GUIDE_SLIDES.filter((slide) => slide.requiresEditMode);
+    expect(dependent.length, 'editModeGroup renders an empty group').toBeGreaterThan(0);
+  });
+
+  it('inside the editing chapter, the edit-mode concept precedes every dependent procedure (REQ-CONTENT-006)', () => {
+    const order = PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id);
+    const conceptIndex = order.indexOf('edit-mode');
+    expect(conceptIndex).toBeGreaterThanOrEqual(0);
+    for (const slide of PUBLISHED_GUIDE_SLIDES) {
+      if (!slide.requiresEditMode || slide.section !== 'editing') continue;
+      expect(
+        order.indexOf(slide.id),
+        `"${slide.id}" is taught before the edit-mode concept`
+      ).toBeGreaterThan(conceptIndex);
+    }
   });
 
   it('schema additions cannot convert missing evidence to ready (truth stays strict)', () => {

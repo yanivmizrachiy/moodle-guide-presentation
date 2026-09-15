@@ -13,9 +13,12 @@ import {
   Menu,
   Minimize2,
   Search,
+  ToggleRight,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { EditModeDependentGroup } from '@/components/guide/EditModeDependentGroup';
+import { EditModeToggle } from '@/components/guide/EditModeToggle';
 import { FlowSteps, NumberedStepRow } from '@/components/guide/FlowSteps';
 import { TwoPathBranch } from '@/components/guide/TwoPathBranch';
 import {
@@ -200,8 +203,16 @@ function SlideContent({
           {/* The attribution card lives on the cover; repeating it here pushed the
               slide title down, so the title now starts at the top. */}
           <header>
-            <div className="mb-3 inline-flex w-fit items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-800 shadow-sm">
-              {slide.eyebrow}
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <div className="inline-flex w-fit items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-800 shadow-sm">
+                {slide.eyebrow}
+              </div>
+              {slide.requiresEditMode && (
+                <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-black text-amber-900 shadow-sm">
+                  <ToggleRight aria-hidden="true" className="h-4 w-4" />
+                  רק כשמצב העריכה דולק
+                </div>
+              )}
             </div>
             <h1 className="font-display text-[clamp(2rem,4.3vw,4.4rem)] font-black leading-[1.02] tracking-tight text-slate-950">
               {slide.title}
@@ -278,6 +289,10 @@ function SlideContent({
                 onOpenScreenshot={onOpenScreenshot}
               />
             )}
+
+            {slide.editModeDemo && <EditModeToggle />}
+
+            {slide.editModeGroup && <EditModeDependentGroup />}
           </div>
         </div>
 

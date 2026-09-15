@@ -323,7 +323,7 @@
     },
     {
       "id": "P5-edit-mode",
-      "status": "next",
+      "status": "done",
       "title": "Make edit mode a first-class guide concept",
       "goal": "Create the approved edit-mode chapter structure and a real guide-side interactive on/off teaching control without pretending that the guide control is Moodle itself.",
       "requirements": [
@@ -368,7 +368,7 @@
     },
     {
       "id": "P6-editing-chapter",
-      "status": "pending",
+      "status": "next",
       "title": "Complete the space-editing chapter",
       "goal": "Organize the approved editing procedures under a clear main heading and teach each procedure click by click.",
       "requirements": [
