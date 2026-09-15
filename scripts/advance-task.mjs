@@ -47,6 +47,10 @@ function fingerprint(relative) {
   return `sha256:${createHash('sha256').update(fs.readFileSync(absolute)).digest('hex')}`;
 }
 
+const args = process.argv.slice(2);
+const verifyOnly = args.includes('--verify');
+const expectedId = args.find((arg) => arg !== '--verify');
+
 if (!fs.existsSync(queuePath)) fail('docs/task-queue.json is missing.');
 if (!fs.existsSync(receiptPath)) fail('verified check receipt is missing; run npm run check successfully before advancing.');
 
@@ -56,7 +60,6 @@ const nextTasks = tasks.filter((task) => task.status === 'next');
 if (nextTasks.length !== 1) fail(`expected exactly one next task; found ${nextTasks.length}.`);
 
 const current = nextTasks[0];
-const expectedId = process.argv[2];
 if (expectedId && expectedId !== current.id) {
   fail(`refusing to advance ${current.id}: caller expected ${expectedId}.`);
 }
@@ -93,6 +96,13 @@ const nextIndex = pendingIndex >= 0 ? pendingIndex : earlierPendingIndex;
 const remainingBlocked = tasks.filter((task) => task.status === 'blocked');
 if (nextIndex < 0 && remainingBlocked.length) {
   fail(`cannot finish queue while blocked tasks remain: ${remainingBlocked.map((task) => task.id).join(', ')}.`);
+}
+
+if (verifyOnly) {
+  console.log(nextIndex >= 0
+    ? `Task advancement verification passed for ${current.id}; next would be ${tasks[nextIndex].id}.`
+    : `Task advancement verification passed for ${current.id}; queue would become complete.`);
+  process.exit(0);
 }
 
 current.status = 'done';
