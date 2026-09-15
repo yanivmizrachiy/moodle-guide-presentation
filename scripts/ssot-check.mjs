@@ -10,6 +10,7 @@ const required = [
   'docs/task-queue.json',
   'scripts/build-task-context.mjs',
   'scripts/task-scope-check.mjs',
+  'scripts/write-check-receipt.mjs',
   'scripts/advance-task.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
@@ -70,15 +71,20 @@ if (pkg.scripts?.['context:task'] !== 'node scripts/build-task-context.mjs') {
 if (pkg.scripts?.['audit:scope'] !== 'node scripts/task-scope-check.mjs') {
   errors.push('package.json must expose audit:scope through scripts/task-scope-check.mjs.');
 }
+if (pkg.scripts?.['receipt:check'] !== 'node scripts/write-check-receipt.mjs') {
+  errors.push('package.json must expose receipt:check through scripts/write-check-receipt.mjs.');
+}
 if (pkg.scripts?.['task:advance'] !== 'node scripts/advance-task.mjs') {
   errors.push('package.json must expose task:advance through scripts/advance-task.mjs.');
 }
 const checkScript = String(pkg.scripts?.check ?? '');
 if (!checkScript.includes('npm run context:task')) errors.push('npm run check must validate/generate the active minimal task context.');
 if (!checkScript.includes('npm run audit:scope')) errors.push('npm run check must enforce the active task scope.');
+if (!checkScript.endsWith('npm run receipt:check')) errors.push('npm run check must record its verified receipt only after every other fast gate passes.');
+if (!pkg.scripts?.['check:full']) errors.push('package.json must expose a stable check:full command; P7 upgrades it to the broad browser/visual gate.');
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
-for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md', '.claude/TASK_BASELINE.json']) {
+for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md', '.claude/TASK_BASELINE.json', '.claude/CHECK_RECEIPT.json']) {
   if (!gitignore.includes(requiredIgnore)) errors.push(`.gitignore must contain ${requiredIgnore}`);
 }
 
@@ -151,4 +157,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, task scope guard, safe task advancement, and standalone boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, fingerprinted scope guard, verified check receipt, safe task advancement, and standalone boundaries preserved.`);
