@@ -8,6 +8,9 @@
   --guide-white: #ffffff;
   --guide-gold: #fbbf24;
   --guide-blue: #1d4ed8;
+  --guide-glass-ink: #0f172a;
+  --guide-glass-icon: #2563eb;
+  --guide-glass-border: rgba(147, 197, 253, 0.68);
   color-scheme: light;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -58,6 +61,51 @@
   opacity: 1 !important;
 }
 
+/* Canonical owner-selected CTA language: soft glassmorphism.
+ * Every external action rendered inside a light content slide inherits this
+ * automatically, so a new slide.link cannot silently fall back to the old dark
+ * near-black pill. Presentation chrome (cover/header/footer/navigation) is
+ * intentionally excluded because it serves a different role and background. */
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"] {
+  border: 1px solid var(--guide-glass-border) !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.82)) !important;
+  color: var(--guide-glass-ink) !important;
+  box-shadow:
+    0 12px 30px rgba(37, 99, 235, 0.12),
+    0 4px 12px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  backdrop-filter: blur(18px) saturate(145%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease !important;
+}
+
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"] svg {
+  color: var(--guide-glass-icon) !important;
+  stroke-width: 2.25;
+}
+
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:hover {
+  border-color: rgba(96, 165, 250, 0.88) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(219, 234, 254, 0.9)) !important;
+  color: #1e3a8a !important;
+  box-shadow:
+    0 16px 38px rgba(37, 99, 235, 0.16),
+    0 6px 16px rgba(15, 23, 42, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+  transform: translateY(-1px);
+}
+
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.3) !important;
+  outline-offset: 3px !important;
+}
+
 /* Screenshot cards are deliberately 3D without WebGL. The outer stage owns
  * perspective, the button owns rotation, and the clipped inner surface sits
  * forward in Z-space. This keeps the screenshots crisp and GPU-friendly. */
@@ -92,13 +140,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-
-
-
-
-
-
-
 @media (max-width: 640px) {
   [data-guide-shell="premium-presentation"] article h1.font-display {
     font-size: clamp(1.9rem, 8.5vw, 3rem) !important;
@@ -108,15 +149,12 @@
   [data-guide-shell="premium-presentation"] .guide-shot-stage {
     perspective: 1100px;
   }
-
-
 }
 
 @media (max-height: 560px) and (min-width: 641px) {
   [data-guide-shell="premium-presentation"] article h1.font-display {
     font-size: clamp(1.9rem, 4.5vw, 3.1rem) !important;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -128,5 +166,4 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-
 }
