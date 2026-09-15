@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronLeft,
   ChevronsDown,
   Copy,
   ExternalLink,
@@ -256,6 +257,27 @@ function SlideContent({
                     >
                       <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
                       <span className="text-sm font-black leading-relaxed text-slate-700 sm:text-base">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {slide.indexCards && slide.indexCards.length > 0 && (
+              // An index slide's cards are navigation: each one opens the slide
+              // that teaches that button (REQ-GUIDE-011).
+              <section aria-label="הכפתורים הראשיים">
+                <ul className="grid gap-2.5 sm:grid-cols-2">
+                  {slide.indexCards.map((card) => (
+                    <li key={card.slideId}>
+                      <button
+                        type="button"
+                        onClick={() => onJumpToSlide(card.slideId)}
+                        className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/88 px-3.5 py-3 text-right text-sm font-black leading-relaxed text-slate-800 shadow-sm backdrop-blur transition hover:border-blue-400 hover:bg-blue-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-300/70 sm:text-base"
+                      >
+                        <span>{card.label}</span>
+                        <ChevronLeft aria-hidden="true" className="h-5 w-5 shrink-0 text-blue-600" />
+                      </button>
                     </li>
                   ))}
                 </ul>

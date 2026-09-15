@@ -165,6 +165,15 @@ describe('screenshots', () => {
     }
   });
 
+  it('every index card points at a published slide', () => {
+    for (const slide of GUIDE_SLIDES) {
+      for (const card of slide.indexCards ?? []) {
+        expect(card.label.trim(), `empty index card label on "${slide.id}"`).not.toBe('');
+        expect(publishedIds, `index card on "${slide.id}" points at "${card.slideId}"`).toContain(card.slideId);
+      }
+    }
+  });
+
   it('screenshot filenames follow the naming convention', () => {
     for (const name of screenshotFiles) {
       expect(name).toMatch(/^\d{2,3}-[a-z0-9-]+\.(?:avif|webp|jpe?g|png)$/);
@@ -356,7 +365,7 @@ describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
     const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'ללא קבוצת לימוד');
     const texts = (path!.flow ?? []).map((step) => step.text);
     // The enrolment continuation the owner asked for, in one source.
-    expect(texts).toContain('המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.');
+    expect(texts).toContain('המורה לוחץ על הכפתור „העתקת כתובת מרחב הלמידה ללוח”.');
     expect(texts).toContain('המורה שולח לתלמיד את הקישור שהועתק.');
     expect(texts).toContain('התלמיד לוחץ על הכפתור „רשום אותי”.');
     // Backed by the real Moodle captures, moved here (not invented).
@@ -393,7 +402,7 @@ describe('add-students guidance has a single source (REQ-CONTENT-009)', () => {
     const count = (needle: string) => allStepTexts.filter((text) => text === needle).length;
     // Single source (REQ-CONTENT-009): the add-students how-to is taught once, in
     // the open-space-two-paths card — never re-taught by another slide.
-    expect(count('המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.'), 'copy-link step duplicated').toBe(1);
+    expect(count('המורה לוחץ על הכפתור „העתקת כתובת מרחב הלמידה ללוח”.'), 'copy-link step duplicated').toBe(1);
     expect(count('המורה שולח לתלמיד את הקישור שהועתק.'), 'send-link step duplicated').toBe(1);
     expect(count('התלמיד לוחץ על הכפתור „רשום אותי”.'), 'enrol step duplicated').toBe(1);
     expect(count('לתלמיד מופיעה הודעת ההצלחה והוא נכנס למרחב.'), 'success step duplicated').toBe(1);
