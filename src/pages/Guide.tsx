@@ -576,7 +576,7 @@ export default function Guide() {
             </Button>
             <Button
               size="icon"
-              aria-label="לשקף הקודם"
+              aria-label="חזרה שלב אחד אחורה"
               onClick={() => goBy(-1)}
               disabled={!canGoPrevious}
               className="rounded-xl bg-amber-400 text-slate-950 shadow-md hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-300 disabled:opacity-40"
