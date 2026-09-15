@@ -27,6 +27,23 @@ export type GuideFlowStep = {
   screenshot?: GuideScreenshot;
 };
 
+/**
+ * One path of a genuine two-path procedure. Each path teaches a real route
+ * with its own actions and screens — the branch is a machine signal, not
+ * "way A / way B" prose (REQ-GUIDE-004).
+ */
+export type GuideBranchPath = {
+  label: string;
+  steps?: string[];
+  flow?: GuideFlowStep[];
+  screenshots?: GuideScreenshot[];
+};
+
+/** A real two-path split: exactly two paths, enforced as a tuple (REQ-GUIDE-004). */
+export type GuideBranch = {
+  paths: readonly [GuideBranchPath, GuideBranchPath];
+};
+
 export type GuideSlide = {
   id: string;
   section: string;
@@ -48,6 +65,10 @@ export type GuideSlide = {
   cover?: boolean;
   status?: GuideSlideStatus;
   missingCaptureId?: string;
+  /** A genuine two-path branch for a procedure with two real routes (REQ-GUIDE-004). */
+  branch?: GuideBranch;
+  /** Marks a procedure performable only while Moodle edit mode is on (REQ-GUIDE-005). */
+  requiresEditMode?: boolean;
 };
 
 export type GuideSection = {
@@ -55,6 +76,34 @@ export type GuideSection = {
   title: string;
   description: string;
 };
+
+/**
+ * A branch path teaches a real route: a non-empty label and at least one
+ * concrete route among steps, flow, or screenshots.
+ */
+export function isValidBranchPath(path: GuideBranchPath): boolean {
+  const hasRoute =
+    (path.steps?.length ?? 0) > 0 || (path.flow?.length ?? 0) > 0 || (path.screenshots?.length ?? 0) > 0;
+  return typeof path.label === 'string' && path.label.trim().length > 0 && hasRoute;
+}
+
+/** A branch is a genuine split only with exactly two valid paths (REQ-GUIDE-004). */
+export function isValidBranch(branch: GuideBranch): boolean {
+  const paths = branch?.paths;
+  return Array.isArray(paths) && paths.length === 2 && paths.every(isValidBranchPath);
+}
+
+/**
+ * Edit-mode dependency is a machine flag, not prose (REQ-GUIDE-005). When a
+ * slide declares requiresEditMode it must actually teach an action (steps,
+ * flow, or branch); flagging a non-procedure slide is an inconsistent state.
+ */
+export function isEditModeMetadataConsistent(slide: GuideSlide): boolean {
+  if (slide.requiresEditMode === undefined) return true;
+  if (typeof slide.requiresEditMode !== 'boolean') return false;
+  if (!slide.requiresEditMode) return true;
+  return (slide.steps?.length ?? 0) > 0 || (slide.flow?.length ?? 0) > 0 || slide.branch !== undefined;
+}
 
 const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
 const MOODLE_MY = 'https://moodlemoe.lms.education.gov.il/my/';
@@ -197,32 +246,45 @@ const TOPIC_SECTION: Readonly<Record<string, string>> = Object.fromEntries(
   GUIDE_TOPICS.map((topic) => [topic.id, topic.section])
 );
 
-function normalizeSlide(slide: GuideSlide): GuideSlide {
+// Every rendered screenshot src is normalized to .avif so the <picture> avif
+// <source> and its .webp fallback both point at files the audit guarantees.
+// Without this a raw .jpg/.png src reaches the avif <source> verbatim; if that
+// original is ever renamed or dropped the source 404s and the card shows its
+// "failed to load" state even though the .avif/.webp siblings exist. Classic
+// screenshots, flow-step screens, and branch-path screens all use it.
+const normalizeShot = (shot: GuideScreenshot): GuideScreenshot => ({
+  ...shot,
+  src: toModernScreenshotFilename(shot.src),
+});
+
+const normalizeFlow = (flow?: GuideFlowStep[]): GuideFlowStep[] | undefined =>
+  flow?.map((step) => (step.screenshot ? { ...step, screenshot: normalizeShot(step.screenshot) } : step));
+
+const normalizeBranchPath = (path: GuideBranchPath): GuideBranchPath => ({
+  ...path,
+  screenshots: path.screenshots?.map(normalizeShot),
+  flow: normalizeFlow(path.flow),
+});
+
+export function normalizeSlide(slide: GuideSlide): GuideSlide {
   const topic = SLIDE_TOPICS[slide.id];
+  const branch: GuideBranch | undefined = slide.branch
+    ? { paths: [normalizeBranchPath(slide.branch.paths[0]), normalizeBranchPath(slide.branch.paths[1])] }
+    : undefined;
   return {
     ...slide,
     topic,
     // Single filing source: the topic map decides the chapter as well.
     section: (topic && TOPIC_SECTION[topic]) || slide.section,
+    // Truth stays strict: a slide that still owes a real capture cannot be
+    // published, no matter what schema (e.g. a branch) it also carries.
     status:
       slide.missingCaptureId && slide.status === 'ready'
         ? ('needs-capture' as const)
         : slide.status,
-    screenshots: slide.screenshots?.map((screenshot) => ({
-      ...screenshot,
-      src: toModernScreenshotFilename(screenshot.src),
-    })),
-    // Flow-step screenshots go through the exact same extension normalization as
-    // the classic array. Without this a raw .jpg/.png src reaches the <picture>
-    // avif <source> verbatim; if that original file is ever renamed or dropped
-    // the source 404s and the card shows its "failed to load" state even though
-    // the .avif/.webp siblings exist. Normalizing to .avif keeps both the avif
-    // source and its .webp fallback pointing at files the audit guarantees.
-    flow: slide.flow?.map((step) =>
-      step.screenshot
-        ? { ...step, screenshot: { ...step.screenshot, src: toModernScreenshotFilename(step.screenshot.src) } }
-        : step
-    ),
+    screenshots: slide.screenshots?.map(normalizeShot),
+    flow: normalizeFlow(slide.flow),
+    branch,
   };
 }
 

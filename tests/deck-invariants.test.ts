@@ -11,6 +11,13 @@ import {
   GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
   SLIDE_TOPICS,
+  isValidBranch,
+  isValidBranchPath,
+  isEditModeMetadataConsistent,
+  normalizeSlide,
+  type GuideBranch,
+  type GuideBranchPath,
+  type GuideSlide,
 } from '@/data/guideDeck';
 import { GUIDE_SCREENSHOT_HOTSPOTS, isValidHotspot } from '@/data/guideHotspots';
 
@@ -24,6 +31,10 @@ const allIds = GUIDE_SLIDES.map((slide) => slide.id);
 const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
   ...(slide.screenshots ?? []),
   ...(slide.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
+  ...(slide.branch?.paths ?? []).flatMap((path) => [
+    ...(path.screenshots ?? []),
+    ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
+  ]),
 ];
 const publishedIds = new Set(PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id));
 const sectionIds = new Set(GUIDE_SECTIONS.map((section) => section.id));
@@ -197,5 +208,84 @@ describe('hotspots', () => {
         expect(isValidHotspot(hotspot), `invalid hotspot "${hotspot.id}" on "${stem}"`).toBe(true);
       }
     }
+  });
+});
+
+describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
+  it('every branch is a genuine two-path split with real, non-empty routes', () => {
+    for (const slide of GUIDE_SLIDES) {
+      if (!slide.branch) continue;
+      expect(isValidBranch(slide.branch), `slide "${slide.id}" has an invalid branch`).toBe(true);
+      for (const path of slide.branch.paths) {
+        expect(path.label.trim(), `empty branch path label on slide "${slide.id}"`).not.toBe('');
+        for (const step of path.flow ?? []) {
+          expect(step.text.trim(), `empty branch flow step on slide "${slide.id}"`).not.toBe('');
+        }
+        for (const step of path.steps ?? []) {
+          expect(step.trim(), `empty branch step on slide "${slide.id}"`).not.toBe('');
+        }
+      }
+    }
+  });
+
+  it('a slide uses at most one top-level procedure shape (linear flow xor branch)', () => {
+    for (const slide of GUIDE_SLIDES) {
+      expect(
+        !(slide.flow && slide.branch),
+        `slide "${slide.id}" declares both a linear flow and a branch`
+      ).toBe(true);
+    }
+  });
+
+  it('edit-mode dependency metadata is consistent for every slide', () => {
+    for (const slide of GUIDE_SLIDES) {
+      expect(
+        isEditModeMetadataConsistent(slide),
+        `slide "${slide.id}" has inconsistent edit-mode metadata`
+      ).toBe(true);
+    }
+  });
+
+  it('the branch validator rejects malformed two-path structures', () => {
+    const good: GuideBranchPath = { label: 'דרך א', flow: [{ text: 'צעד' }] };
+    const other: GuideBranchPath = { label: 'דרך ב', steps: ['צעד'] };
+    const emptyLabel: GuideBranchPath = { label: '  ', steps: ['x'] };
+    const noRoute: GuideBranchPath = { label: 'דרך ב' };
+    expect(isValidBranchPath(good)).toBe(true);
+    expect(isValidBranch({ paths: [good, other] })).toBe(true);
+    // one path, three paths, an empty label, and a route-less path are all rejected.
+    expect(isValidBranch({ paths: [good] } as unknown as GuideBranch)).toBe(false);
+    expect(isValidBranch({ paths: [good, other, good] } as unknown as GuideBranch)).toBe(false);
+    expect(isValidBranch({ paths: [good, emptyLabel] })).toBe(false);
+    expect(isValidBranch({ paths: [good, noRoute] })).toBe(false);
+  });
+
+  it('the edit-mode validator rejects inconsistent metadata', () => {
+    const base = { id: 'x', section: 'x', eyebrow: 'x', title: 'x' } as GuideSlide;
+    expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true })).toBe(false);
+    expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true, steps: [] })).toBe(false);
+    expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true, flow: [{ text: 't' }] })).toBe(true);
+    expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: false })).toBe(true);
+    expect(
+      isEditModeMetadataConsistent({ ...base, requiresEditMode: 'yes' as unknown as boolean })
+    ).toBe(false);
+  });
+
+  it('schema additions cannot convert missing evidence to ready (truth stays strict)', () => {
+    const normalized = normalizeSlide({
+      id: '__truth_probe__',
+      section: 'x',
+      eyebrow: 'x',
+      title: 'x',
+      status: 'ready',
+      missingCaptureId: 'M99',
+      branch: {
+        paths: [
+          { label: 'דרך א', flow: [{ text: 'צעד' }] },
+          { label: 'דרך ב', flow: [{ text: 'צעד' }] },
+        ],
+      },
+    });
+    expect(normalized.status).toBe('needs-capture');
   });
 });

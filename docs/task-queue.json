@@ -150,7 +150,7 @@
     },
     {
       "id": "P1-contract",
-      "status": "next",
+      "status": "done",
       "title": "Encode guide semantics and invariants",
       "goal": "Make the guide data model and invariant tests capable of expressing and enforcing the approved procedure, visual-branch, edit-mode-dependency and truth rules without changing slide wording or presentation behavior yet.",
       "requirements": [
@@ -192,7 +192,7 @@
     },
     {
       "id": "P2-primitives",
-      "status": "pending",
+      "status": "next",
       "title": "Extract reusable guide primitives",
       "goal": "Reduce regression risk by extracting only the recurring guide UI primitives from Guide.tsx while preserving behavior and visuals.",
       "requirements": [
