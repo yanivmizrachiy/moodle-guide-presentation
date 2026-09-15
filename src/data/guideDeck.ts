@@ -4,9 +4,10 @@ export type GuideScreenshot = {
   /** Renders small beside/below the main capture (e.g. a login thumbnail). */
   secondary?: boolean;
   /**
-   * Restrict the red marks to these hotspot ids (from guideHotspots.ts) for this
-   * use of the capture. Omit to show every hotspot the stem defines. Use it when
-   * a shared screen is reused across steps and each step marks a different control.
+   * The single verified control this step marks (id from guideHotspots.ts).
+   * Red focus is explicit per use: omit it — or leave it empty — for a clean
+   * screenshot; a defined hotspot never appears on its own. At most one target
+   * per use (REQ-GUIDE-002; enforced by src/data/hotspotPolicy.ts).
    */
   hotspotIds?: readonly string[];
 };
@@ -71,7 +72,7 @@ export type GuideSlide = {
   /** Marks a procedure performable only while Moodle edit mode is on (REQ-GUIDE-005). */
   requiresEditMode?: boolean;
   /** Renders the interactive guide-side edit-mode teaching toggle (REQ-CONTENT-004). */
-  editModeDemo?: boolean;
+  editModeTeachingToggle?: boolean;
   /** Renders the emphasized group of edit-mode-dependent operations, derived from requiresEditMode (REQ-CONTENT-004). */
   editModeGroup?: boolean;
 };
@@ -194,6 +195,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'open-space-my-courses': 'opening',
   'open-space-wizard': 'opening',
   'open-space-two-paths': 'opening',
+  'self-enrol-auto': 'opening',
   'open-space-group-choice': 'opening',
   'open-space-details-empty': 'opening',
   'open-space-details-check': 'opening',
@@ -261,7 +263,6 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'common-mistakes': 'support',
   recovery: 'support',
   'final-checklist': 'support',
-  'self-enrol-auto': 'students-join',
   'late-enrol-link': 'students-join',
   'self-enrol-troubleshoot-method': 'students-join',
   'self-enrol-troubleshoot-settings': 'students-join',
@@ -419,19 +420,43 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
       {
         label: 'ללא קבוצת לימוד',
-        steps: ['המרחב מתחיל ללא תלמידים.', 'אפשר לצרף תלמידים למרחב גם מאוחר יותר.'],
-        screenshots: [
-          {
-            src: '45-open-space-choice.png',
-            caption: 'מסך הבחירה — הכרטיס „ללא קבוצת לימוד”.',
-            hotspotIds: ['without-group'],
-          },
+        flow: [
+          { text: 'המרחב מתחיל ללא תלמידים.' },
+          { text: 'אפשר לצרף תלמידים למרחב גם מאוחר יותר.' },
         ],
       },
     ],
   },
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['עם קבוצת לימוד', 'ללא קבוצת לימוד', 'עם תלמידים', 'ללא תלמידים', 'שתי דרכים'],
+  status: 'ready',
+  },
+  {
+  id: 'self-enrol-auto',
+  eyebrow: 'הצטרפות תלמידים',
+  title: 'איך מצרפים תלמידים חדשים למרחב הלימוד?',
+  flow: [
+    { text: 'המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.' },
+    {
+      text: 'התלמיד פותח את הקישור ומתחבר למערכת.',
+      screenshot: { src: '01-login.png', caption: 'התחברות באמצעות סיסמת משרד החינוך.' },
+    },
+    {
+      text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
+      screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
+    },
+    {
+      text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
+      screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
+    },
+    {
+      text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
+      screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
+    },
+    { text: 'לכל משתתף במרחב מוגדר תפקיד, למשל „תלמיד” או „מורה”.' },
+  ],
+  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  keywords: ['מצרפים תלמידים', 'רישום עצמי', 'קישור למרחב', 'רשום אותי', 'משתמשים', 'תפקיד'],
   status: 'ready',
   },
   {
@@ -655,34 +680,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'זהו מרחב ללא מורה. התלמיד מתרגל בו עצמאית והביצועים שם אינם משויכים למרחב של המורה.',
   screenshots: [{ src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.' }],
   keywords: ['לימוד עצמי', 'למידה עצמית', 'מרחב אחר'],
-  status: 'ready',
-  },
-  {
-  id: 'self-enrol-auto',
-  eyebrow: 'הצטרפות תלמידים',
-  title: 'איך מצרפים תלמידים חדשים למרחב הלימוד?',
-  flow: [
-    { text: 'המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.' },
-    {
-      text: 'התלמיד פותח את הקישור ומתחבר למערכת.',
-      screenshot: { src: '01-login.png', caption: 'התחברות באמצעות סיסמת משרד החינוך.' },
-    },
-    {
-      text: 'התלמיד לוחץ על הכפתור „רשום אותי”.',
-      screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' },
-    },
-    {
-      text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
-      screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת תלמיד לאחר הרשמה עצמית.' },
-    },
-    {
-      text: 'המורה נכנס ל„משתמשים” ורואה את התלמיד ברשימת המשתתפים במרחב.',
-      screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
-    },
-    { text: 'לכל משתתף במרחב מוגדר תפקיד, למשל „תלמיד” או „מורה”.' },
-  ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
-  keywords: ['מצרפים תלמידים', 'רישום עצמי', 'קישור למרחב', 'רשום אותי', 'משתמשים', 'תפקיד'],
   status: 'ready',
   },
   {
@@ -930,7 +927,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     { text: 'מכבים ובודקים.' },
   ],
   keywords: ['מצב עריכה', 'עריכה', 'שינוי'],
-  editModeDemo: true,
+  editModeTeachingToggle: true,
   status: 'ready',
   },
   {

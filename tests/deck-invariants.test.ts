@@ -321,3 +321,78 @@ describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
     expect(normalized.status).toBe('needs-capture');
   });
 });
+
+describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
+  const twoPaths = GUIDE_SLIDES.find((slide) => slide.id === 'open-space-two-paths');
+
+  it('open-space-two-paths is a genuine two-path branch', () => {
+    expect(twoPaths, 'open-space-two-paths slide is missing').toBeDefined();
+    expect(twoPaths!.branch, 'open-space-two-paths has no branch').toBeDefined();
+    expect(isValidBranch(twoPaths!.branch!)).toBe(true);
+  });
+
+  it("the 'without study group' path is a vertical flow of the two owner steps in order, with no screenshot", () => {
+    const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'ללא קבוצת לימוד');
+    expect(path, "the 'ללא קבוצת לימוד' path is missing").toBeDefined();
+    expect(path!.flow?.map((step) => step.text)).toEqual([
+      'המרחב מתחיל ללא תלמידים.',
+      'אפשר לצרף תלמידים למרחב גם מאוחר יותר.',
+    ]);
+    // Converted away from steps/screenshots into a real vertical flow, so this
+    // path carries no capture and therefore no red circle at all.
+    expect(path!.steps ?? [], 'the without-group path still carries steps').toEqual([]);
+    expect(path!.screenshots ?? [], 'the without-group path still carries a screenshot').toEqual([]);
+    expect((path!.flow ?? []).some((step) => step.screenshot)).toBe(false);
+  });
+
+  it("the 'with study group' path requests only its own card's focus", () => {
+    const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'עם קבוצת לימוד');
+    const shots = path!.screenshots ?? [];
+    expect(shots.length).toBe(1);
+    expect(shots[0].hotspotIds).toEqual(['with-group']);
+  });
+});
+
+describe('adding students follows the opening choice (REQ-CONTENT-009)', () => {
+  it('the published slide right after open-space-two-paths teaches adding students', () => {
+    const order = PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id);
+    const index = order.indexOf('open-space-two-paths');
+    expect(index, 'open-space-two-paths is not published').toBeGreaterThanOrEqual(0);
+    expect(order[index + 1]).toBe('self-enrol-auto');
+  });
+
+  it('self-enrol-auto is filed in the opening chapter, so no chapter jump occurs', () => {
+    const slide = GUIDE_SLIDES.find((candidate) => candidate.id === 'self-enrol-auto');
+    expect(slide?.section).toBe('opening');
+  });
+
+  it('the add-students guide exists exactly once (moved, not duplicated)', () => {
+    expect(GUIDE_SLIDES.filter((slide) => slide.id === 'self-enrol-auto').length).toBe(1);
+  });
+});
+
+describe('no demo in code, UI or identifiers (REQ-STABILITY-008)', () => {
+  const collectSources = (dir: string): string[] => {
+    const out: string[] = [];
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) out.push(...collectSources(full));
+      else if (/\.(?:ts|tsx|css)$/.test(entry.name)) out.push(full);
+    }
+    return out;
+  };
+  const sources = collectSources(join(root, 'src')).map((file) => ({
+    file,
+    text: readFileSync(file, 'utf8'),
+  }));
+
+  it('no app source names a guide field editModeDemo', () => {
+    const offenders = sources.filter((source) => source.text.includes('editModeDemo')).map((source) => source.file);
+    expect(offenders, `editModeDemo found in: ${offenders.join(', ')}`).toEqual([]);
+  });
+
+  it("no UI source renders the 'צילום אמיתי' label", () => {
+    const offenders = sources.filter((source) => source.text.includes('צילום אמיתי')).map((source) => source.file);
+    expect(offenders, `'צילום אמיתי' found in: ${offenders.join(', ')}`).toEqual([]);
+  });
+});

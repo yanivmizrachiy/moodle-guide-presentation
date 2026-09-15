@@ -290,7 +290,7 @@ function SlideContent({
               />
             )}
 
-            {slide.editModeDemo && <EditModeToggle />}
+            {slide.editModeTeachingToggle && <EditModeToggle />}
 
             {slide.editModeGroup && <EditModeDependentGroup />}
           </div>

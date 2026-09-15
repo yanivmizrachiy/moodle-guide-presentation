@@ -230,9 +230,6 @@ export function ScreenshotCard({
           {!hideCaption && (
             <span className="flex items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3 text-sm font-black leading-relaxed text-slate-700">
               <span>{screenshot.caption}</span>
-              {!failed && (
-                <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] text-blue-800">צילום אמיתי</span>
-              )}
             </span>
           )}
 

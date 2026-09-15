@@ -27,11 +27,32 @@ test.describe('two-path branch', () => {
     }
   });
 
-  test('each path circles only its own card on the shared choice screen', async ({ page }) => {
+  test('the with-group path circles only its own card on the shared choice screen', async ({ page }) => {
     await page.goto('./?slide=open-space-two-paths');
     const withPath = page.getByRole('region', { name: 'עם קבוצת לימוד' });
-    const withoutPath = page.getByRole('region', { name: 'ללא קבוצת לימוד' });
     await expect(withPath.locator('svg title')).toHaveText(['עם קבוצת לימוד']);
-    await expect(withoutPath.locator('svg title')).toHaveText(['ללא קבוצת לימוד']);
+  });
+
+  // REQ-CONTENT-008: the "without study group" path is a real vertical process,
+  // not a screenshot list — two ordered steps joined by the canonical down-arrow,
+  // and no red circle at all (it carries no capture).
+  test('the without-group path is a vertical flow with a down arrow and no card circle', async ({ page }) => {
+    await page.goto('./?slide=open-space-two-paths');
+    const withoutPath = page.getByRole('region', { name: 'ללא קבוצת לימוד' });
+    const step1 = withoutPath.getByText('המרחב מתחיל ללא תלמידים.');
+    const step2 = withoutPath.getByText('אפשר לצרף תלמידים למרחב גם מאוחר יותר.');
+    await expect(step1).toBeVisible();
+    await expect(step2).toBeVisible();
+
+    // A genuine top-to-bottom sequence: step 2 sits below step 1.
+    const b1 = await step1.boundingBox();
+    const b2 = await step2.boundingBox();
+    if (!b1 || !b2) throw new Error('without-group flow steps have no layout boxes');
+    expect(b2.y).toBeGreaterThan(b1.y);
+
+    // The canonical double down-arrow between the two steps.
+    await expect(withoutPath.locator('svg.lucide-chevrons-down')).toHaveCount(1);
+    // No red hotspot circle in this path.
+    await expect(withoutPath.locator('svg title')).toHaveCount(0);
   });
 });

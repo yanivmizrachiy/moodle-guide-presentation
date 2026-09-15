@@ -51,7 +51,7 @@
 - **טיפוס הצילום:** `GuideScreenshot { src, caption }`, כשדה `screenshots?: GuideScreenshot[]` על `GuideSlide`.
 - **שם הקובץ:** `src` הוא שם קובץ בלבד (בלי נתיב), יחסית ל-`public/guide/screenshots/`. `normalizeSlide` ממיר אותו ל-`.avif` בזמן ריצה, ולכן חייבות להתקיים גם נגזרות `.avif` ו-`.webp` וגם מקור `.jpg`/`.png`.
 - **פרסום:** שקף מתפרסם רק כאשר `status: 'ready'` ואין לו `missingCaptureId` (`PUBLISHED_GUIDE_SLIDES`). שקף שממתין לצילום אמיתי מסומן `needs-capture` ומתועד ב-`docs/GUIDE_MISSING_CAPTURES.md`.
-- **תצוגה:** `ScreenshotCard` ב-`src/pages/Guide.tsx` מציג כל צילום ככרטיס לחיץ, ו-`LightboxImage` מציג אותו בגודל מלא. אם הקובץ לא נטען — הכרטיס מושבת, תג „צילום אמיתי” נעלם, ומוצג „הצילום לא נטען. אין מוצג תחליף.”
+- **תצוגה:** `ScreenshotCard` ב-`src/pages/Guide.tsx` מציג כל צילום ככרטיס לחיץ, ו-`LightboxImage` מציג אותו בגודל מלא. אם הקובץ לא נטען — הכרטיס מושבת ומוצג „הצילום לא נטען. אין מוצג תחליף.”
 - **סימוני לחיצה:** `GUIDE_SCREENSHOT_HOTSPOTS` ב-`src/data/guideHotspots.ts`, לפי שם קובץ. המפה ריקה בכוונה עד שמיקום נבדק מול הצילום האמיתי; אין סימון מומצא.
 - **שערים:** `npm run check` (typecheck + audit:ssot + test + build) מריץ את בדיקות שלמות הדק, עקביות מקור האמת של המצגת, איכות המצגת ושלמות הנכסים. כל הבדיקות טוענות/בודקות את מקורות ה-Guide האמיתיים ונכשלות כאשר קיימת סתירה, צילום חסר בשקף מפורסם או סטייה מחוזה השער.
 
