@@ -6,6 +6,7 @@ const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
 const ssotPath = path.join(root, 'SSOT.md');
 const outPath = path.join(root, '.claude/TASK_CONTEXT.md');
+const baselinePath = path.join(root, '.claude/TASK_BASELINE.json');
 
 function die(message) {
   console.error(`task-context: ${message}`);
@@ -54,6 +55,22 @@ function gitLines(args) {
   return value ? value.split(/\r?\n/) : [];
 }
 
+function statusPaths(lines) {
+  const paths = new Set();
+  for (const line of lines) {
+    const raw = line.slice(3).trim();
+    if (!raw) continue;
+    if (raw.includes(' -> ')) {
+      const [from, to] = raw.split(' -> ');
+      if (from) paths.add(from.replace(/^"|"$/g, ''));
+      if (to) paths.add(to.replace(/^"|"$/g, ''));
+    } else {
+      paths.add(raw.replace(/^"|"$/g, ''));
+    }
+  }
+  return [...paths].sort();
+}
+
 const queue = readJson(queuePath);
 const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
 const nextTasks = tasks.filter((task) => task.status === 'next');
@@ -93,11 +110,33 @@ const sections = sectionNames.map((heading) => {
   return text;
 });
 
-const changed = gitLines(['status', '--short']);
+const statusLines = gitLines(['status', '--porcelain=v1', '--untracked-files=all']);
+const changedPaths = statusPaths(statusLines);
 const branch = gitLines(['branch', '--show-current'])[0] ?? 'unknown';
 const head = gitLines(['rev-parse', '--short', 'HEAD'])[0] ?? 'unknown';
+const fullHead = gitText(['rev-parse', 'HEAD']) || 'unknown';
 const ssotHash = gitText(['hash-object', 'SSOT.md']) || 'unknown';
 const queueHash = gitText(['hash-object', 'docs/task-queue.json']) || 'unknown';
+
+fs.mkdirSync(path.dirname(outPath), { recursive: true });
+let baseline = null;
+if (fs.existsSync(baselinePath)) {
+  try {
+    baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+  } catch {
+    baseline = null;
+  }
+}
+if (!baseline || baseline.task_id !== task.id || baseline.head !== fullHead) {
+  baseline = {
+    version: 1,
+    task_id: task.id,
+    head: fullHead,
+    initial_changed_paths: changedPaths,
+    created_at: new Date().toISOString()
+  };
+  fs.writeFileSync(baselinePath, `${JSON.stringify(baseline, null, 2)}\n`, 'utf8');
+}
 
 const bullets = (items) => items.length ? items.map((item) => `- ${item}`).join('\n') : '- none';
 const numbered = (items) => items.length ? items.map((item, index) => `${index + 1}. ${item}`).join('\n') : '1. none';
@@ -138,7 +177,7 @@ Start with these files only. Expand beyond them only when a concrete dependency,
 
 ${bullets(scope)}
 
-This is a focus boundary, not permission to ignore a proven dependency. If scope must expand, state the concrete dependency in the final BLOCKED/CHANGED report.
+This is a focus boundary. The scope guard compares work against the task-start baseline. If a proven dependency requires another path, add that path to the active task scope with a concrete reason before relying on it.
 
 ## Acceptance criteria
 
@@ -161,12 +200,13 @@ ${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical r
 - SSOT hash: ${ssotHash}
 - Task queue hash: ${queueHash}
 - Requirement ids: ${requestedRequirementIds.length ? requestedRequirementIds.join(', ') : 'none'}
+- Scope baseline: .claude/TASK_BASELINE.json for task ${baseline.task_id} at HEAD ${baseline.head.slice(0, 12)}
 
 ## Current repository state
 
 - Branch: ${branch}
 - HEAD before work: ${head}
-- Existing working-tree changes: ${changed.length ? changed.join(' | ') : 'clean'}
+- Existing working-tree changes at context generation: ${changedPaths.length ? changedPaths.join(' | ') : 'clean'}
 
 ## Execution contract
 
@@ -180,6 +220,5 @@ ${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical r
 - Report only: CHANGED / VERIFIED / COMMIT / NEXT / BLOCKED. Do not repeat the SSOT or narrate the whole repository.
 `;
 
-fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, output, 'utf8');
 console.log(`Generated ${path.relative(root, outPath)} for ${task.id} with ${requestedRequirementIds.length} canonical requirements and ${evidence.length} evidence notes.`);
