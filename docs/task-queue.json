@@ -281,7 +281,7 @@
     },
     {
       "id": "P4-late-enrol-link",
-      "status": "next",
+      "status": "done",
       "title": "Teach later student joining by space link",
       "goal": "Show that a space opened without students can accept students later and teach the exact real link-copy path step by step.",
       "requirements": [
@@ -323,7 +323,7 @@
     },
     {
       "id": "P5-edit-mode",
-      "status": "pending",
+      "status": "next",
       "title": "Make edit mode a first-class guide concept",
       "goal": "Create the approved edit-mode chapter structure and a real guide-side interactive on/off teaching control without pretending that the guide control is Moodle itself.",
       "requirements": [

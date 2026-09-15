@@ -227,6 +227,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   recovery: 'support',
   'final-checklist': 'support',
   'self-enrol-auto': 'students-join',
+  'late-enrol-link': 'students-join',
   'self-enrol-troubleshoot-method': 'students-join',
   'self-enrol-troubleshoot-settings': 'students-join',
   'self-enrol-student': 'students-join',
@@ -736,6 +737,40 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['מצרפים תלמידים', 'רישום עצמי', 'קישור למרחב', 'רשום אותי', 'משתמשים', 'תפקיד'],
   status: 'ready',
+  },
+  {
+  id: 'late-enrol-link',
+  section: 'users-roles',
+  eyebrow: 'הצטרפות מאוחרת',
+  title: 'צירוף תלמידים מאוחר יותר',
+  summary: '„ללא תלמידים” אינו מצב קבוע — אפשר לצרף תלמידים למרחב גם מאוחר יותר באמצעות קישור המרחב.',
+  flow: [
+    {
+      text: 'המורה פותח את מרחב הלמידה המדויק.',
+      screenshot: { src: '10-course-page.png', caption: 'מרחב הלמידה פתוח.', hotspotIds: [] },
+    },
+    // The space-URL copy step has no capture yet on purpose: proving where
+    // the space address is copied from needs a real browser-window shot
+    // (M12, distinct from M11). Truth before design — no fake address bar.
+    { text: 'מעתיק את כתובת האינטרנט של המרחב משורת הכתובת של הדפדפן.' },
+    { text: 'שולח את הקישור לתלמידים.' },
+    {
+      text: 'התלמיד פותח את הקישור ולוחץ „רשום אותי”.',
+      screenshot: { src: '53-student-enrol.png', caption: 'מסך ההצטרפות עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
+    },
+    {
+      text: 'התלמיד רואה שההרשמה הצליחה ונכנס למרחב.',
+      screenshot: {
+        src: '54-student-enrolled.png',
+        caption: '„נרשמתם לקורס בהצלחה” — תצוגת התלמיד לאחר ההרשמה.',
+        hotspotIds: ['enrolled-ok'],
+      },
+    },
+  ],
+  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  keywords: ['צירוף תלמידים מאוחר', 'קישור למרחב', 'הצטרפות מאוחרת', 'ללא תלמידים'],
+  status: 'needs-capture',
+  missingCaptureId: 'M12',
   },
   {
   id: 'self-enrol-troubleshoot-method',
