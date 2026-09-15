@@ -968,16 +968,20 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'space-heading',
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים כותרת?',
-  summary: 'מפעילים עריכה, פותחים את עריכת הכותרת, משנים ושומרים.',
   flow: [
     {
-      text: 'מפעילים את מתג „עריכה” ולוחצים על סמל העיפרון שליד הכותרת.',
-      screenshot: { src: '69-section-rename-pencil.png', caption: 'מצב עריכה — סמל העיפרון ליד כותרת היחידה.' },
+      text: 'מפעילים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.', hotspotIds: ['edit-toggle'] },
     },
     {
-      text: 'מקלידים את הכותרת החדשה ומקישים Enter לשמירה.',
-      screenshot: { src: '70-section-rename-field.png', caption: 'שדה עריכת הכותרת פתוח — Enter לשמירה, Esc לביטול.' },
+      text: 'לוחצים על סמל העיפרון שליד הכותרת.',
+      screenshot: { src: '69-section-rename-pencil.png', caption: 'מצב עריכה — סמל העיפרון ליד כותרת היחידה.', hotspotIds: ['rename-pencil'] },
     },
+    {
+      text: 'מקלידים את הכותרת החדשה בשדה.',
+      screenshot: { src: '70-section-rename-field.png', caption: 'שדה עריכת הכותרת פתוח — Enter לשמירה, Esc לביטול.', hotspotIds: ['rename-field'] },
+    },
+    { text: 'מקישים Enter כדי לשמור.' },
   ],
   keywords: ['כותרת', 'שם יחידה', 'עריכה'],
   requiresEditMode: true,
@@ -1396,17 +1400,19 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מגדירים שתלמיד יוכל לנסות לפתור את המשימה שוב ושוב?',
   summary: 'בהגדרות הבוחן בוחרים את מספר הניסיונות המותרים.',
   flow: [
-    { text: 'נכנסים למצב עריכה.' },
+    {
+      text: 'מפעילים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.', hotspotIds: ['edit-toggle'] },
+    },
     { text: 'פותחים את הגדרות הבוחן.' },
     {
-      text: 'מאתרים את „מספר נסיונות מותרים”.',
-      screenshot: { src: '33-quiz-question-behaviour.jpg', caption: '„מספר נסיונות מותרים” בהגדרות הבוחן — „אין הגבלה”.' },
+      text: 'בוחרים „מספר נסיונות מותרים: אין הגבלה”.',
+      screenshot: { src: '33-quiz-question-behaviour.jpg', caption: '„מספר נסיונות מותרים” בהגדרות הבוחן — „אין הגבלה”.', hotspotIds: ['unlimited-attempts'] },
     },
-    { text: 'בוחרים „אין הגבלה”.' },
     { text: 'שומרים.' },
     {
       text: 'בודקים בתצוגת תלמיד שאפשר לבצע ניסיון נוסף.',
-      screenshot: { src: '56-quiz-retry.png', caption: 'תצוגת תלמיד לאחר ההגשה: הכפתור „ניסיון חדש” וסיכום הניסיון שהסתיים.' },
+      screenshot: { src: '56-quiz-retry.png', caption: 'תצוגת תלמיד לאחר ההגשה: הכפתור „ניסיון חדש”.', hotspotIds: ['new-attempt'] },
     },
   ],
   points: ['למבחן חד־פעמי בוחרים ניסיון אחד.', 'לתרגול בוחרים „אין הגבלה”.'],
