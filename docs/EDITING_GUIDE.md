@@ -17,7 +17,6 @@ only tells you *where* and *how*. Run `npm run check` before every commit.
 | What each screenshot shows / privacy edits | `docs/GUIDE_SCREENSHOTS_MANIFEST.md` |
 | Screens still missing real evidence | `docs/GUIDE_MISSING_CAPTURES.md` |
 | Requirements + rules | `SSOT.md` (`REQ-*`) |
-| Execution state (which task is next) | `docs/task-queue.json` (state only, not truth) |
 
 Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
 
@@ -58,23 +57,27 @@ node scripts/capture/launch.mjs "https://moodlemoe.lms.education.gov.il/my/"   #
 node scripts/capture/steps.mjs '[{"dsf":2},{"cdpshot":"raw/NN-name.png"}]'      # drive + full-res shot
 ```
 
-Mask any PII (names, school, email, phone, IDs, grades) with clean pixel edits
-before it enters the repo. Replace, never blur.
+`raw/` is intentionally ignored by Git. Mask any PII (names, school, email,
+phone, IDs, grades) with clean pixel edits before a screenshot enters the repo.
+Replace, never blur.
 
-## Requirements & tasks (canonical lifecycle)
+## Repository hygiene
 
-- **New requirement** — add a `[REQ-AREA-NNN]` line in `SSOT.md` and cover it with
-  a task in `docs/task-queue.json` (every REQ must be covered — CI enforces it).
-- **New task after the queue is complete** — append one `next` task to
-  `docs/task-queue.json`, then follow `CLAUDE.md` rule 13: `npm run context:task`
-  → implement → `npm run check` → `npm run task:advance -- <id>` →
-  `npm run audit:ssot` → one commit → push.
+```bash
+npm run clean
+```
+
+This removes disposable build/test artifacts (`dist`, `.vite`, coverage,
+Playwright output and generated Claude temp files). It does **not** delete
+`raw/` captures.
+
+Tracked generated junk is rejected by `npm run audit:ssot`.
 
 ## Checks before commit / push
 
 ```bash
-npm run check        # fast per-task gate: typecheck + ssot + scope + tests + build + receipt
-npm run check:full   # broad gate: check + browser/a11y/visual (Playwright)
+npm run check        # typecheck + SSOT audit + unit tests + production build
+npm run check:full   # check + browser/a11y/visual Playwright tests
 ```
 
 Do not update visual baselines unless you made an intentional visual change:

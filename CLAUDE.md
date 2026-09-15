@@ -1,18 +1,16 @@
 # Claude Code
 
-1. `SSOT.md` is the sole normative authority. `docs/task-queue.json` is execution state only, never a second source of truth.
-2. At the **start** of a task run `npm run context:task` and read `.claude/TASK_CONTEXT.md`. Treat its `REQ-*` lines as exact canonical SSOT excerpts for the active task.
-3. Start with the files under `Read first`. Do **not** reread the full SSOT or scan the whole repository unless the task explicitly lists it or a concrete dependency, failing check, or verified conflict requires expansion.
-4. For large source files such as `src/data/guideDeck.ts` or `src/pages/Guide.tsx`, locate the relevant type, function, component, slide id, or test name first and read bounded surrounding spans. Do not dump/read the entire file merely for orientation; expand to the full file only when a proven dependency requires it.
-5. Token saving must never reduce reasoning, verification, correctness, implementation quality, or necessary dependency inspection. Save context only by excluding irrelevant files, repeated explanations, and repeated repo-wide audits.
-6. `REQ-*` ids are stable requirement anchors. Never delete, rename, silently weaken, or drop coverage for an approved requirement. A newly approved owner requirement must receive a canonical SSOT `REQ-*` id and execution coverage.
-7. Content/order stay canonical in `src/data/guideDeck.ts`; do not create another deck/content source.
-8. Never invent screenshots or hotspots. Missing real evidence stays `needs-capture`. Reuse verified existing evidence before capturing anything new.
-9. Never add, delete, or rewrite owner-authored slide/TOC wording without explicit owner instruction. A listed `REQ-CONTENT-*` requirement authorizes only the facts/headings/intent it actually contains; do not improvise unrelated explanatory copy. No demo, mock, placeholder, marketing, or self-descriptive copy.
-10. Preserve RTL, stable slide IDs, navigation, canonical assets, and existing working behavior. No unrelated cleanup/refactor.
-11. Keep this repository presentation-only: no Teacher Hub, LTI, Supabase, backend, grades, or user-data systems.
-12. The declared task scope is enforced. If a concrete dependency requires another path, add that path to the active task scope with the reason before changing it; do not silently broaden scope.
-13. **Lifecycle is strict:** context first → implement only the active task → run every required check, including `npm run check` → only after all checks pass run `npm run task:advance -- <current-task-id>` → run `npm run audit:ssot` once more to validate the queue transition → commit. `npm run check` records a verified receipt of the exact tested working-tree state; `task:advance` must refuse to advance if anything changed after that receipt. Do not run full `npm run check` again after advancing the queue in the same uncommitted worktree, because that would intentionally switch the active-task baseline.
-14. A shared-component change must regression-check at least one dependent usage outside the immediate target when applicable.
-15. If the queue is fully complete, do not invent follow-up work. New work starts only from a new owner-approved canonical requirement.
-16. Final report only: `CHANGED / VERIFIED / COMMIT / NEXT / BLOCKED`. Do not restate the SSOT or narrate the repository.
+1. `SSOT.md` is the sole normative authority for this project.
+2. This repository is presentation-only. Do not add Teacher Hub, LTI, Supabase, backend, grades, user-data systems, or unrelated infrastructure.
+3. Content/order stay canonical in `src/data/guideDeck.ts`; do not create another deck/content source.
+4. Never invent screenshots or hotspots. Missing real evidence stays `needs-capture`. Reuse verified existing evidence before capturing anything new.
+5. Never add, delete, or rewrite owner-authored slide/TOC wording without explicit owner instruction.
+6. Preserve RTL, stable slide IDs, navigation, canonical assets, and existing working behavior.
+7. For large files, locate the relevant slide id, type, function, component, or test first; read only the surrounding code needed for the change.
+8. Shared-component changes must regression-check at least one dependent usage outside the immediate target when applicable.
+9. Generated outputs and local artifacts are not source: never commit `dist/`, `.vite/`, `coverage/`, Playwright reports, raw captures, logs, temporary files, or generated Claude context/receipt files.
+10. Run `npm run check` before every commit. For meaningful UI changes, run `npm run check:full`.
+11. Use `npm run clean` to remove disposable local build/test artifacts. It intentionally does not delete `raw/` captures because they may contain evidence that has not yet been integrated.
+12. Do not update visual baselines unless the visual change is deliberate and verified.
+13. Keep changes scoped to the requested work; do not perform unrelated refactors.
+14. Final report should be concise: changed, verified, commit, and any real blocker.
