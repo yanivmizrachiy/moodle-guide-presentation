@@ -43,12 +43,111 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
 /* Red focus is deliberate, not automatic: no hotspotIds means a clean screenshot.
  * A use can request one verified target; the policy helper caps the visible result
  * at one so a page never gets covered in competing red circles. */
-export function HotspotLayer({ src, only }: { src: string; only?: readonly string[] }) {
+/**
+ * A step that marks one small control is shown as a close-up of that control:
+ * on a full-page capture a button is a few pixels wide, and the red circle is
+ * easy to miss. Larger targets (a table, a section, a whole form area) keep the
+ * full screen, and any use can override with `zoom`.
+ */
+const SMALL_TARGET = { width: 22, height: 14 };
+
+export function focusHotspot(screenshot: GuideScreenshot) {
+  if (screenshot.zoom === false) return null;
+  const hotspots = getVisibleGuideHotspots(screenshot.src, screenshot.hotspotIds);
+  if (hotspots.length !== 1) return null;
+  const [hotspot] = hotspots;
+  const small = hotspot.width <= SMALL_TARGET.width && hotspot.height <= SMALL_TARGET.height;
+  return screenshot.zoom || small ? hotspot : null;
+}
+
+/**
+ * How far to magnify a close-up. Deliberately moderate: the control has to be
+ * big enough to read, while the surrounding screen stays visible so the teacher
+ * still sees WHERE on the page the control sits.
+ */
+function focusScale(width: number) {
+  return Math.min(3.4, Math.max(1.4, 14 / Math.max(width, 0.5)));
+}
+
+/**
+ * The red arrow that points at the marked control, drawn in its own untilted,
+ * fixed-size box so it never inherits the ellipse's non-uniform scaling. It
+ * approaches from whichever side of the capture has room, and its tip stops on
+ * the edge of the target instead of covering it.
+ */
+function HotspotArrow({
+  x,
+  y,
+  width,
+  height,
+}: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}) {
+  const fromRight = x + width / 2 <= 55;
+  const fromBelow = y + height / 2 <= 55;
+  const tip = { x: fromRight ? 14 : 118, y: fromBelow ? 14 : 118 };
+  const tail = { x: fromRight ? 124 : 8, y: fromBelow ? 124 : 8 };
+
+  const dx = tip.x - tail.x;
+  const dy = tip.y - tail.y;
+  const len = Math.hypot(dx, dy);
+  const ux = dx / len;
+  const uy = dy / len;
+  const base = { x: tip.x - ux * 34, y: tip.y - uy * 34 };
+  const head = [
+    `${tip.x},${tip.y}`,
+    `${base.x - uy * 15},${base.y + ux * 15}`,
+    `${base.x + uy * 15},${base.y - ux * 15}`,
+  ].join(' ');
+
+  return (
+    <svg
+      className="pointer-events-none absolute overflow-visible"
+      style={{
+        left: `${fromRight ? x + width : x}%`,
+        top: `${fromBelow ? y + height : y}%`,
+        marginLeft: `-${tip.x}px`,
+        marginTop: `-${tip.y}px`,
+      }}
+      width="132"
+      height="132"
+      viewBox="0 0 132 132"
+    >
+      {/* White under-stroke so the arrow stays readable over dark UI too. */}
+      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#ffffff" strokeWidth="11" strokeLinecap="round" opacity="0.85" />
+      <polygon points={head} fill="#ffffff" opacity="0.85" transform="scale(1.18)" transform-origin={`${tip.x} ${tip.y}`} />
+      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#dc2626" strokeWidth="6.5" strokeLinecap="round" />
+      <polygon points={head} fill="#dc2626" />
+    </svg>
+  );
+}
+
+export function HotspotLayer({
+  src,
+  only,
+  strokeWidth = 2.8,
+}: {
+  src: string;
+  only?: readonly string[];
+  strokeWidth?: number;
+}) {
   const hotspots = getVisibleGuideHotspots(src, only);
   if (hotspots.length === 0) return null;
 
   return (
     <span className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
+      {hotspots.map((hotspot) => (
+        <HotspotArrow
+          key={`${hotspot.id}-arrow`}
+          x={hotspot.x}
+          y={hotspot.y}
+          width={hotspot.width}
+          height={hotspot.height}
+        />
+      ))}
       {hotspots.map((hotspot) => (
         <svg
           key={hotspot.id}
@@ -70,7 +169,7 @@ export function HotspotLayer({ src, only }: { src: string; only?: readonly strin
             ry="43"
             fill="none"
             stroke="#dc2626"
-            strokeWidth="2.8"
+            strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
             opacity="0.9"
@@ -122,12 +221,19 @@ export function ScreenshotCard({
   slideTitle,
   onOpen,
   hideCaption = false,
+  zoomable = false,
 }: {
   screenshot: GuideScreenshot;
   slideTitle: string;
   onOpen: (state: LightboxState) => void;
   /** In a flow the step text already labels the screen; skip the caption bar. */
   hideCaption?: boolean;
+  /**
+   * A step in a click chain may close in on the control it tells you to press.
+   * A slide-level capture never does: there the point is to see the whole page
+   * and where the control sits on it.
+   */
+  zoomable?: boolean;
 }) {
   const reducedMotion = Boolean(useReducedMotion());
   const pointerX = useMotionValue(0);
@@ -137,6 +243,7 @@ export function ScreenshotCard({
   const rotateY = useSpring(rotateYRaw, { stiffness: 210, damping: 24, mass: 0.55 });
   const rotateX = useSpring(rotateXRaw, { stiffness: 210, damping: 24, mass: 0.55 });
   const [failed, setFailed] = useState(false);
+  const focus = zoomable || screenshot.zoom === true ? focusHotspot(screenshot) : null;
 
   function resetTilt() {
     pointerX.set(0);
@@ -210,20 +317,52 @@ export function ScreenshotCard({
             // The inner relative wrapper hugs the painted image, so hotspot
             // percentages land on the real control (w-full letterboxing drifted them).
             <span className="block overflow-hidden bg-white">
-              <span className="relative mx-auto block w-fit max-w-full">
-                <picture>
-                  <source type="image/avif" srcSet={screenshotSources(screenshot.src).avif} />
-                  <img
-                    src={screenshotSources(screenshot.src).webp}
-                    alt={screenshot.caption}
-                    loading="eager"
-                    decoding="async"
-                    onError={() => setFailed(true)}
-                    className="block max-h-[53vh] max-w-full bg-white object-contain"
-                  />
-                </picture>
-                <HotspotLayer src={screenshot.src} only={screenshot.hotspotIds} />
-              </span>
+              {focus ? (
+                // Close-up: the image is magnified and shifted so the marked
+                // control sits in the middle of a short frame. The translate
+                // percentages are of the image's own box, so this needs no
+                // pixel measurements and stays correct at any card width.
+                <span
+                  className="relative block overflow-hidden bg-white"
+                  style={{ height: 'clamp(210px, 36vh, 380px)' }}
+                >
+                  <span
+                    className="absolute left-1/2 top-1/2 block"
+                    style={{
+                      width: `${focusScale(focus.width) * 100}%`,
+                      transform: `translate(-${focus.x + focus.width / 2}%, -${focus.y + focus.height / 2}%)`,
+                    }}
+                  >
+                    <picture>
+                      <source type="image/avif" srcSet={screenshotSources(screenshot.src).avif} />
+                      <img
+                        src={screenshotSources(screenshot.src).webp}
+                        alt={screenshot.caption}
+                        loading="eager"
+                        decoding="async"
+                        onError={() => setFailed(true)}
+                        className="block w-full bg-white"
+                      />
+                    </picture>
+                    <HotspotLayer src={screenshot.src} only={screenshot.hotspotIds} strokeWidth={4.2} />
+                  </span>
+                </span>
+              ) : (
+                <span className="relative mx-auto block w-fit max-w-full">
+                  <picture>
+                    <source type="image/avif" srcSet={screenshotSources(screenshot.src).avif} />
+                    <img
+                      src={screenshotSources(screenshot.src).webp}
+                      alt={screenshot.caption}
+                      loading="eager"
+                      decoding="async"
+                      onError={() => setFailed(true)}
+                      className="block max-h-[53vh] max-w-full bg-white object-contain"
+                    />
+                  </picture>
+                  <HotspotLayer src={screenshot.src} only={screenshot.hotspotIds} />
+                </span>
+              )}
             </span>
           )}
 

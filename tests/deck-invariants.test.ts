@@ -344,7 +344,7 @@ describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
     expect(path, "the 'ללא קבוצת לימוד' path is missing").toBeDefined();
     const texts = (path!.flow ?? []).map((step) => step.text);
     expect(texts.slice(0, 2)).toEqual([
-      'המרחב מתחיל ללא תלמידים.',
+      'פתחנו מרחב ללא תלמידים.',
       'אפשר לצרף תלמידים למרחב גם מאוחר יותר.',
     ]);
     // A real vertical flow, not a steps/screenshots list.

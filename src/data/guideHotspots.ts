@@ -55,16 +55,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '61-my-courses-new': [
     { id: 'new-space', label: 'מרחב חדש', x: 22.4, y: 20.4, width: 10.6, height: 7.6 },
   ],
+  // 1200x603 course page in edit mode: the „מצב עריכה" toggle, top-left corner.
+  '06-course-edit-on': [
+    { id: 'edit-toggle', label: 'מצב עריכה', x: 1.9, y: 1.8, width: 7.3, height: 4.8 },
+  ],
   // 3200x1800 home page in edit mode: the "עריכה" toggle, top-left corner.
   '05-home-edit-on': [
-    { id: 'edit-toggle', label: 'עריכה', x: 3.4, y: 2.2, width: 6.6, height: 6 },
-  ],
-  // 400x62 top-bar crop: the "מצב עריכה" toggle sits on the left.
-  '03-topbar-edit-off': [
-    { id: 'edit-toggle', label: 'מצב עריכה', x: 5, y: 20, width: 36, height: 56 },
-  ],
-  '04-topbar-edit-on': [
-    { id: 'edit-toggle', label: 'מצב עריכה', x: 5, y: 20, width: 36, height: 56 },
+    { id: 'edit-toggle', label: 'עריכה', x: 1.3, y: 1.9, width: 6, height: 2.9 },
   ],
   // 3200x1800 student quiz page after submission: the "ניסיון חדש" button.
   '56-quiz-retry': [
@@ -100,11 +97,12 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '45-open-space-choice': [
     { id: 'with-group', label: 'עם קבוצת לימוד', x: 50.3, y: 29.8, width: 22.2, height: 45.3 },
     { id: 'without-group', label: 'ללא קבוצת לימוד', x: 27.5, y: 29.8, width: 22.2, height: 45.3 },
+    { id: 'next', label: 'הבא', x: 4.0, y: 78.8, width: 4.4, height: 6 },
   ],
   // 3200x1800 course page: the space-navigation tabs. Shared across several
   // slides, so each is marked only on steps that opt in via hotspotIds.
   '10-course-page': [
-    { id: 'edit-toggle', label: 'עריכה', x: 0.85, y: 1.4, width: 7.4, height: 4.1 },
+    { id: 'edit-toggle', label: 'עריכה', x: 1.3, y: 1.9, width: 6, height: 2.9 },
     { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
     { id: 'participants-tab', label: 'משתתפים', x: 51.6, y: 20.4, width: 5, height: 4.6 },
   ],
@@ -186,9 +184,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'group-name', label: 'שם הקבוצה', x: 43.4, y: 27.8, width: 28.8, height: 5.5 },
   ],
   // 3200x1800 add/remove members: the add button.
-  '73-group-add-members': [
-    { id: 'add-member', label: 'הוספה', x: 53.3, y: 39.3, width: 9.4, height: 5.0 },
-  ],
   // 3200x1800 grader: the visible-groups selector open with its options.
   '75-grader-group-selector-open': [
     { id: 'group-option', label: 'קבוצה 1', x: 65.6, y: 49.5, width: 7.2, height: 6.0 },
@@ -225,9 +220,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   '74-groups-two-groups': [
     { id: 'add-members', label: 'הוספת/הסרת משתתפים מקבוצה', x: 33, y: 85.3, width: 16, height: 5.5 },
-  ],
-  '06-course-edit-on': [
-    { id: 'edit-toggle', label: 'מצב עריכה', x: 1.2, y: 2.2, width: 8.6, height: 4.6 },
   ],
   '09-user-menu': [
     { id: 'user-button', label: 'יניב', x: 8.4, y: 1.9, width: 3.7, height: 2.9 },
@@ -295,6 +287,12 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1420 participants page (cropped above the table for privacy): the menu
   // that leads to the enrolment methods.
+  // 3200x1800 group members screen: the two lists it moves users between.
+  '73-group-add-members': [
+    { id: 'available-user', label: 'משתמשים זמינים — המשתמש שבוחרים', x: 31.4, y: 38, width: 18.7, height: 4.4 },
+    { id: 'group-member', label: 'חברי הקבוצה — המשתמש שנוסף', x: 66.6, y: 38, width: 28, height: 4.4 },
+    { id: 'add-member', label: 'הוספה', x: 52.9, y: 39.2, width: 9.2, height: 4.6 },
+  ],
   '25-participants-nav': [
     { id: 'groups-entry', label: 'קבוצות', x: 86.5, y: 62.1, width: 9.7, height: 5.2 },
     { id: 'users-menu', label: 'תפריט „משתמשים רשומים”', x: 82.6, y: 30.2, width: 13, height: 6.8 },

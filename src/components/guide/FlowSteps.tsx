@@ -14,11 +14,14 @@ export function NumberedStepRow({
   index,
   children,
   centered = false,
+  showNumber = true,
 }: {
   index: number;
   children: ReactNode;
-  /** Center the badge+text (used for text-only flow steps, to line up with the arrows). */
+  /** Center the badge+text under the flow's down-arrows (REQ-GUIDE-003). */
   centered?: boolean;
+  /** A single-step lane is not a sequence, so it carries no „1” badge. */
+  showNumber?: boolean;
 }) {
   return (
     <div
@@ -27,9 +30,11 @@ export function NumberedStepRow({
         centered && 'justify-center text-center'
       )}
     >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-black text-white shadow-md">
-        {index + 1}
-      </span>
+      {showNumber && (
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-black text-white shadow-md">
+          {index + 1}
+        </span>
+      )}
       <span className="pt-1 text-sm font-black leading-relaxed text-slate-700 sm:text-base">{children}</span>
     </div>
   );
@@ -46,6 +51,7 @@ export function FlowSteps({
   flow,
   onOpenScreenshot,
   afterFirstStep,
+  numbered = true,
 }: {
   idPrefix: string;
   slideTitle: string;
@@ -53,6 +59,8 @@ export function FlowSteps({
   onOpenScreenshot: (state: LightboxState) => void;
   /** Rendered right after step 1 — the slide's link row lives there today. */
   afterFirstStep?: ReactNode;
+  /** A lane with a single action is not a numbered sequence. */
+  numbered?: boolean;
 }) {
   return (
     <ol className="grid gap-3">
@@ -65,7 +73,10 @@ export function FlowSteps({
               strokeWidth={2.6}
             />
           )}
-          <NumberedStepRow index={index} centered={!step.screenshot}>
+          {/* Every step of a flow sits centred under the same down-arrow, so the
+              numbered sentences line up with it whether or not the step also
+              shows a screenshot below. */}
+          <NumberedStepRow index={index} centered showNumber={numbered}>
             {step.text}
             {step.link && (
               <>
@@ -87,6 +98,7 @@ export function FlowSteps({
               screenshot={step.screenshot}
               slideTitle={slideTitle}
               onOpen={onOpenScreenshot}
+              zoomable
               hideCaption
             />
           )}

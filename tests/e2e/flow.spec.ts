@@ -25,17 +25,18 @@ test.describe('flow slides and hotspots', () => {
 
     // REQ-GUIDE-002/007: every step of this flow is a click on the toggle, so
     // each of its screenshot uses marks that one control — one mark per use.
-    await expect(flow.locator('svg title', { hasText: 'מצב עריכה' })).toHaveCount(count);
+    await expect(flow.locator('svg title', { hasText: 'עריכה' })).toHaveCount(count);
   });
 
   test('a screenshot shown without a requested mark stays clean', async ({ page }) => {
-    await page.goto('./?slide=open-space-details-check');
+    await page.goto('./?slide=open-space-start');
     const flow = page.getByRole('region', { name: 'רצף הפעולות' }).first();
     await expect(flow).toBeVisible();
-    // The same capture is shown twice: clean while the details are checked,
-    // then marked on „הבא" — never two circles on one use.
-    await expect(flow.locator('img')).toHaveCount(2);
-    await expect(flow.locator('svg title')).toHaveCount(1);
+    // 46-open-space-form is shown twice in this procedure: clean while the
+    // details are checked, then marked on „הבא" — never two circles on one use.
+    const steps = flow.locator('li', { has: page.locator('img[src*="46-open-space-form"]') });
+    await expect(steps).toHaveCount(2);
+    await expect(steps.filter({ has: page.locator('svg title') })).toHaveCount(1);
   });
 
   test('the honest failure state never appears on published slides', async ({ page }) => {

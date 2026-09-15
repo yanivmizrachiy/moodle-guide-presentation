@@ -50,10 +50,12 @@ function SlideContent({
   slide,
   onOpenScreenshot,
   onStart,
+  onJumpToSlide,
 }: {
   slide: GuideSlide;
   onOpenScreenshot: (state: LightboxState) => void;
   onStart: () => void;
+  onJumpToSlide: (slideId: string) => void;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -209,9 +211,11 @@ function SlideContent({
               slide title down, so the title now starts at the top. */}
           <header>
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <div className="inline-flex w-fit items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-800 shadow-sm">
-                {slide.eyebrow}
-              </div>
+              {slide.eyebrow && (
+                <div className="inline-flex w-fit items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-800 shadow-sm">
+                  {slide.eyebrow}
+                </div>
+              )}
               {slide.requiresEditMode && (
                 <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-black text-amber-900 shadow-sm">
                   <ToggleRight aria-hidden="true" className="h-4 w-4" />
@@ -297,7 +301,7 @@ function SlideContent({
 
             {slide.editModeTeachingToggle && <EditModeToggle />}
 
-            {slide.editModeGroup && <EditModeDependentGroup />}
+            {slide.editModeGroup && <EditModeDependentGroup onSelect={onJumpToSlide} />}
           </div>
         </div>
 
@@ -663,6 +667,7 @@ export default function Guide() {
                 slide={slide}
                 onOpenScreenshot={setLightbox}
                 onStart={() => setPanel('menu')}
+                onJumpToSlide={jumpToSlide}
               />
             </m.article>
           </AnimatePresence>
@@ -856,7 +861,9 @@ export default function Guide() {
                             className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-right transition hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
                           >
                             <div className="min-w-0">
-                              <p className="text-xs font-black text-blue-700">{item.eyebrow}</p>
+                              {item.eyebrow && (
+                                <p className="text-xs font-black text-blue-700">{item.eyebrow}</p>
+                              )}
                               <p className="mt-1 text-base font-black text-slate-950">{item.title}</p>
                             </div>
                             <span className="flex shrink-0 items-center gap-2">

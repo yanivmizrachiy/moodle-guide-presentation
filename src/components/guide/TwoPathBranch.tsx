@@ -45,15 +45,10 @@ function BranchPathCard({
         accent.card
       )}
     >
+      {/* The two lanes are alternatives, not steps 1 and 2 — the colour tells
+          them apart, so the header carries the label alone. */}
       <h3 className={cn('flex items-center gap-2.5 px-4 py-3 text-base font-black sm:text-lg', accent.header)}>
-        <span
-          className={cn(
-            'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm font-black text-white shadow-md',
-            accent.badge
-          )}
-        >
-          {index + 1}
-        </span>
+        <span aria-hidden="true" className={cn('h-5 w-1.5 shrink-0 rounded-full', accent.badge)} />
         {path.label}
       </h3>
 
@@ -62,7 +57,9 @@ function BranchPathCard({
           <ol className="grid gap-2.5">
             {path.steps.map((step, stepIndex) => (
               <li key={`${idPrefix}-path${index}-step-${stepIndex}`}>
-                <NumberedStepRow index={stepIndex}>{step}</NumberedStepRow>
+                <NumberedStepRow index={stepIndex} showNumber={path.steps!.length > 1}>
+                  {step}
+                </NumberedStepRow>
               </li>
             ))}
           </ol>
@@ -74,6 +71,7 @@ function BranchPathCard({
             slideTitle={slideTitle}
             flow={path.flow}
             onOpenScreenshot={onOpenScreenshot}
+            numbered={path.flow.length > 1}
           />
         )}
 

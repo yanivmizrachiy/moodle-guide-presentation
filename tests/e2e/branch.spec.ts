@@ -40,7 +40,7 @@ test.describe('two-path branch', () => {
   test('the without-group card continues downward into the real add-students flow', async ({ page }) => {
     await page.goto('./?slide=open-space-two-paths');
     const withoutPath = page.getByRole('region', { name: 'ללא קבוצת לימוד' });
-    const step1 = withoutPath.getByText('המרחב מתחיל ללא תלמידים.');
+    const step1 = withoutPath.getByText('פתחנו מרחב ללא תלמידים.');
     const sendLink = withoutPath.getByText('המורה שולח לתלמיד את הקישור שהועתק.');
     const enrol = withoutPath.getByText('התלמיד לוחץ על הכפתור „רשום אותי”.');
     await expect(step1).toBeVisible();
