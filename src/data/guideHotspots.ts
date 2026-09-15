@@ -95,10 +95,23 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '59-quiz-after-enrol': [
     { id: 'start-attempt', label: 'התחלת ניסיון מענה', x: 64.8, y: 35.3, width: 9.6, height: 4.6 },
   ],
-  // 3200x1800 course page: the "הגדרות" tab in the space navigation. Shared with
-  // several slides, so it is marked only on steps that opt in via hotspotIds.
+  // 3200x1800 course page: the space-navigation tabs. Shared across several
+  // slides, so each is marked only on steps that opt in via hotspotIds.
   '10-course-page': [
     { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
+    { id: 'participants-tab', label: 'משתתפים', x: 51.6, y: 20.4, width: 5, height: 4.6 },
+  ],
+  // 3200x1800 participants list: the roles column (each participant's תפקיד).
+  '47-participants-list': [
+    { id: 'roles-column', label: 'תפקיד', x: 41, y: 76, width: 11, height: 10 },
+  ],
+  // 3200x1800 role editor open: the role picker with its options.
+  '62-role-options': [
+    { id: 'role-select', label: 'בחירת תפקיד', x: 41, y: 90.5, width: 13.5, height: 8 },
+  ],
+  // 3200x1800 after saving: the updated role cell shows "תלמיד, מורה".
+  '63-role-teacher-saved': [
+    { id: 'updated-role', label: 'תלמיד, מורה', x: 46.8, y: 84.5, width: 8, height: 5 },
   ],
   // 3200x1800 new wizard, ready-content step: the search row.
   '34-wizard-ready-content-search': [
