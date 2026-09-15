@@ -37,7 +37,9 @@ test.describe('edit-mode teaching toggle', () => {
     await page.goto('./?slide=edit-mode');
     await expect(page.getByText('רכיב אינטראקטיבי של המדריך', { exact: true })).toBeVisible();
     // The real Moodle captures remain on the same slide as the evidence.
-    await expect(page.locator('img[src*="03-topbar-edit-off"]')).toBeVisible();
-    await expect(page.locator('img[src*="04-topbar-edit-on"]')).toBeVisible();
+    // „כבוי" appears twice in the flow (turning on, then off again), so the
+    // evidence check takes the first use of each capture.
+    await expect(page.locator('img[src*="03-topbar-edit-off"]').first()).toBeVisible();
+    await expect(page.locator('img[src*="04-topbar-edit-on"]').first()).toBeVisible();
   });
 });

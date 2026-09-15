@@ -23,8 +23,19 @@ test.describe('flow slides and hotspots', () => {
       expect(width, `screenshot ${index} failed to load`).toBeGreaterThan(0);
     }
 
-    // These screenshot uses do not explicitly request a hotspot, so they stay clean.
-    await expect(flow.locator('svg title', { hasText: 'מצב עריכה' })).toHaveCount(0);
+    // REQ-GUIDE-002/007: every step of this flow is a click on the toggle, so
+    // each of its screenshot uses marks that one control — one mark per use.
+    await expect(flow.locator('svg title', { hasText: 'מצב עריכה' })).toHaveCount(count);
+  });
+
+  test('a screenshot shown without a requested mark stays clean', async ({ page }) => {
+    await page.goto('./?slide=open-space-details-check');
+    const flow = page.getByRole('region', { name: 'רצף הפעולות' }).first();
+    await expect(flow).toBeVisible();
+    // The same capture is shown twice: clean while the details are checked,
+    // then marked on „הבא" — never two circles on one use.
+    await expect(flow.locator('img')).toHaveCount(2);
+    await expect(flow.locator('svg title')).toHaveCount(1);
   });
 
   test('the honest failure state never appears on published slides', async ({ page }) => {
