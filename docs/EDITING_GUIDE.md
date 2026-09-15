@@ -35,9 +35,13 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
   `public/guide/screenshots/`, run `npm run shots:derive -- NN-name`, reference
   `{ src: 'NN-name.png', caption: '…' }` on a slide, and add a manifest row.
   Naming: `^\d{2}-[a-z0-9-]+`.
-- **Add a hotspot** — add `{ id, label, x, y, width, height }` (percent) under the
-  screenshot's stem in `guideHotspots.ts`; scope it to a step with
-  `screenshot.hotspotIds: ['id']`.
+- **Add a hotspot** — first add `{ id, label, x, y, width, height }` (percent) under
+  the screenshot's stem in `guideHotspots.ts`. A screenshot remains unmarked by
+  default. Only when that specific use genuinely needs visual focus, opt in with
+  exactly one id: `screenshot.hotspotIds: ['id']`. Never request two hotspots on
+  the same screenshot use; show the screen again in the next step if a second
+  target must be taught. Size the ellipse so the target's text/icon stays fully
+  readable inside the mark.
 - **Mark `needs-capture`** — set `status: 'needs-capture'` + `missingCaptureId:
   'Mxx'` and add a `## Mxx` entry in `GUIDE_MISSING_CAPTURES.md`.
 - **Close a missing capture** — add the real masked screenshot + derivatives,
