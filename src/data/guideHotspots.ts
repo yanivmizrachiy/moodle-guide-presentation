@@ -76,6 +76,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 activity kebab menu: the availability and delete entries.
   '42-activity-menu': [
+    { id: 'settings', label: 'הגדרות', x: 5.2, y: 59.3, width: 13.4, height: 7.6 },
     { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
     { id: 'delete', label: 'מחיקה', x: 5.2, y: 80.8, width: 13.4, height: 7.6 },
   ],

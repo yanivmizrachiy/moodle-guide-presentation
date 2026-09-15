@@ -169,6 +169,7 @@ export const GUIDE_TOPICS: GuideTopic[] = [
   { id: 'groups', section: 'users-roles', title: 'קבוצות' },
   { id: 'teachers', section: 'users-roles', title: 'מורים נוספים' },
   { id: 'edit-mode-basics', section: 'editing', title: 'מה זה מצב עריכה?' },
+  { id: 'space-editing', section: 'editing', title: 'איך עורכים את מרחב הלמידה שלנו?' },
   { id: 'editing', section: 'editing', title: 'עריכה וניהול תוכן' },
   { id: 'imports', section: 'editing', title: 'ייבוא ועדכונים' },
   { id: 'tasks', section: 'tasks-grades', title: 'משימות והערכה' },
@@ -206,9 +207,10 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'pass-grade': 'grading',
   'archive-space': 'space',
   'self-learning-space': 'space',
-  'rename-space': 'space',
-  'space-image': 'space',
-  'space-heading': 'space',
+  'rename-space': 'space-editing',
+  'space-image': 'space-editing',
+  'space-heading': 'space-editing',
+  'rename-task': 'space-editing',
   'edit-mode': 'edit-mode-basics',
   'edit-mode-dependent': 'edit-mode-basics',
   'add-content': 'editing',
@@ -668,72 +670,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   status: 'ready',
   },
   {
-  id: 'rename-space',
-  section: 'spaces',
-  eyebrow: 'עריכת פרטי המרחב',
-  title: 'איך משנים את שם מרחב הלימוד?',
-  summary: 'נכנסים להגדרות, משנים את שם המרחב ושומרים.',
-  flow: [
-    {
-      text: 'לוחצים „הגדרות”.',
-      screenshot: { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.', hotspotIds: ['settings-tab'] },
-    },
-    {
-      text: 'משנים את שדה השם.',
-      screenshot: { src: '41-space-settings.png', caption: 'עריכת הגדרות המרחב — השם המלא, השם הקצר וקטגוריית המרחב.' },
-    },
-    {
-      text: 'לוחצים „שמירת שינויים”.',
-      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
-    },
-  ],
-  keywords: ['שם', 'שינוי שם', 'הגדרות'],
-  status: 'ready',
-  },
-  {
-  id: 'space-image',
-  section: 'spaces',
-  eyebrow: 'עריכת פרטי המרחב',
-  title: 'איך משנים את התמונה הראשית של המרחב?',
-  summary: 'נכנסים להגדרות, בוחרים תמונה ושומרים.',
-  flow: [
-    {
-      text: 'נכנסים להגדרות.',
-      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.', hotspotIds: ['settings-tab'] },
-    },
-    {
-      text: 'בוחרים תמונה.',
-      screenshot: { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.' },
-    },
-    {
-      text: 'שומרים.',
-      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
-    },
-  ],
-  keywords: ['תמונה', 'תמונת מרחב', 'הגדרות'],
-  status: 'ready',
-  },
-  {
-  id: 'space-heading',
-  section: 'spaces',
-  eyebrow: 'עריכת פרטי המרחב',
-  title: 'איך משנים כותרת?',
-  summary: 'מפעילים עריכה, פותחים את עריכת הכותרת, משנים ושומרים.',
-  flow: [
-    {
-      text: 'מפעילים את מתג „עריכה” ולוחצים על סמל העיפרון שליד הכותרת.',
-      screenshot: { src: '69-section-rename-pencil.png', caption: 'מצב עריכה — סמל העיפרון ליד כותרת היחידה.' },
-    },
-    {
-      text: 'מקלידים את הכותרת החדשה ומקישים Enter לשמירה.',
-      screenshot: { src: '70-section-rename-field.png', caption: 'שדה עריכת הכותרת פתוח — Enter לשמירה, Esc לביטול.' },
-    },
-  ],
-  keywords: ['כותרת', 'שם יחידה', 'עריכה'],
-  requiresEditMode: true,
-  status: 'ready',
-  },
-  {
   id: 'self-enrol-auto',
   section: 'students',
   eyebrow: 'הצטרפות תלמידים',
@@ -1034,6 +970,102 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   editModeGroup: true,
   keywords: ['מצב עריכה', 'פעולות עריכה', 'תלות במצב עריכה'],
   status: 'ready',
+  },
+  {
+  id: 'rename-space',
+  section: 'spaces',
+  eyebrow: 'עריכת פרטי המרחב',
+  title: 'איך משנים את שם מרחב הלימוד?',
+  summary: 'נכנסים להגדרות, משנים את שם המרחב ושומרים.',
+  flow: [
+    {
+      text: 'לוחצים „הגדרות”.',
+      screenshot: { src: '10-course-page.png', caption: 'כפתור „הגדרות” בתפריט המרחב.', hotspotIds: ['settings-tab'] },
+    },
+    {
+      text: 'משנים את שדה השם.',
+      screenshot: { src: '41-space-settings.png', caption: 'עריכת הגדרות המרחב — השם המלא, השם הקצר וקטגוריית המרחב.' },
+    },
+    {
+      text: 'לוחצים „שמירת שינויים”.',
+      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
+    },
+  ],
+  keywords: ['שם', 'שינוי שם', 'הגדרות'],
+  status: 'ready',
+  },
+  {
+  id: 'space-image',
+  section: 'spaces',
+  eyebrow: 'עריכת פרטי המרחב',
+  title: 'איך משנים את התמונה הראשית של המרחב?',
+  summary: 'נכנסים להגדרות, בוחרים תמונה ושומרים.',
+  flow: [
+    {
+      text: 'נכנסים להגדרות.',
+      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.', hotspotIds: ['settings-tab'] },
+    },
+    {
+      text: 'בוחרים תמונה.',
+      screenshot: { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.' },
+    },
+    {
+      text: 'שומרים.',
+      screenshot: { src: '43-space-settings-save.png', caption: 'כפתור „שמירת השינויים והצגתם” בתחתית טופס ההגדרות.' },
+    },
+  ],
+  keywords: ['תמונה', 'תמונת מרחב', 'הגדרות'],
+  status: 'ready',
+  },
+  {
+  id: 'space-heading',
+  section: 'spaces',
+  eyebrow: 'עריכת פרטי המרחב',
+  title: 'איך משנים כותרת?',
+  summary: 'מפעילים עריכה, פותחים את עריכת הכותרת, משנים ושומרים.',
+  flow: [
+    {
+      text: 'מפעילים את מתג „עריכה” ולוחצים על סמל העיפרון שליד הכותרת.',
+      screenshot: { src: '69-section-rename-pencil.png', caption: 'מצב עריכה — סמל העיפרון ליד כותרת היחידה.' },
+    },
+    {
+      text: 'מקלידים את הכותרת החדשה ומקישים Enter לשמירה.',
+      screenshot: { src: '70-section-rename-field.png', caption: 'שדה עריכת הכותרת פתוח — Enter לשמירה, Esc לביטול.' },
+    },
+  ],
+  keywords: ['כותרת', 'שם יחידה', 'עריכה'],
+  requiresEditMode: true,
+  status: 'ready',
+  },
+  {
+  id: 'rename-task',
+  section: 'spaces',
+  eyebrow: 'עריכת מרחב · שם משימה',
+  title: 'איך משנים שם של משימה?',
+  requiresEditMode: true,
+  flow: [
+    {
+      text: 'מדליקים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” דלוק בסרגל העליון.' },
+    },
+    {
+      text: 'פותחים את תפריט העריכה של המשימה ולוחצים „הגדרות”.',
+      screenshot: {
+        src: '42-activity-menu.png',
+        caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.',
+        hotspotIds: ['settings'],
+      },
+    },
+    // The name field, the save action and the renamed result are the M14
+    // gap: they require a safe test activity, so they stay uncaptured.
+    // Truth before design — no invented screens.
+    { text: 'משנים את השם בשדה שם המשימה.' },
+    { text: 'שומרים.' },
+    { text: 'רואים את השם החדש במרחב.' },
+  ],
+  keywords: ['שינוי שם משימה', 'שם פעילות', 'עריכת משימה'],
+  status: 'needs-capture',
+  missingCaptureId: 'M14',
   },
   {
   id: 'add-content',
