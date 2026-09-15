@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "execution_policy": {
     "quality": "Do not reduce reasoning, verification, or implementation quality to save tokens. Save tokens only by excluding irrelevant context and repeated explanations.",
     "one_next_task": true,
@@ -158,10 +158,12 @@
       ],
       "acceptance": [
         "A main topic asks מה זה מצב עריכה? before dependent editing procedures.",
-        "The guide clearly identifies operations that require edit mode.",
+        "A visually emphasized guide area explicitly groups the operations that can be performed only while edit mode is on; dependency metadata alone is not sufficient.",
         "The guide-side toggle is genuinely interactive and accessible, and visually distinguishes on/off.",
+        "When the guide-side teaching control is off it visibly says כך מכבים את מצב העריכה; when it is on it visibly says כך מדליקים את מצב העריכה.",
         "The teaching control is not presented as a fake Moodle screenshot.",
         "Real Moodle screenshots remain the evidence for the real Moodle control.",
+        "The approved teaching order remains: what edit mode is -> on/off -> which actions depend on it -> specific editing procedures.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
@@ -201,14 +203,16 @@
       "ssot_sections": [],
       "evidence": [],
       "acceptance": [
-        "Critical guide interactions are browser-tested.",
-        "Representative desktop and mobile states are regression-tested.",
-        "Two-path, hotspot, flow and edit-mode teaching states are covered.",
-        "Interactive controls expose appropriate accessibility semantics.",
-        "Fast checks remain fast; broad browser/visual gates run at appropriate checkpoints and CI.",
-        "npm run check passes."
+        "Critical guide interactions are browser-tested with a real browser automation framework.",
+        "Representative desktop and mobile states are visual-regression tested.",
+        "Two-path, hotspot, linear-flow and edit-mode teaching states are covered.",
+        "Interactive controls expose appropriate accessibility semantics and keyboard behavior.",
+        "npm run check remains the fast mandatory per-task gate.",
+        "npm run check:full becomes a real broad gate that includes npm run check plus browser/mobile/visual/accessibility verification; it must no longer be only an alias to npm run check.",
+        "Presentation CI runs the broad full gate at the appropriate CI checkpoint so UI regressions cannot merge merely because type/unit/build checks passed.",
+        "npm run check and npm run check:full both pass."
       ],
-      "checks": ["npm run check"]
+      "checks": ["npm run check", "npm run check:full"]
     },
     {
       "id": "P8-adversarial-audit",
@@ -225,10 +229,10 @@
         "Every canonical REQ-* requirement is checked against the final implementation, not merely against task completion state.",
         "No unverified cleanup or speculative rewrite is performed.",
         "All verified findings are fixed or explicitly blocked with evidence.",
-        "Full quality gate passes.",
+        "npm run check:full passes as the final broad quality gate.",
         "Task queue contains no unfinished approved requirement."
       ],
-      "checks": ["npm run check", "full browser/visual suite"]
+      "checks": ["npm run check", "npm run check:full"]
     }
   ]
 }
