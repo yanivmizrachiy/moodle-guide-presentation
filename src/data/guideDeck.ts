@@ -360,7 +360,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       text: 'ממלאים את הפרטים: בית ספר, מקצוע, שכבת גיל וכיתה.',
       screenshot: { src: '46-open-space-form.png', caption: 'טופס שלב 1 לאחר מילוי הפרטים.' },
     },
-    { text: 'לחצו על כפתור ההמשך באשף.' },
+    { text: 'לוחצים על „הבא” כדי להמשיך.' },
     {
       text: 'לחצו על סוג המרחב הרצוי.',
       screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
@@ -634,8 +634,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'interface',
   eyebrow: 'ממשק',
-  title: 'איפה נמצאים הכפתורים המרכזיים במרחב?',
-  summary: 'רוב הפעולות נמצאות בתפריט המרחב, בסרגל העליון ובעמוד היחידות.',
+  title: 'מהם הכפתורים הראשיים במרחב הלמידה?',
   points: ['הגדרות.', 'משתתפים.', 'ציונים ודוחות.', 'מצב עריכה.'],
   screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.', hotspotIds: [] }],
   keywords: ['ממשק', 'תפריט', 'סרגל', 'כפתורים'],
@@ -720,10 +719,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'self-enrol-student',
   eyebrow: 'הצטרפות תלמיד',
-  title: 'מה התלמיד לוחץ בפעם הראשונה?',
+  title: 'איך תלמיד מתחבר למרחב שלנו?',
   summary: 'אחרי שהתלמיד מקבל את קישור המרחב ומגיע למסך ההצטרפות, הוא משלים את הרישום למרחב.',
-  steps: ['לחצו „רשום אותי”.'],
-  screenshots: [{ src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.' }],
+  steps: ['לוחצים „רשום אותי”.'],
+  screenshots: [{ src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['רשום אותי', 'קישור למרחב', 'תלמיד'],
   status: 'ready',
@@ -1486,16 +1485,17 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'פעילות תלמיד · זמנים',
   title: 'איך רואים באילו תאריכים ושעות התקיימה פעילות?',
   flow: [
+    { text: 'פותחים „דוחות” ואז „יומני מעקב”.' },
     {
-      text: 'פותחים את יומני המעקב ולוחצים „הצגת יומני מעקב אלו”.',
+      text: 'לוחצים „הצגת יומני מעקב אלו”.',
       screenshot: {
         src: '51-logs-chooser.png',
-        caption: '„בחירת יומני מעקב אותם יש להציג”.',
+        caption: '„בחירת יומני מעקב אותם יש להציג” — הכפתור „הצגת יומני מעקב אלו”.',
         hotspotIds: ['show-logs'],
       },
     },
     {
-      text: 'עמודת „זמן” מציגה לכל פעולה את התאריך ואת השעה.',
+      text: 'בעמודת „זמן” רואים לכל פעולה את התאריך ואת השעה.',
       screenshot: {
         src: '52-logs-table.png',
         caption: 'עמודת „זמן” בטבלת יומני המעקב — תאריך ושעה לכל אירוע.',

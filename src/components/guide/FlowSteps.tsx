@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { ChevronsDown } from 'lucide-react';
 import type { GuideFlowStep } from '@/data/guideDeck';
 import { ScreenshotCard, type LightboxState } from '@/components/guide/screenshots';
+import { cn } from '@/lib/utils';
 
 /**
  * One numbered action row — the shared visual for a step, used by both the
@@ -9,9 +10,23 @@ import { ScreenshotCard, type LightboxState } from '@/components/guide/screensho
  * paths). One canonical implementation keeps every procedure looking alike
  * (REQ-GUIDE-001/003).
  */
-export function NumberedStepRow({ index, children }: { index: number; children: ReactNode }) {
+export function NumberedStepRow({
+  index,
+  children,
+  centered = false,
+}: {
+  index: number;
+  children: ReactNode;
+  /** Center the badge+text (used for text-only flow steps, to line up with the arrows). */
+  centered?: boolean;
+}) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white/88 px-3.5 py-3 shadow-sm backdrop-blur">
+    <div
+      className={cn(
+        'flex items-start gap-3 rounded-2xl border border-slate-200 bg-white/88 px-3.5 py-3 shadow-sm backdrop-blur',
+        centered && 'justify-center text-center'
+      )}
+    >
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-black text-white shadow-md">
         {index + 1}
       </span>
@@ -50,7 +65,7 @@ export function FlowSteps({
               strokeWidth={2.6}
             />
           )}
-          <NumberedStepRow index={index}>
+          <NumberedStepRow index={index} centered={!step.screenshot}>
             {step.text}
             {step.link && (
               <>

@@ -765,16 +765,6 @@ export default function Guide() {
                               >
                                 <span className="flex min-w-0 items-center gap-3">
                                   <span className="text-lg font-black">{section.title}</span>
-                                  {isCurrentSection && (
-                                    <span
-                                      className={cn(
-                                        'shrink-0 rounded-full px-2 py-0.5 text-[11px] font-black',
-                                        isOpen ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
-                                      )}
-                                    >
-                                      אתם כאן
-                                    </span>
-                                  )}
                                 </span>
                                 <ChevronsDown
                                   className={cn('h-5 w-5 shrink-0 transition-transform', isOpen ? 'rotate-180' : '')}
