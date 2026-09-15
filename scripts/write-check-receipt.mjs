@@ -3,6 +3,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readStatusPaths } from './git-status.mjs';
+import { classifyQueue, nextTasks } from './queue-state.mjs';
 
 const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
@@ -27,17 +28,17 @@ function fingerprint(relative) {
 
 const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
 const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
-const next = tasks.filter((task) => task.status === 'next');
-const complete = next.length === 0 && tasks.length > 0 && tasks.every((task) => task.status === 'done');
-if (!complete && next.length !== 1) {
-  console.error(`check-receipt: expected one active task or a fully complete queue; found ${next.length} active tasks.`);
+const classification = classifyQueue(tasks);
+const complete = classification.state === 'complete';
+if (classification.state === 'invalid') {
+  console.error(`check-receipt: expected one active task or a fully complete queue; ${classification.reason}.`);
   process.exit(1);
 }
 
 const changedPaths = readStatusPaths(root);
 const receipt = {
   version: 1,
-  task_id: complete ? null : next[0].id,
+  task_id: complete ? null : nextTasks(tasks)[0].id,
   queue_complete: complete,
   head: gitText(['rev-parse', 'HEAD']) || 'unknown',
   queue_hash: gitText(['hash-object', 'docs/task-queue.json']) || 'unknown',

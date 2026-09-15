@@ -495,6 +495,41 @@
         "npm run check",
         "npm run check:full"
       ]
+    },
+    {
+      "id": "P0.7-complete-queue-gate",
+      "status": "done",
+      "title": "Make the check gate pass on a fully complete queue",
+      "goal": "Fix advance-task.mjs so verify:advance (and therefore npm run check and CI) succeeds on a fully-complete queue instead of failing with '0 next tasks', without weakening any active-task check.",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-005"
+      ],
+      "read_first": [
+        "scripts/advance-task.mjs",
+        "scripts/write-check-receipt.mjs"
+      ],
+      "scope": [
+        "scripts",
+        "tests/queue-state.test.ts"
+      ],
+      "ssot_sections": [],
+      "evidence": [
+        "CI on the P8 completion commit failed with 'task-advance: expected exactly one next task; found 0' — advance-task.mjs rejects a complete queue even in --verify, while write-check-receipt.mjs already treats it as valid."
+      ],
+      "acceptance": [
+        "verify:advance succeeds on a fully-complete queue by validating the complete-queue receipt against the working tree, and reports completion.",
+        "All active-task strictness is preserved for a queue with exactly one next task; the fix adds only the complete-queue branch.",
+        "A shared, unit-tested helper classifies queue state; regression tests prove complete vs single-next vs zero-next-with-unfinished vs blocked.",
+        "No baseline is regenerated to mask the defect and no task is marked done by hand.",
+        "npm run check passes."
+      ],
+      "checks": [
+        "npm run check"
+      ],
+      "notes": [
+        "This closes the last DONE-definition gap: green CI on the completed queue."
+      ]
     }
   ]
 }

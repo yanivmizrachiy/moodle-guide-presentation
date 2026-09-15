@@ -3,6 +3,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readStatusPaths } from './git-status.mjs';
+import { classifyQueue } from './queue-state.mjs';
 
 const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
@@ -39,13 +40,8 @@ if (!fs.existsSync(receiptPath)) fail('verified check receipt is missing; run np
 
 const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
 const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
-const nextTasks = tasks.filter((task) => task.status === 'next');
-if (nextTasks.length !== 1) fail(`expected exactly one next task; found ${nextTasks.length}.`);
-
-const current = nextTasks[0];
-if (expectedId && expectedId !== current.id) {
-  fail(`refusing to advance ${current.id}: caller expected ${expectedId}.`);
-}
+const classification = classifyQueue(tasks);
+if (classification.state === 'invalid') fail(classification.reason);
 
 let receipt;
 try {
@@ -53,24 +49,49 @@ try {
 } catch (error) {
   fail(`cannot read verified check receipt: ${error.message}`);
 }
+if (receipt.version !== 1) fail('check receipt version is unsupported; rerun npm run check.');
 
 const head = gitText(['rev-parse', 'HEAD']) || 'unknown';
 const queueHash = gitText(['hash-object', 'docs/task-queue.json']) || 'unknown';
 const currentPaths = readStatusPaths(root);
 const receiptPaths = Array.isArray(receipt.changed_paths) ? [...receipt.changed_paths].sort() : [];
 
-if (receipt.version !== 1) fail('check receipt version is unsupported; rerun npm run check.');
+// A verified receipt must describe exactly the current committed/working state.
+function assertReceiptMatchesTree() {
+  if (receipt.head !== head) fail('HEAD changed since the verified check; rerun npm run check.');
+  if (receipt.queue_hash !== queueHash) fail('Task queue changed since the verified check; rerun npm run check.');
+  if (JSON.stringify(receiptPaths) !== JSON.stringify(currentPaths)) {
+    fail('Working-tree changed-path set differs from the verified check; rerun npm run check.');
+  }
+  for (const relative of currentPaths) {
+    const expected = receipt.fingerprints?.[relative];
+    const actual = fingerprint(relative);
+    if (expected !== actual) fail(`Working-tree content changed after verification: ${relative}. Rerun npm run check.`);
+  }
+}
+
+// A fully-complete queue is a valid terminal state: there is nothing to
+// advance, so verify (and the gate's verify:advance step, and therefore
+// npm run check on the finished project) confirm the complete-queue receipt
+// matches the tree and pass — instead of failing on "0 next tasks".
+if (classification.state === 'complete') {
+  if (!receipt.queue_complete) fail('queue is complete but the receipt is for an active task; rerun npm run check.');
+  assertReceiptMatchesTree();
+  console.log(
+    verifyOnly
+      ? 'Task advancement verification passed: the task queue is fully complete.'
+      : 'Task queue is already fully complete; nothing to advance.'
+  );
+  process.exit(0);
+}
+
+const current = classification.task;
+if (expectedId && expectedId !== current.id) {
+  fail(`refusing to advance ${current.id}: caller expected ${expectedId}.`);
+}
 if (receipt.queue_complete) fail('check receipt belongs to an already-complete queue.');
 if (receipt.task_id !== current.id) fail(`check receipt belongs to ${receipt.task_id ?? '<none>'}, active task is ${current.id}.`);
-if (receipt.head !== head) fail('HEAD changed since the verified check; rerun npm run check.');
-if (receipt.queue_hash !== queueHash) fail('Task queue changed since the verified check; rerun npm run check.');
-if (JSON.stringify(receiptPaths) !== JSON.stringify(currentPaths)) fail('Working-tree changed-path set differs from the verified check; rerun npm run check.');
-
-for (const relative of currentPaths) {
-  const expected = receipt.fingerprints?.[relative];
-  const actual = fingerprint(relative);
-  if (expected !== actual) fail(`Working-tree content changed after verification: ${relative}. Rerun npm run check.`);
-}
+assertReceiptMatchesTree();
 
 const currentIndex = tasks.findIndex((task) => task.id === current.id);
 const pendingIndex = tasks.findIndex((task, index) => index > currentIndex && task.status === 'pending');
