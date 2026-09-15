@@ -497,7 +497,7 @@ export default function Guide() {
 
   // The TOC lists only the chapter headings; a chapter opens its topics and
   // questions when clicked. Opening the menu starts every chapter collapsed and
-  // just scrolls the reader's current chapter (marked "אתם כאן") into view.
+  // just scrolls the reader's current chapter into view.
   useEffect(() => {
     if (panel !== 'menu') return;
     setOpenSection(null);
