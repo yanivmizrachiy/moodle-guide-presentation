@@ -308,6 +308,7 @@ function SlideContent({
                   flow={flow}
                   onOpenScreenshot={onOpenScreenshot}
                   afterFirstStep={linkRow}
+                  numbered={flow.length > 1}
                 />
               </section>
             )}

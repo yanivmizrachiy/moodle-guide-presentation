@@ -23,9 +23,12 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
 ## Common edits
 
 - **Change a slide's wording** — edit its `title`/`summary`/`steps`/`flow[].text`/
-  `points` in `guideDeck.ts`. Owner-authored text only (SSOT rule 11).
-- **Add a slide** — add an object to `AUTHORED_GUIDE_SLIDES` (a unique `id`,
-  `eyebrow`, `title`; do **not** write `section`), then map it in `SLIDE_TOPICS`
+  `points` in `guideDeck.ts`. Owner-authored text only (SSOT rule 11). A click step
+  is phrased with the word „הכפתור" and the exact button name in quotes; a result
+  step says what the screen does (it opens / it appears), never „רואים…"
+  (REQ-GUIDE-001/009).
+- **Add a slide** — add an object to `AUTHORED_GUIDE_SLIDES` (a unique `id` and
+  `title`; `eyebrow` is optional; do **not** write `section`), then map it in `SLIDE_TOPICS`
   (`'my-id': 'some-topic'`). Its chapter comes from that topic.
 - **Change order** — move the object within `AUTHORED_GUIDE_SLIDES`.
 - **Add a section or topic** — add to `GUIDE_SECTIONS` / `GUIDE_TOPICS`, then
@@ -33,7 +36,9 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
 - **Add a screenshot** — drop the real `NN-name.png|jpg` (device-full res) in
   `public/guide/screenshots/`, run `npm run shots:derive -- NN-name`, reference
   `{ src: 'NN-name.png', caption: '…' }` on a slide, and add a manifest row.
-  Naming: `^\d{2}-[a-z0-9-]+`.
+  Naming: `^\d{2,3}-[a-z0-9-]+`. A capture whose clicked control is not legible
+  (low resolution, blur, a narrow crop) is weak evidence — re-shoot it at full
+  resolution instead of enlarging the old file (SSOT rule 13).
 - **Add a hotspot** — first add `{ id, label, x, y, width, height }` (percent) under
   the screenshot's stem in `guideHotspots.ts`. This only defines a verified target;
   it never displays automatically. To show the red focus in a specific screenshot
@@ -41,7 +46,11 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
   `hotspotIds` (or with `hotspotIds: []`) the screenshot stays clean. Never show
   two hotspots on one screenshot use; show the screen again in the next step if a
   second target must be taught. Size the ellipse so the target's text/icon stays
-  fully readable inside the mark.
+  fully readable inside the mark — it surrounds the control, it does not cross it.
+  Measure the box on the image itself and check the rendered result before
+  publishing; the app draws both the circle and an arrow pointing at it, on the
+  WHOLE screen (REQ-GUIDE-008). A close-up is opt-in per use (`zoom: true`) and
+  only for a control that stands alone on an empty part of the screen.
 - **Mark `needs-capture`** — set `status: 'needs-capture'` + `missingCaptureId:
   'Mxx'` and add a `## Mxx` entry in `GUIDE_MISSING_CAPTURES.md`.
 - **Close a missing capture** — add the real masked screenshot + derivatives,
