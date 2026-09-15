@@ -74,7 +74,16 @@ function statusPaths(lines) {
 const queue = readJson(queuePath);
 const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
 const nextTasks = tasks.filter((task) => task.status === 'next');
-if (nextTasks.length !== 1) die(`expected exactly one task with status "next"; found ${nextTasks.length}`);
+
+fs.mkdirSync(path.dirname(outPath), { recursive: true });
+if (nextTasks.length === 0 && tasks.length && tasks.every((task) => task.status === 'done')) {
+  const complete = `# TASK CONTEXT — generated, do not hand-edit\n\n## Queue complete\n\nAll approved execution tasks are marked done. There is no active implementation task.\n\nDo not invent follow-up work. A new owner-approved requirement must first be added to the canonical SSOT with a stable REQ-* id and explicit execution coverage.\n`;
+  fs.writeFileSync(outPath, complete, 'utf8');
+  if (fs.existsSync(baselinePath)) fs.rmSync(baselinePath);
+  console.log('Generated completed task context: no active task remains.');
+  process.exit(0);
+}
+if (nextTasks.length !== 1) die(`expected exactly one task with status "next" unless the queue is fully complete; found ${nextTasks.length}`);
 
 const task = nextTasks[0];
 for (const key of ['id', 'title', 'goal']) {
@@ -118,7 +127,6 @@ const fullHead = gitText(['rev-parse', 'HEAD']) || 'unknown';
 const ssotHash = gitText(['hash-object', 'SSOT.md']) || 'unknown';
 const queueHash = gitText(['hash-object', 'docs/task-queue.json']) || 'unknown';
 
-fs.mkdirSync(path.dirname(outPath), { recursive: true });
 let baseline = null;
 if (fs.existsSync(baselinePath)) {
   try {
