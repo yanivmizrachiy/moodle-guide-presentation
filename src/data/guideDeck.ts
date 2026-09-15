@@ -789,12 +789,16 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'מסירים את השיוך של המשתמש למרחב ומאשרים את הפעולה.',
   flow: [
     {
-      text: 'בעמוד „משתתפים” לוחצים על סמל הפח בשורת המשתמש.',
-      screenshot: { src: '77-participant-row-controls.png', caption: 'שורת המשתמש עם סמלי הפח, העיפרון והפרטים.' },
+      text: 'לוחצים על „משתתפים” בתפריט המרחב.',
+      screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הלשונית „משתתפים”.', hotspotIds: ['participants-tab'] },
+    },
+    {
+      text: 'לוחצים על סמל הפח („ביטול שיוך לתפקיד בקורס”) בשורת המשתמש.',
+      screenshot: { src: '77-participant-row-controls.png', caption: 'שורת המשתמש עם סמלי הפח, העיפרון והפרטים.', hotspotIds: ['unenrol-icon'] },
     },
     {
       text: 'בחלון האישור לוחצים „ביטול שיוך לתפקיד בקורס”.',
-      screenshot: { src: '78-unenrol-confirm-dialog.png', caption: 'חלון האישור — „ביטול שיוך לתפקיד בקורס” או „ביטול”.' },
+      screenshot: { src: '78-unenrol-confirm-dialog.png', caption: 'חלון האישור — „ביטול שיוך לתפקיד בקורס” או „ביטול”.', hotspotIds: ['confirm-unenrol'] },
     },
   ],
   keywords: ['הסרה', 'ביטול שיוך', 'משתתפים'],
@@ -949,8 +953,8 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '10-course-page.png', caption: 'תפריט המרחב — הכניסה ל„הגדרות”.', hotspotIds: ['settings-tab'] },
     },
     {
-      text: 'בוחרים תמונה.',
-      screenshot: { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.' },
+      text: 'באזור „תמונת מרחב־הלימוד” לוחצים על תיבת הקבצים ומעלים תמונה.',
+      screenshot: { src: '44-space-image.png', caption: 'אזור „תמונת מרחב־הלימוד” בהגדרות — התמונה הנוכחית וסוגי הקבצים האפשריים.', hotspotIds: ['image-box'] },
     },
     {
       text: 'שומרים.',
@@ -1319,11 +1323,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'student-solve-task',
   eyebrow: 'תצוגת תלמיד',
-  title: 'איך תלמיד פותר משימה במרחב?',
+  title: 'איך תלמיד מתחיל לענות על משימה במרחב?',
   flow: [
     {
       text: 'פותחים את המשימה ולוחצים „התחלת ניסיון מענה”.',
-      screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן בתצוגת תלמיד עם „התחלת ניסיון מענה”.' },
+      screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן בתצוגת תלמיד עם „התחלת ניסיון מענה”.', hotspotIds: ['start-attempt'] },
     },
     {
       text: 'עונים על השאלות, עמוד אחרי עמוד.',
@@ -1437,7 +1441,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'student-correct-space',
   eyebrow: 'שיוך למרחב',
-  title: 'למה המורה לא רואה ביצוע שהתלמיד אומר שביצע?',
+  title: 'מה כדאי לבדוק במקרה שהמורה לא רואה ביצוע שהתלמיד אומר שביצע?',
   summary: 'בודקים שהתלמיד ביצע את המשימה במרחב של המורה ולא במרחב אחר או ב„למידה עצמית”.',
   flow: [
     {

@@ -574,6 +574,15 @@ export default function Guide() {
             >
               <Home className="h-6 w-6" />
             </Button>
+            <Button
+              size="icon"
+              aria-label="לשקף הקודם"
+              onClick={() => goBy(-1)}
+              disabled={!canGoPrevious}
+              className="rounded-xl bg-amber-400 text-slate-950 shadow-md hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-300 disabled:opacity-40"
+            >
+              <ArrowRight className="h-6 w-6" />
+            </Button>
             <Button variant="ghost" size="sm" aria-label="חיפוש במצגת" onClick={() => setPanel('search')} className="gap-2 text-white hover:bg-white/10 hover:text-white">
               <Search className="h-5 w-5" />
               <span className="hidden sm:inline">חיפוש</span>
