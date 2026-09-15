@@ -9,7 +9,13 @@
     "requirement_coverage_enforced": true,
     "full_ssot_read_only_when_required": true,
     "reuse_verified_evidence_before_capture": true,
-    "final_report": ["CHANGED", "VERIFIED", "COMMIT", "NEXT", "BLOCKED"]
+    "final_report": [
+      "CHANGED",
+      "VERIFIED",
+      "COMMIT",
+      "NEXT",
+      "BLOCKED"
+    ]
   },
   "tasks": [
     {
@@ -17,9 +23,29 @@
       "status": "done",
       "title": "Prepare token-efficient full-quality execution",
       "goal": "Make future Claude Code work requirement-scoped, evidence-aware, regression-safe, and token-efficient without reducing model reasoning or verification quality.",
-      "requirements": ["REQ-TOKEN-001", "REQ-TOKEN-002", "REQ-TOKEN-003", "REQ-TOKEN-004", "REQ-TOKEN-005", "REQ-TOKEN-006"],
-      "read_first": ["CLAUDE.md", "docs/task-queue.json", "scripts/build-task-context.mjs", "scripts/ssot-check.mjs", "scripts/task-scope-check.mjs"],
-      "scope": ["SSOT.md", "CLAUDE.md", "docs/task-queue.json", "scripts", "package.json", ".gitignore"],
+      "requirements": [
+        "REQ-TOKEN-001",
+        "REQ-TOKEN-002",
+        "REQ-TOKEN-003",
+        "REQ-TOKEN-004",
+        "REQ-TOKEN-005",
+        "REQ-TOKEN-006"
+      ],
+      "read_first": [
+        "CLAUDE.md",
+        "docs/task-queue.json",
+        "scripts/build-task-context.mjs",
+        "scripts/ssot-check.mjs",
+        "scripts/task-scope-check.mjs"
+      ],
+      "scope": [
+        "SSOT.md",
+        "CLAUDE.md",
+        "docs/task-queue.json",
+        "scripts",
+        "package.json",
+        ".gitignore"
+      ],
       "ssot_sections": [],
       "evidence": [
         "Stable REQ-* ids and task coverage are enforced by scripts/ssot-check.mjs.",
@@ -34,16 +60,80 @@
         "The quality gate includes requirement coverage, task context, task scope, tests and build.",
         "A fully completed queue is a valid final state and does not trigger invented follow-up work."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
+    },
+    {
+      "id": "P0.5-evidence-integration",
+      "status": "done",
+      "title": "Integrate approved M29/M18/M02 real evidence",
+      "goal": "Land the already-approved, already-captured real evidence for the space-created notification (M29), the import wizard steps 1-4 (M18), and the archive fact-finding (M02) into the canonical deck, screenshots and docs, without bypassing any quality gate and without touching the P1-P8 plan.",
+      "requirements": [
+        "REQ-CONTENT-007",
+        "REQ-GUIDE-001",
+        "REQ-GUIDE-006",
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-004"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md",
+        "SSOT.md"
+      ],
+      "scope": [
+        "SSOT.md",
+        "src/data/guideDeck.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md",
+        "public/guide/screenshots"
+      ],
+      "ssot_sections": [],
+      "evidence": [
+        "40-wizard-notification-update.png is the real, masked bell-notification capture proving space creation; it closes M29.",
+        "83-import-source, 84-import-select and 85-import-confirm are real pre-mutation import-wizard captures (steps 1-4); steps 5-6 stay needs-capture.",
+        "The archive-space slide has no teacher archive action in the live UI, so it becomes needs-fact rather than a captured screen."
+      ],
+      "acceptance": [
+        "M29: the open-space-created-notification slide shows the real notification screenshot with all PII masked cleanly, carries the owner-approved summary, makes no email claim, and is status ready.",
+        "M18: only import-wizard steps 1-4 are integrated as real evidence; the slide stays needs-capture because steps 5-6 require a live-space mutation.",
+        "M02: the archive-space slide is needs-fact and blocked from publishing, with the finding recorded and no invented auto-archive explanation.",
+        "No owner-authored wording is changed except the owner-approved M29 summary, and no P1-P8 task work is performed.",
+        "npm run check passes."
+      ],
+      "checks": [
+        "npm run check"
+      ],
+      "notes": [
+        "Do not start P1-contract in this task; evidence integration and P1 are separate units of work.",
+        "Reuse the already-captured evidence; do not recapture."
+      ]
     },
     {
       "id": "P1-contract",
       "status": "next",
       "title": "Encode guide semantics and invariants",
       "goal": "Make the guide data model and invariant tests capable of expressing and enforcing the approved procedure, visual-branch, edit-mode-dependency and truth rules without changing slide wording or presentation behavior yet.",
-      "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-004", "REQ-GUIDE-005", "REQ-GUIDE-006", "REQ-STABILITY-005"],
-      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "tests/deck-invariants.test.ts"],
-      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "tests/deck-invariants.test.ts"],
+      "requirements": [
+        "REQ-GUIDE-001",
+        "REQ-GUIDE-002",
+        "REQ-GUIDE-003",
+        "REQ-GUIDE-004",
+        "REQ-GUIDE-005",
+        "REQ-GUIDE-006",
+        "REQ-STABILITY-005"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "tests/deck-invariants.test.ts"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "tests/deck-invariants.test.ts"
+      ],
       "ssot_sections": [],
       "evidence": [],
       "acceptance": [
@@ -54,7 +144,9 @@
         "The model is no more complex than required by the approved requirements; avoid speculative abstractions.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"],
+      "checks": [
+        "npm run check"
+      ],
       "notes": [
         "Do not implement the new slides or new visual components in this task.",
         "Do not perform unrelated refactors."
@@ -66,12 +158,32 @@
       "title": "Extract reusable guide primitives",
       "goal": "Reduce regression risk by extracting only the recurring guide UI primitives from Guide.tsx while preserving behavior and visuals.",
       "requirements": [
-        "REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-004", "REQ-GUIDE-005", "REQ-GUIDE-006",
-        "REQ-STABILITY-002", "REQ-STABILITY-003", "REQ-STABILITY-004", "REQ-STABILITY-007"
+        "REQ-GUIDE-001",
+        "REQ-GUIDE-002",
+        "REQ-GUIDE-003",
+        "REQ-GUIDE-004",
+        "REQ-GUIDE-005",
+        "REQ-GUIDE-006",
+        "REQ-STABILITY-002",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-STABILITY-007"
       ],
-      "read_first": ["src/pages/Guide.tsx", "src/data/guideDeck.ts", "tests/deck-invariants.test.ts"],
-      "scope": ["src/pages/Guide.tsx", "src/components", "src/index.css", "src/guide-visual-isolation.css", "tests"],
-      "ssot_sections": ["מקורות האמת בתוך הריפו"],
+      "read_first": [
+        "src/pages/Guide.tsx",
+        "src/data/guideDeck.ts",
+        "tests/deck-invariants.test.ts"
+      ],
+      "scope": [
+        "src/pages/Guide.tsx",
+        "src/components",
+        "src/index.css",
+        "src/guide-visual-isolation.css",
+        "tests"
+      ],
+      "ssot_sections": [
+        "מקורות האמת בתוך הריפו"
+      ],
       "evidence": [],
       "acceptance": [
         "Recurring flow, screenshot/hotspot, and branch-capable presentation primitives have one canonical implementation.",
@@ -80,14 +192,20 @@
         "At least one existing dependent usage is regression-checked for each extracted shared primitive.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
     },
     {
       "id": "P3-two-paths",
       "status": "pending",
       "title": "Add canonical two-path guidance",
       "goal": "Add a reusable responsive visual branch for procedures that genuinely have two paths, then use it for the approved student-task and space-opening cases.",
-      "requirements": ["REQ-GUIDE-004", "REQ-CONTENT-001", "REQ-CONTENT-002"],
+      "requirements": [
+        "REQ-GUIDE-004",
+        "REQ-CONTENT-001",
+        "REQ-CONTENT-002"
+      ],
       "read_first": [
         "src/data/guideDeck.ts",
         "src/pages/Guide.tsx",
@@ -119,16 +237,36 @@
         "If M11 evidence is still missing, the affected content stays needs-capture rather than being faked or prematurely marked ready.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
     },
     {
       "id": "P4-late-enrol-link",
       "status": "pending",
       "title": "Teach later student joining by space link",
       "goal": "Show that a space opened without students can accept students later and teach the exact real link-copy path step by step.",
-      "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-006", "REQ-CONTENT-003"],
-      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
-      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md", "tests"],
+      "requirements": [
+        "REQ-GUIDE-001",
+        "REQ-GUIDE-002",
+        "REQ-GUIDE-003",
+        "REQ-GUIDE-006",
+        "REQ-CONTENT-003"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "public/guide/screenshots",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md",
+        "tests"
+      ],
       "ssot_sections": [],
       "evidence": [
         "26-29 already document the real self-enrol setup/student flow and should be reused where relevant.",
@@ -141,16 +279,36 @@
         "If M12 evidence is still missing, the affected content remains needs-capture and is not mocked or inferred from M11.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
     },
     {
       "id": "P5-edit-mode",
       "status": "pending",
       "title": "Make edit mode a first-class guide concept",
       "goal": "Create the approved edit-mode chapter structure and a real guide-side interactive on/off teaching control without pretending that the guide control is Moodle itself.",
-      "requirements": ["REQ-GUIDE-005", "REQ-GUIDE-006", "REQ-CONTENT-004", "REQ-CONTENT-006"],
-      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md"],
-      "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "tests"],
+      "requirements": [
+        "REQ-GUIDE-005",
+        "REQ-GUIDE-006",
+        "REQ-CONTENT-004",
+        "REQ-CONTENT-006"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "src/pages/Guide.tsx",
+        "src/data/guideHotspots.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "src/pages/Guide.tsx",
+        "src/components",
+        "src/data/guideHotspots.ts",
+        "public/guide/screenshots",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "tests"
+      ],
       "ssot_sections": [],
       "evidence": [
         "03-topbar-edit-off.png and 04-topbar-edit-on.png already prove the real Moodle edit-mode off/on states; reuse them.",
@@ -166,16 +324,37 @@
         "The approved teaching order remains: what edit mode is -> on/off -> which actions depend on it -> specific editing procedures.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
     },
     {
       "id": "P6-editing-chapter",
       "status": "pending",
       "title": "Complete the space-editing chapter",
       "goal": "Organize the approved editing procedures under a clear main heading and teach each procedure click by click.",
-      "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-005", "REQ-CONTENT-005", "REQ-CONTENT-006"],
-      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
-      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md", "tests"],
+      "requirements": [
+        "REQ-GUIDE-001",
+        "REQ-GUIDE-002",
+        "REQ-GUIDE-003",
+        "REQ-GUIDE-005",
+        "REQ-CONTENT-005",
+        "REQ-CONTENT-006"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "src/data/guideHotspots.ts",
+        "public/guide/screenshots",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md",
+        "tests"
+      ],
       "ssot_sections": [],
       "evidence": [
         "41/43 already prove the real space settings form/save path; 44 proves the real space-image area.",
@@ -190,16 +369,38 @@
         "If M14 evidence is still missing, task-name editing remains needs-capture rather than using invented UI or an incomplete screenshot sequence.",
         "npm run check passes."
       ],
-      "checks": ["npm run check"]
+      "checks": [
+        "npm run check"
+      ]
     },
     {
       "id": "P7-browser-quality",
       "status": "pending",
       "title": "Add browser, visual, mobile and accessibility regression gates",
       "goal": "Protect the visual guide from regressions that typechecking and unit invariants cannot detect.",
-      "requirements": ["REQ-STABILITY-001", "REQ-STABILITY-002", "REQ-STABILITY-005", "REQ-STABILITY-006", "REQ-GUIDE-004", "REQ-GUIDE-005"],
-      "read_first": ["package.json", "package-lock.json", ".github/workflows/ci.yml", "src/pages/Guide.tsx"],
-      "scope": ["package.json", "package-lock.json", "playwright.config.ts", "tests", ".github/workflows", "src/components", "src/pages/Guide.tsx"],
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-002",
+        "REQ-STABILITY-005",
+        "REQ-STABILITY-006",
+        "REQ-GUIDE-004",
+        "REQ-GUIDE-005"
+      ],
+      "read_first": [
+        "package.json",
+        "package-lock.json",
+        ".github/workflows/ci.yml",
+        "src/pages/Guide.tsx"
+      ],
+      "scope": [
+        "package.json",
+        "package-lock.json",
+        "playwright.config.ts",
+        "tests",
+        ".github/workflows",
+        "src/components",
+        "src/pages/Guide.tsx"
+      ],
       "ssot_sections": [],
       "evidence": [],
       "acceptance": [
@@ -212,7 +413,10 @@
         "Presentation CI runs the broad full gate at the appropriate CI checkpoint so UI regressions cannot merge merely because type/unit/build checks passed.",
         "npm run check and npm run check:full both pass."
       ],
-      "checks": ["npm run check", "npm run check:full"]
+      "checks": [
+        "npm run check",
+        "npm run check:full"
+      ]
     },
     {
       "id": "P8-adversarial-audit",
@@ -221,10 +425,23 @@
       "goal": "Attempt to prove that the completed implementation violates the SSOT, owner requirements, mobile behavior, truth rules, or regression guarantees; fix only verified findings.",
       "requirements": [],
       "audit_all_requirements": true,
-      "read_first": ["SSOT.md", "docs/task-queue.json", "src/data/guideDeck.ts", "tests"],
-      "scope": ["repository as required by verified findings"],
-      "ssot_sections": ["תחום הריפו", "מקורות האמת בתוך הריפו", "כללי גבול מחייבים"],
-      "evidence": ["Use the final canonical screenshot manifest, missing-capture list, task history, and browser/visual results as evidence; task status alone is not proof."],
+      "read_first": [
+        "SSOT.md",
+        "docs/task-queue.json",
+        "src/data/guideDeck.ts",
+        "tests"
+      ],
+      "scope": [
+        "repository as required by verified findings"
+      ],
+      "ssot_sections": [
+        "תחום הריפו",
+        "מקורות האמת בתוך הריפו",
+        "כללי גבול מחייבים"
+      ],
+      "evidence": [
+        "Use the final canonical screenshot manifest, missing-capture list, task history, and browser/visual results as evidence; task status alone is not proof."
+      ],
       "acceptance": [
         "Every canonical REQ-* requirement is checked against the final implementation, not merely against task completion state.",
         "No unverified cleanup or speculative rewrite is performed.",
@@ -232,7 +449,10 @@
         "npm run check:full passes as the final broad quality gate.",
         "Task queue contains no unfinished approved requirement."
       ],
-      "checks": ["npm run check", "npm run check:full"]
+      "checks": [
+        "npm run check",
+        "npm run check:full"
+      ]
     }
   ]
 }

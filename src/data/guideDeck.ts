@@ -388,11 +388,13 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 11',
   title: 'איך יודעים שהמרחב נוצר?',
-  summary: 'עדכון על סיום היצירה נשלח במייל, והתהליך עשוי להימשך עד 3 שעות. כשמתקבל העדכון — המרחב מופיע ב„מרחבי הלמידה שלי”.',
+  summary: 'לאחר שהמרחב נוצר, מתקבלת התראה במודל שמאשרת שהמערכת הצליחה ליצור את מרחב הלמידה.',
+  screenshots: [
+    { src: '40-wizard-notification-update.png', caption: 'פעמון ההתראות במודל עם ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.' },
+  ],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['הודעה', 'יצירת מרחב', 'סיום יצירה'],
-  status: 'needs-capture',
-  missingCaptureId: 'M29',
+  status: 'ready',
   },
   {
   id: 'open-space-result',
@@ -527,8 +529,10 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'מעבירים מרחב שאינו בשימוש לארכיון במקום להשאיר אותו ברשימה הפעילה.',
   steps: ['פותחים את המרחבים שלי.', 'פותחים את פעולות המרחב.', 'בוחרים העברה לארכיון.', 'מוודאים שהמרחב בארכיון.'],
   keywords: ['ארכיון', 'מרחב ישן'],
-  status: 'needs-capture',
-  missingCaptureId: 'M02',
+  // needs-fact: „ארכיון” מופיע רק כמסנן ב„מרחבי הלמידה שלי”; לא נמצאה פעולת מורה
+  // „העברה לארכיון” בתפריט כרטיס המרחב ולא בעמוד הקורס. חסום לפרסום עד לבירור עובדתי,
+  // ואין להמציא הסבר חלופי על ארכוב אוטומטי ללא אישור הבעלים.
+  status: 'needs-fact',
   },
   {
   id: 'self-learning-space',
@@ -1057,8 +1061,16 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ייבוא',
   title: 'איך מייבאים משימה ממרחב אחר?',
   summary: 'נכנסים ל„שימוש חוזר בתכנים”, בוחרים מקור, משימה ויעד ומאשרים.',
-  screenshots: [{ src: '08-more-options.jpg', caption: '„אפשרויות נוספות” — מכאן נכנסים ל„שימוש חוזר בתכנים”.' }],
+  screenshots: [
+    { src: '08-more-options.jpg', caption: '„אפשרויות נוספות” — מכאן נכנסים ל„שימוש חוזר בתכנים”.' },
+    { src: '83-import-source.png', caption: 'אשף הייבוא — בחירת מרחב־הלימוד שממנו מייבאים מתוך רשימת המרחבים.' },
+    { src: '84-import-select.png', caption: '„הגדרות בחירה” — סימון הפריטים לייבוא מהמרחב שנבחר.' },
+    { src: '85-import-confirm.png', caption: '„אישור ותצוגה” — סקירת מה ייובא, לפני שלב „ביצוע יבוא”.' },
+  ],
   keywords: ['ייבוא', 'שימוש חוזר בתכנים', 'מרחב אחר'],
+  // M18 still needs-capture: steps 1–4 of the import wizard are real captures;
+  // the execution ("ביצוע יבוא", step 5) and its result require a mutation on a
+  // live space, so they stay uncaptured until a safe test environment exists.
   status: 'needs-capture',
   missingCaptureId: 'M18',
   },
