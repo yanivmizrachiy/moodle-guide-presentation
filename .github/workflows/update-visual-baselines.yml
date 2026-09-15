@@ -1,0 +1,25 @@
+# Deliberate, owner-triggered generation of the Linux visual baselines.
+# The gate never blesses its own snapshots: this workflow only uploads the
+# rendered baselines as an artifact for review and an explicit commit.
+name: Update visual baselines (linux)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  baselines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual.spec.ts --update-snapshots
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-linux
+          path: tests/e2e/visual.spec.ts-snapshots
+          retention-days: 14

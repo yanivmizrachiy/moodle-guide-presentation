@@ -413,7 +413,7 @@
     },
     {
       "id": "P7-browser-quality",
-      "status": "next",
+      "status": "done",
       "title": "Add browser, visual, mobile and accessibility regression gates",
       "goal": "Protect the visual guide from regressions that typechecking and unit invariants cannot detect.",
       "requirements": [
@@ -437,7 +437,8 @@
         "tests",
         ".github/workflows",
         "src/components",
-        "src/pages/Guide.tsx"
+        "src/pages/Guide.tsx",
+        ".gitignore"
       ],
       "ssot_sections": [],
       "evidence": [],
@@ -454,11 +455,14 @@
       "checks": [
         "npm run check",
         "npm run check:full"
+      ],
+      "notes": [
+        "Scope expanded with .gitignore (rule 12): the browser tooling writes test-results/ and playwright-report/ artifact directories that must never enter git."
       ]
     },
     {
       "id": "P8-adversarial-audit",
-      "status": "pending",
+      "status": "next",
       "title": "Run final adversarial audit",
       "goal": "Attempt to prove that the completed implementation violates the SSOT, owner requirements, mobile behavior, truth rules, or regression guarantees; fix only verified findings.",
       "requirements": [],

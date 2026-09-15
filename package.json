@@ -17,7 +17,8 @@
     "task:advance": "node scripts/advance-task.mjs",
     "shots:derive": "node scripts/derive-screenshots.mjs",
     "check": "npm run typecheck && npm run audit:ssot && npm run context:task && npm run audit:scope && npm run test && npm run build && npm run receipt:check && npm run verify:advance",
-    "check:full": "npm run check"
+    "check:full": "npm run check && npm run test:e2e",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource-variable/heebo": "^5.3.0",
@@ -30,6 +31,8 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

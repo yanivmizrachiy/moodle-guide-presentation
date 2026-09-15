@@ -8,3 +8,5 @@ dist/
 .claude/TASK_BASELINE.json
 .claude/CHECK_RECEIPT.json
 *.tmp
+/test-results/
+/playwright-report/
