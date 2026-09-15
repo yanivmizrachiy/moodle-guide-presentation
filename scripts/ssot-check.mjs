@@ -7,6 +7,8 @@ const required = [
   'SSOT.md',
   'CLAUDE.md',
   'MIGRATION_MANIFEST.md',
+  'docs/task-queue.json',
+  'scripts/build-task-context.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/pages/Guide.tsx',
@@ -45,10 +47,46 @@ const deps = Object.keys({ ...(pkg.dependencies ?? {}), ...(pkg.devDependencies 
 for (const forbidden of ['@supabase/supabase-js', 'express', 'cookie-parser', 'helmet', 'xlsx']) {
   if (deps.includes(forbidden)) errors.push(`Non-presentation dependency is forbidden: ${forbidden}`);
 }
+if (pkg.scripts?.['context:task'] !== 'node scripts/build-task-context.mjs') {
+  errors.push('package.json must expose context:task through scripts/build-task-context.mjs.');
+}
+if (!String(pkg.scripts?.check ?? '').includes('npm run context:task')) {
+  errors.push('npm run check must validate/generate the active minimal task context.');
+}
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
-for (const requiredIgnore of ['node_modules/', 'dist/']) {
+for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md']) {
   if (!gitignore.includes(requiredIgnore)) errors.push(`.gitignore must contain ${requiredIgnore}`);
+}
+
+const queuePath = path.join(root, 'docs/task-queue.json');
+if (fs.existsSync(queuePath)) {
+  try {
+    const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+    const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
+    const ids = tasks.map((task) => task.id);
+    if (!tasks.length) errors.push('Task queue must contain tasks.');
+    if (new Set(ids).size !== ids.length) errors.push('Task queue task ids must be unique.');
+    const allowedStatuses = new Set(['next', 'pending', 'done', 'blocked']);
+    for (const task of tasks) {
+      if (!task.id || !task.title || !task.goal) errors.push(`Task ${task.id ?? '<missing-id>'} is missing id/title/goal.`);
+      if (!allowedStatuses.has(task.status)) errors.push(`Task ${task.id ?? '<missing-id>'} has invalid status ${task.status}.`);
+    }
+    const next = tasks.filter((task) => task.status === 'next');
+    if (next.length !== 1) {
+      errors.push(`Task queue must contain exactly one next task; found ${next.length}.`);
+    } else {
+      const active = next[0];
+      if (!Array.isArray(active.read_first) || !active.read_first.length) errors.push(`Active task ${active.id} needs read_first paths.`);
+      if (!Array.isArray(active.acceptance) || !active.acceptance.length) errors.push(`Active task ${active.id} needs acceptance criteria.`);
+      if (!Array.isArray(active.checks) || !active.checks.includes('npm run check')) errors.push(`Active task ${active.id} must require npm run check.`);
+      for (const relative of active.read_first ?? []) {
+        if (!fs.existsSync(path.join(root, relative))) errors.push(`Active task read_first path does not exist: ${relative}`);
+      }
+    }
+  } catch (error) {
+    errors.push(`Invalid docs/task-queue.json: ${error.message}`);
+  }
 }
 
 const screenshotsDir = path.join(root, 'public/guide/screenshots');
@@ -70,4 +108,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('SSOT audit passed: one canonical deck, real assets present, and standalone boundaries preserved.');
+console.log('SSOT audit passed: one canonical deck, real assets, minimal-context execution contract, and standalone boundaries preserved.');
