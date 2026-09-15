@@ -29,11 +29,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '53-student-enrol': [
     { id: 'enrol-me', label: 'רשום אותי', x: 57.2, y: 47.4, width: 9.6, height: 9.8 },
   ],
-  // 958x797: the attempts select and the pass-grade field above it.
-  '33-quiz-question-behaviour': [
-    { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 11.8, width: 15.8, height: 10.4 },
-    { id: 'pass-grade', label: 'ציון "עובר"', x: 47.5, y: 5.4, width: 24, height: 8 },
-  ],
   // 3200x1800 settings form: the full-name field.
   '41-space-settings': [
     { id: 'fullname', label: 'השם המלא של מרחב־הלימוד', x: 26.8, y: 35.8, width: 30, height: 7.4 },
@@ -215,12 +210,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '54-student-enrolled': [
     { id: 'enrolled-ok', label: 'נרשמתם לקורס בהצלחה', x: 58.5, y: 28.5, width: 12, height: 4.5 },
   ],
-  '26-selfenrol-methods-list': [
-    { id: 'self-enrol-method', label: 'שיוך עצמי (תלמיד)', x: 75, y: 48, width: 20, height: 4.2 },
-  ],
-  '27-selfenrol-settings': [
-    { id: 'enrol-active', label: 'מנגנון רישום עצמי פעיל?', x: 75.4, y: 35.9, width: 17.7, height: 3.6 },
-  ],
   '74-groups-two-groups': [
     { id: 'add-members', label: 'הוספת/הסרת משתתפים מקבוצה', x: 33, y: 85.3, width: 16, height: 5.5 },
   ],
@@ -236,12 +225,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '07-unit-menu': [
     { id: 'unit-kebab', label: 'תפריט יחידת ההוראה', x: 8.2, y: 74.5, width: 4.3, height: 7.8 },
   ],
-  '14-hidden-items': [
-    { id: 'hidden-label', label: 'מוסתר בפני תלמידים', x: 56.5, y: 29.6, width: 11.5, height: 3.6 },
-  ],
-  '18-reports': [
-    { id: 'learning-mgmt', label: 'ניהול למידה', x: 68.3, y: 58.7, width: 6.4, height: 3.2 },
-  ],
   // 3200x1800 activity edit menu: the move entry.
   '80-activity-menu-move': [
     { id: 'move-entry', label: 'העברה', x: 17.7, y: 57.6, width: 6.3, height: 4.2 },
@@ -253,6 +236,64 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1800 after the move: the activity at its new position.
   '82-move-activity-result': [
     { id: 'moved-activity', label: 'המשימה במיקום החדש', x: 68.7, y: 60.2, width: 5.3, height: 3.7 },
+  ],
+  // 3200x1800 quiz settings, „ציונים" area: pass grade, attempts and grading method.
+  '86-quiz-settings-grades': [
+    { id: 'pass-grade', label: 'ציון "עובר"', x: 50.1, y: 64.9, width: 13.7, height: 5.6 },
+    { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 71.2, width: 7.7, height: 5.6 },
+    { id: 'grading-method', label: 'שיטת מתן ציונים — הציון הגבוה ביותר', x: 53.1, y: 77.5, width: 10.8, height: 5.6 },
+  ],
+  // 3200x1800 quiz settings, „התנהגות השאלה" area: the feedback-mechanism field.
+  '87-quiz-settings-behaviour': [
+    { id: 'question-behaviour', label: 'מנגנון המשוב בשאלות', x: 38.0, y: 64.8, width: 25.8, height: 5.6 },
+  ],
+  // 3200x1800 bottom of the quiz settings form: the save button.
+  '88-quiz-settings-save': [
+    { id: 'save', label: 'שמירת שינויים וחזרה למרחב־לימוד', x: 47.2, y: 89.9, width: 16.6, height: 5.4 },
+  ],
+  // 3200x1800 teacher quiz page: the „הגדרות" tab and the pass-grade line.
+  '89-quiz-tabs-settings': [
+    { id: 'settings-tab', label: 'הגדרות', x: 70.1, y: 22.4, width: 4.7, height: 4.9 },
+    { id: 'pass-grade-line', label: 'ציון עובר: 80.00 מתוך 100.00', x: 66.0, y: 48.6, width: 13.2, height: 4.2 },
+  ],
+  // 3200x1800 space tab row: the tabs a teacher clicks inside the space.
+  '90-course-tabs': [
+    { id: 'participants-tab', label: 'משתתפים', x: 60.7, y: 20.6, width: 5.3, height: 4.6 },
+    { id: 'grades-tab', label: 'ציונים', x: 55.6, y: 20.6, width: 4.1, height: 4.6 },
+    { id: 'reports-tab', label: 'דוחות', x: 50.9, y: 20.6, width: 4.2, height: 4.6 },
+    { id: 'settings-tab', label: 'הגדרות', x: 66.2, y: 20.6, width: 4.5, height: 4.6 },
+  ],
+  // 3200x1800 reports list: the two reports the guide uses.
+  '91-reports-list': [
+    { id: 'logs-link', label: 'יומני מעקב', x: 72.9, y: 46.5, width: 5.9, height: 2.9 },
+    { id: 'learning-management-link', label: 'ניהול למידה', x: 74.2, y: 43.6, width: 4.6, height: 2.9 },
+  ],
+  // 3200x1800 course page in edit mode: the rename pencil beside an activity name.
+  '92-activity-rename-pencil': [
+    { id: 'rename-pencil', label: 'עיפרון — שינוי שם הפעילות', x: 65.2, y: 80.1, width: 3.1, height: 5.3 },
+  ],
+  // 3200x1800 the open inline rename field (Esc cancels, Enter saves).
+  '93-activity-rename-field': [
+    { id: 'rename-field', label: 'שדה שם הפעילות', x: 52.3, y: 75.6, width: 21.9, height: 6.4 },
+  ],
+  // 3200x1800 enrolment-methods page: the self-enrolment row and its eye icon.
+  '94-enrol-methods': [
+    { id: 'self-enrol-method', label: 'שיוך עצמי (תלמיד)', x: 88.4, y: 46.2, width: 6.6, height: 4.6 },
+    { id: 'self-enrol-eye', label: 'סמל העין — שיטת השיוך פעילה', x: 15.4, y: 46.4, width: 3.0, height: 4.6 },
+  ],
+  // 3200x1800 self-enrolment settings: the two fields that must be „כן".
+  '95-selfenrol-settings': [
+    { id: 'enrol-active', label: 'מנגנון רישום עצמי פעיל? — כן', x: 67.1, y: 33.6, width: 5.1, height: 5.6 },
+    { id: 'allow-new-users', label: 'האם לאפשר רישום למשתמשים חדשים — כן', x: 67.1, y: 39.9, width: 5.1, height: 5.6 },
+  ],
+  // 3200x1800 the „אפשרויות נוספות" menu of the space, opened.
+  '96-more-options-menu': [
+    { id: 'more-options-tab', label: 'אפשרויות נוספות', x: 40.7, y: 18.9, width: 10.3, height: 6.8 },
+    { id: 'more-menu', label: 'תפריט „אפשרויות נוספות”', x: 40.7, y: 25.8, width: 11.4, height: 21.4 },
+  ],
+  // 3200x1800 course page in edit mode: the „מוסתר בפני תלמידים" badge.
+  '99-hidden-item': [
+    { id: 'hidden-badge', label: 'מוסתר בפני תלמידים', x: 66.4, y: 42.4, width: 10.1, height: 4.2 },
   ],
 });
 
