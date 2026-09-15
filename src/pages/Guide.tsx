@@ -365,7 +365,7 @@ function SlideContent({
               className="h-16 min-w-44 gap-3 rounded-2xl bg-amber-400 px-10 text-xl font-black text-slate-950 shadow-[0_16px_38px_rgba(251,191,36,0.22),0_8px_22px_rgba(0,0,0,0.28)] hover:bg-amber-300"
             >
               <List className="h-6 w-6" />
-              לתוכן העניינים
+              התחל
             </Button>
           </div>
         </div>
