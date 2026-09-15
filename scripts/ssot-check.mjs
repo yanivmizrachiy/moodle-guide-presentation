@@ -74,13 +74,17 @@ if (pkg.scripts?.['audit:scope'] !== 'node scripts/task-scope-check.mjs') {
 if (pkg.scripts?.['receipt:check'] !== 'node scripts/write-check-receipt.mjs') {
   errors.push('package.json must expose receipt:check through scripts/write-check-receipt.mjs.');
 }
+if (pkg.scripts?.['verify:advance'] !== 'node scripts/advance-task.mjs --verify') {
+  errors.push('package.json must expose verify:advance as the non-mutating task advancement check.');
+}
 if (pkg.scripts?.['task:advance'] !== 'node scripts/advance-task.mjs') {
   errors.push('package.json must expose task:advance through scripts/advance-task.mjs.');
 }
 const checkScript = String(pkg.scripts?.check ?? '');
 if (!checkScript.includes('npm run context:task')) errors.push('npm run check must validate/generate the active minimal task context.');
 if (!checkScript.includes('npm run audit:scope')) errors.push('npm run check must enforce the active task scope.');
-if (!checkScript.endsWith('npm run receipt:check')) errors.push('npm run check must record its verified receipt only after every other fast gate passes.');
+if (!checkScript.includes('npm run receipt:check')) errors.push('npm run check must record a verified receipt after tests/build pass.');
+if (!checkScript.endsWith('npm run verify:advance')) errors.push('npm run check must finish by proving the verified state is advanceable without mutating the queue.');
 if (!pkg.scripts?.['check:full']) errors.push('package.json must expose a stable check:full command; P7 upgrades it to the broad browser/visual gate.');
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
@@ -157,4 +161,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, fingerprinted scope guard, verified check receipt, safe task advancement, and standalone boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, fingerprinted scope guard, verified check receipt, non-mutating advance verification, safe task advancement, and standalone boundaries preserved.`);
