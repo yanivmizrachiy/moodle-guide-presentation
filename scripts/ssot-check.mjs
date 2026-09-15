@@ -10,6 +10,7 @@ const required = [
   'docs/task-queue.json',
   'scripts/build-task-context.mjs',
   'scripts/task-scope-check.mjs',
+  'scripts/advance-task.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/pages/Guide.tsx',
@@ -68,6 +69,9 @@ if (pkg.scripts?.['context:task'] !== 'node scripts/build-task-context.mjs') {
 }
 if (pkg.scripts?.['audit:scope'] !== 'node scripts/task-scope-check.mjs') {
   errors.push('package.json must expose audit:scope through scripts/task-scope-check.mjs.');
+}
+if (pkg.scripts?.['task:advance'] !== 'node scripts/advance-task.mjs') {
+  errors.push('package.json must expose task:advance through scripts/advance-task.mjs.');
 }
 const checkScript = String(pkg.scripts?.check ?? '');
 if (!checkScript.includes('npm run context:task')) errors.push('npm run check must validate/generate the active minimal task context.');
@@ -147,4 +151,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, task scope guard, and standalone boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, task scope guard, safe task advancement, and standalone boundaries preserved.`);
