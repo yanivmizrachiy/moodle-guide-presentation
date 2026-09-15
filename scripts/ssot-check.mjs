@@ -106,8 +106,13 @@ if (fs.existsSync(queuePath)) {
     }
 
     const next = tasks.filter((task) => task.status === 'next');
-    if (next.length !== 1) {
-      errors.push(`Task queue must contain exactly one next task; found ${next.length}.`);
+    if (next.length > 1) {
+      errors.push(`Task queue may contain at most one next task; found ${next.length}.`);
+    } else if (next.length === 0) {
+      const unfinished = tasks.filter((task) => task.status !== 'done');
+      if (unfinished.length) {
+        errors.push(`Task queue has no next task but is not complete; unfinished: ${unfinished.map((task) => `${task.id}:${task.status}`).join(', ')}.`);
+      }
     } else {
       const active = next[0];
       if (!Array.isArray(active.read_first) || !active.read_first.length) errors.push(`Active task ${active.id} needs read_first paths.`);
