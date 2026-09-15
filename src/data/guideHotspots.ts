@@ -320,6 +320,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 space tab row: the tabs a teacher clicks inside the space.
   '90-course-tabs': [
+    { id: 'my-courses', label: 'מרחבי הלמידה שלי', x: 61.9, y: 0.9, width: 8.4, height: 5 },
     { id: 'participants-tab', label: 'משתתפים', x: 60.7, y: 20.6, width: 5.3, height: 4.6 },
     { id: 'grades-tab', label: 'ציונים', x: 55.6, y: 20.6, width: 4.1, height: 4.6 },
     { id: 'reports-tab', label: 'דוחות', x: 50.9, y: 20.6, width: 4.2, height: 4.6 },

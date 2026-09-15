@@ -218,6 +218,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'wizard-clone-previous-year': 'wizard',
   workflow: 'start',
   interface: 'space',
+  'my-spaces-list': 'space',
   'student-space-view': 'space',
   'pass-grade': 'grading',
   'archive-space': 'space',
@@ -714,6 +715,38 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   points: ['הגדרות.', 'משתתפים.', 'ציונים ודוחות.', 'מצב עריכה.'],
   screenshots: [{ src: '10-course-page.png', caption: 'תפריט המרחב והיחידות בעמוד.', hotspotIds: [] }],
   keywords: ['ממשק', 'תפריט', 'סרגל', 'כפתורים'],
+  status: 'ready',
+  },
+  {
+  id: 'my-spaces-list',
+  eyebrow: 'מרחבי הלמידה שלי',
+  title: 'איפה רואים לאילו מרחבים אנחנו או התלמידים רשומים השנה?',
+  flow: [
+    {
+      text: 'לוחצים על „מרחבי הלמידה שלי” בסרגל העליון.',
+      screenshot: {
+        src: '90-course-tabs.png',
+        caption: 'הסרגל העליון של Moodle — הקישור „מרחבי הלמידה שלי”.',
+        hotspotIds: ['my-courses'],
+      },
+    },
+    {
+      text: 'נפתחת רשימת המרחבים שאנחנו רשומים אליהם השנה.',
+      screenshot: {
+        src: '61-my-courses-new.png',
+        caption: 'עמוד „מרחבי הלמידה שלי” — רשימת המרחבים הקיימים.',
+      },
+    },
+    {
+      text: 'אצל התלמיד נפתחת אותה רשימה עם המרחבים שהוא רשום אליהם.',
+      screenshot: {
+        src: '30-student-mycourses-selflearning.jpg',
+        caption: 'מרחב המורה לצד מרחב „למידה עצמית” — המסומן הוא מרחב הלימוד העצמי.',
+        hotspotIds: ['self-learning'],
+      },
+    },
+  ],
+  keywords: ['מרחבי הלמידה שלי', 'רשימת מרחבים', 'לאילו מרחבים רשומים', 'תלמיד רשום'],
   status: 'ready',
   },
   {
