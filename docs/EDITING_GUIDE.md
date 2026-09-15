@@ -35,13 +35,13 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
   `{ src: 'NN-name.png', caption: '…' }` on a slide, and add a manifest row.
   Naming: `^\d{2}-[a-z0-9-]+`.
 - **Add a hotspot** — first add `{ id, label, x, y, width, height }` (percent) under
-  the screenshot's stem in `guideHotspots.ts`. If that screenshot has exactly one
-  verified hotspot, it is the unambiguous focus. If the screenshot has several
-  possible hotspots, the use stays unmarked until it selects exactly one with
-  `screenshot.hotspotIds: ['id']`. Use `hotspotIds: []` to suppress even a single
-  default focus. Never show two hotspots on one screenshot use; show the screen
-  again in the next step if a second target must be taught. Size the ellipse so
-  the target's text/icon stays fully readable inside the mark.
+  the screenshot's stem in `guideHotspots.ts`. This only defines a verified target;
+  it never displays automatically. To show the red focus in a specific screenshot
+  use, select exactly one target with `screenshot.hotspotIds: ['id']`. With no
+  `hotspotIds` (or with `hotspotIds: []`) the screenshot stays clean. Never show
+  two hotspots on one screenshot use; show the screen again in the next step if a
+  second target must be taught. Size the ellipse so the target's text/icon stays
+  fully readable inside the mark.
 - **Mark `needs-capture`** — set `status: 'needs-capture'` + `missingCaptureId:
   'Mxx'` and add a `## Mxx` entry in `GUIDE_MISSING_CAPTURES.md`.
 - **Close a missing capture** — add the real masked screenshot + derivatives,
