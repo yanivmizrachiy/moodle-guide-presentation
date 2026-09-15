@@ -1,18 +1,25 @@
 {
-  "version": 1,
+  "version": 2,
   "execution_policy": {
     "quality": "Do not reduce reasoning, verification, or implementation quality to save tokens. Save tokens only by excluding irrelevant context and repeated explanations.",
     "one_next_task": true,
     "expand_scope_only_when_proven": true,
     "owner_controls_slide_wording": true,
+    "requirement_coverage_enforced": true,
+    "full_ssot_read_only_when_required": true,
     "final_report": ["CHANGED", "VERIFIED", "COMMIT", "NEXT", "BLOCKED"]
   },
   "tasks": [
     {
       "id": "P1-contract",
       "status": "next",
-      "title": "Codify the approved guide contract",
-      "goal": "Integrate the approved project-wide rules into the canonical SSOT and make the enforceable parts machine-checkable without changing slide wording or presentation behavior.",
+      "title": "Enforce the approved guide contract",
+      "goal": "Turn the approved project-wide contract into machine-enforced invariants wherever that can be done safely, without changing slide wording or presentation behavior.",
+      "requirements": [
+        "REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-004", "REQ-GUIDE-005", "REQ-GUIDE-006",
+        "REQ-STABILITY-001", "REQ-STABILITY-002", "REQ-STABILITY-003", "REQ-STABILITY-004", "REQ-STABILITY-005", "REQ-STABILITY-006", "REQ-STABILITY-007",
+        "REQ-TOKEN-001", "REQ-TOKEN-002", "REQ-TOKEN-003", "REQ-TOKEN-004", "REQ-TOKEN-005", "REQ-TOKEN-006"
+      ],
       "read_first": [
         "SSOT.md",
         "src/data/guideDeck.ts",
@@ -23,27 +30,24 @@
         "SSOT.md",
         "src/data/guideDeck.ts",
         "tests/deck-invariants.test.ts",
-        "scripts/ssot-check.mjs"
+        "scripts/ssot-check.mjs",
+        "scripts/build-task-context.mjs",
+        "docs/task-queue.json",
+        "package.json"
       ],
-      "ssot_sections": [
-        "מקורות האמת בתוך הריפו",
-        "כללי גבול מחייבים"
-      ],
+      "ssot_sections": ["מקורות האמת בתוך הריפו"],
       "acceptance": [
-        "SSOT states that procedure guidance is real-screen, step-by-step, concise, and regression-safe.",
-        "SSOT requires the established red hotspot on the current action target when a target exists.",
-        "SSOT requires a visual branch, not text-only דרך א/דרך ב, when two paths are taught.",
-        "SSOT states that edit-mode-dependent actions must be explicitly identified.",
-        "SSOT states that changes must preserve existing working behavior and canonical sources.",
+        "Every REQ-* id in SSOT is referenced by at least one execution task and unknown requirement ids fail the audit.",
+        "The active TASK_CONTEXT contains the exact canonical requirements for its task without forcing a full SSOT read unless that task actually needs it.",
         "Rules that can be represented safely in the data model or invariant tests are enforced there.",
-        "No existing owner-authored slide wording is changed.",
+        "No existing owner-authored slide wording or presentation behavior is changed.",
         "npm run check passes."
       ],
       "checks": ["npm run check"],
       "notes": [
         "Do not implement the new slides in this task.",
         "Do not perform unrelated refactors.",
-        "Keep the SSOT normative and concise; Git history is the historical record."
+        "Keep SSOT normative and concise; Git history is the historical record."
       ]
     },
     {
@@ -51,13 +55,18 @@
       "status": "pending",
       "title": "Extract reusable guide primitives",
       "goal": "Reduce regression risk by extracting only the recurring guide UI primitives from Guide.tsx while preserving behavior and visuals.",
-      "read_first": ["SSOT.md", "src/pages/Guide.tsx", "src/data/guideDeck.ts", "tests/deck-invariants.test.ts"],
+      "requirements": [
+        "REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-004", "REQ-GUIDE-005", "REQ-GUIDE-006",
+        "REQ-STABILITY-002", "REQ-STABILITY-003", "REQ-STABILITY-004", "REQ-STABILITY-007"
+      ],
+      "read_first": ["src/pages/Guide.tsx", "src/data/guideDeck.ts", "tests/deck-invariants.test.ts"],
       "scope": ["src/pages/Guide.tsx", "src/components", "tests"],
-      "ssot_sections": ["מקורות האמת בתוך הריפו", "כללי גבול מחייבים"],
+      "ssot_sections": ["מקורות האמת בתוך הריפו"],
       "acceptance": [
         "Recurring flow, screenshot/hotspot, and branch-capable presentation primitives have one canonical implementation.",
         "No owner-authored wording changes.",
         "Existing slide IDs, navigation, screenshots, and hotspot behavior remain intact.",
+        "At least one existing dependent usage is regression-checked for each extracted shared primitive.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
@@ -67,9 +76,10 @@
       "status": "pending",
       "title": "Add canonical two-path guidance",
       "goal": "Add a reusable responsive visual branch for procedures that genuinely have two paths, then use it for the approved student-task and space-opening cases.",
-      "read_first": ["SSOT.md", "src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components"],
+      "requirements": ["REQ-GUIDE-004", "REQ-CONTENT-001", "REQ-CONTENT-002"],
+      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components"],
       "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "tests"],
-      "ssot_sections": ["כללי גבול מחייבים"],
+      "ssot_sections": [],
       "acceptance": [
         "Two-path guidance is visibly split on desktop and mobile.",
         "The student task flow shows both navigation through the space and a direct task URL path.",
@@ -84,9 +94,10 @@
       "status": "pending",
       "title": "Teach later student joining by space link",
       "goal": "Show that a space opened without students can accept students later and teach the exact real link-copy path step by step.",
-      "read_first": ["SSOT.md", "src/data/guideDeck.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
+      "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-006", "REQ-CONTENT-003"],
+      "read_first": ["src/data/guideDeck.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
       "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs", "tests"],
-      "ssot_sections": ["כללי גבול מחייבים"],
+      "ssot_sections": [],
       "acceptance": [
         "The guide explicitly states that choosing ללא תלמידים does not prevent adding students later.",
         "The exact space URL location and copy action are shown, not merely described.",
@@ -101,9 +112,10 @@
       "status": "pending",
       "title": "Make edit mode a first-class guide concept",
       "goal": "Create the approved edit-mode chapter structure and a real guide-side interactive on/off teaching control without pretending that the guide control is Moodle itself.",
-      "read_first": ["SSOT.md", "src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/data/guideHotspots.ts"],
+      "requirements": ["REQ-GUIDE-005", "REQ-GUIDE-006", "REQ-CONTENT-004", "REQ-CONTENT-006"],
+      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/data/guideHotspots.ts"],
       "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "src/data/guideHotspots.ts", "tests"],
-      "ssot_sections": ["כללי גבול מחייבים"],
+      "ssot_sections": [],
       "acceptance": [
         "A main topic asks מה זה מצב עריכה? before dependent editing procedures.",
         "The guide clearly identifies operations that require edit mode.",
@@ -119,9 +131,10 @@
       "status": "pending",
       "title": "Complete the space-editing chapter",
       "goal": "Organize the approved editing procedures under a clear main heading and teach each procedure click by click.",
-      "read_first": ["SSOT.md", "src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md"],
+      "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-005", "REQ-CONTENT-005", "REQ-CONTENT-006"],
+      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md"],
       "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "tests"],
-      "ssot_sections": ["כללי גבול מחייבים"],
+      "ssot_sections": [],
       "acceptance": [
         "The chapter order teaches edit mode before edit-mode-dependent actions.",
         "Separate procedures cover editing the main heading, main image, and task name.",
@@ -135,9 +148,10 @@
       "status": "pending",
       "title": "Add browser, visual, mobile and accessibility regression gates",
       "goal": "Protect the visual guide from regressions that typechecking and unit invariants cannot detect.",
-      "read_first": ["SSOT.md", "package.json", ".github/workflows/ci.yml", "src/pages/Guide.tsx"],
+      "requirements": ["REQ-STABILITY-001", "REQ-STABILITY-002", "REQ-STABILITY-005", "REQ-STABILITY-006", "REQ-GUIDE-004", "REQ-GUIDE-005"],
+      "read_first": ["package.json", ".github/workflows/ci.yml", "src/pages/Guide.tsx"],
       "scope": ["package.json", "tests", ".github/workflows", "src/components", "src/pages/Guide.tsx"],
-      "ssot_sections": ["כללי גבול מחייבים"],
+      "ssot_sections": [],
       "acceptance": [
         "Critical guide interactions are browser-tested.",
         "Representative desktop and mobile states are regression-tested.",
@@ -153,10 +167,13 @@
       "status": "pending",
       "title": "Run final adversarial audit",
       "goal": "Attempt to prove that the completed implementation violates the SSOT, owner requirements, mobile behavior, truth rules, or regression guarantees; fix only verified findings.",
+      "requirements": [],
+      "audit_all_requirements": true,
       "read_first": ["SSOT.md", "docs/task-queue.json", "src/data/guideDeck.ts", "tests"],
       "scope": ["repository as required by verified findings"],
       "ssot_sections": ["תחום הריפו", "מקורות האמת בתוך הריפו", "כללי גבול מחייבים"],
       "acceptance": [
+        "Every canonical REQ-* requirement is checked against the final implementation, not merely against task completion state.",
         "No unverified cleanup or speculative rewrite is performed.",
         "All verified findings are fixed or explicitly blocked with evidence.",
         "Full quality gate passes.",
