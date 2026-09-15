@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const errors = [];
@@ -7,30 +8,31 @@ const required = [
   'SSOT.md',
   'CLAUDE.md',
   'MIGRATION_MANIFEST.md',
-  'docs/task-queue.json',
-  'scripts/build-task-context.mjs',
-  'scripts/task-scope-check.mjs',
-  'scripts/write-check-receipt.mjs',
-  'scripts/advance-task.mjs',
+  'docs/EDITING_GUIDE.md',
+  'docs/GUIDE_MISSING_CAPTURES.md',
+  'docs/GUIDE_SCREENSHOTS_MANIFEST.md',
+  'scripts/clean-generated.mjs',
+  'scripts/derive-screenshots.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
+  'src/data/hotspotPolicy.ts',
   'src/pages/Guide.tsx',
   'src/index.css',
   'src/guide-visual-isolation.css',
   'public/guide/jerusalem-math-logo.png',
   'public/guide/jerusalem-math-logo.webp',
-  'public/guide/screenshots'
+  'public/guide/screenshots',
 ];
 
 for (const relative of required) {
-  if (!fs.existsSync(path.join(root, relative))) errors.push(`Missing required SSOT item: ${relative}`);
+  if (!fs.existsSync(path.join(root, relative))) errors.push(`Missing required project item: ${relative}`);
 }
 
 const ssotPath = path.join(root, 'SSOT.md');
 const ssot = fs.existsSync(ssotPath) ? fs.readFileSync(ssotPath, 'utf8') : '';
 const requirementIds = [...ssot.matchAll(/\[(REQ-[A-Z]+-\d{3})\]/g)].map((match) => match[1]);
-const requirementSet = new Set(requirementIds);
-if (requirementSet.size !== requirementIds.length) {
+if (!requirementIds.length) errors.push('SSOT must contain stable REQ-* requirement ids.');
+if (new Set(requirementIds).size !== requirementIds.length) {
   const seen = new Set();
   const duplicates = new Set();
   for (const id of requirementIds) {
@@ -39,7 +41,6 @@ if (requirementSet.size !== requirementIds.length) {
   }
   errors.push(`SSOT requirement ids must be unique; duplicates: ${[...duplicates].join(', ')}`);
 }
-if (!requirementIds.length) errors.push('SSOT must contain stable REQ-* requirement ids.');
 
 const dataDir = path.join(root, 'src/data');
 if (fs.existsSync(dataDir)) {
@@ -65,80 +66,67 @@ const deps = Object.keys({ ...(pkg.dependencies ?? {}), ...(pkg.devDependencies 
 for (const forbidden of ['@supabase/supabase-js', 'express', 'cookie-parser', 'helmet', 'xlsx']) {
   if (deps.includes(forbidden)) errors.push(`Non-presentation dependency is forbidden: ${forbidden}`);
 }
-if (pkg.scripts?.['context:task'] !== 'node scripts/build-task-context.mjs') {
-  errors.push('package.json must expose context:task through scripts/build-task-context.mjs.');
+
+const expectedScripts = {
+  'audit:ssot': 'node scripts/ssot-check.mjs',
+  clean: 'node scripts/clean-generated.mjs',
+  check: 'npm run typecheck && npm run audit:ssot && npm run test && npm run build',
+  'check:full': 'npm run check && npm run test:e2e',
+};
+for (const [name, expected] of Object.entries(expectedScripts)) {
+  if (pkg.scripts?.[name] !== expected) errors.push(`package.json script ${name} must be: ${expected}`);
 }
-if (pkg.scripts?.['audit:scope'] !== 'node scripts/task-scope-check.mjs') {
-  errors.push('package.json must expose audit:scope through scripts/task-scope-check.mjs.');
-}
-if (pkg.scripts?.['receipt:check'] !== 'node scripts/write-check-receipt.mjs') {
-  errors.push('package.json must expose receipt:check through scripts/write-check-receipt.mjs.');
-}
-if (pkg.scripts?.['verify:advance'] !== 'node scripts/advance-task.mjs --verify') {
-  errors.push('package.json must expose verify:advance as the non-mutating task advancement check.');
-}
-if (pkg.scripts?.['task:advance'] !== 'node scripts/advance-task.mjs') {
-  errors.push('package.json must expose task:advance through scripts/advance-task.mjs.');
-}
-const checkScript = String(pkg.scripts?.check ?? '');
-if (!checkScript.includes('npm run context:task')) errors.push('npm run check must validate/generate the active minimal task context.');
-if (!checkScript.includes('npm run audit:scope')) errors.push('npm run check must enforce the active task scope.');
-if (!checkScript.includes('npm run receipt:check')) errors.push('npm run check must record a verified receipt after tests/build pass.');
-if (!checkScript.endsWith('npm run verify:advance')) errors.push('npm run check must finish by proving the verified state is advanceable without mutating the queue.');
-if (!pkg.scripts?.['check:full']) errors.push('package.json must expose a stable check:full command; P7 upgrades it to the broad browser/visual gate.');
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
-for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md', '.claude/TASK_BASELINE.json', '.claude/CHECK_RECEIPT.json']) {
+for (const requiredIgnore of [
+  'node_modules/',
+  'dist/',
+  '.vite/',
+  'coverage/',
+  '/raw/',
+  '/test-results/',
+  '/playwright-report/',
+  '*.tsbuildinfo',
+  '.claude/TASK_CONTEXT.md',
+  '.claude/TASK_BASELINE.json',
+  '.claude/CHECK_RECEIPT.json',
+]) {
   if (!gitignore.includes(requiredIgnore)) errors.push(`.gitignore must contain ${requiredIgnore}`);
 }
 
-const queuePath = path.join(root, 'docs/task-queue.json');
-if (fs.existsSync(queuePath)) {
-  try {
-    const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
-    const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
-    const ids = tasks.map((task) => task.id);
-    if (!tasks.length) errors.push('Task queue must contain tasks.');
-    if (new Set(ids).size !== ids.length) errors.push('Task queue task ids must be unique.');
-    const allowedStatuses = new Set(['next', 'pending', 'done', 'blocked']);
-    const coveredRequirements = new Set();
+let tracked = [];
+try {
+  tracked = execFileSync('git', ['ls-files', '-z'], {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }).split('\0').filter(Boolean);
+} catch {
+  errors.push('Unable to inspect tracked files with git ls-files.');
+}
 
-    for (const task of tasks) {
-      if (!task.id || !task.title || !task.goal) errors.push(`Task ${task.id ?? '<missing-id>'} is missing id/title/goal.`);
-      if (!allowedStatuses.has(task.status)) errors.push(`Task ${task.id ?? '<missing-id>'} has invalid status ${task.status}.`);
-      if (!Array.isArray(task.requirements)) errors.push(`Task ${task.id ?? '<missing-id>'} must define a requirements array.`);
-      if (!Array.isArray(task.scope) || !task.scope.length) errors.push(`Task ${task.id ?? '<missing-id>'} must define a non-empty scope.`);
-      if (!Array.isArray(task.evidence)) errors.push(`Task ${task.id ?? '<missing-id>'} must define an evidence array.`);
-      for (const requirement of task.requirements ?? []) {
-        if (!requirementSet.has(requirement)) errors.push(`Task ${task.id} references unknown SSOT requirement ${requirement}.`);
-        coveredRequirements.add(requirement);
-      }
-    }
+const forbiddenTracked = [
+  /^dist\//,
+  /^\.vite\//,
+  /^coverage\//,
+  /^\.cache\//,
+  /^test-results\//,
+  /^playwright-report\//,
+  /^raw\//,
+  /^\.claude\/(?:TASK_CONTEXT\.md|TASK_BASELINE\.json|CHECK_RECEIPT\.json)$/,
+  /(?:^|\/)\.DS_Store$/,
+  /(?:^|\/)Thumbs\.db$/,
+  /(?:^|\/)Desktop\.ini$/,
+  /\.log$/i,
+  /\.tmp$/i,
+  /\.tsbuildinfo$/i,
+  /\.bak$/i,
+  /\.orig$/i,
+];
 
-    for (const requirement of requirementIds) {
-      if (!coveredRequirements.has(requirement)) errors.push(`Canonical SSOT requirement has no execution coverage: ${requirement}.`);
-    }
-
-    const next = tasks.filter((task) => task.status === 'next');
-    if (next.length > 1) {
-      errors.push(`Task queue may contain at most one next task; found ${next.length}.`);
-    } else if (next.length === 0) {
-      const unfinished = tasks.filter((task) => task.status !== 'done');
-      if (unfinished.length) {
-        errors.push(`Task queue has no next task but is not complete; unfinished: ${unfinished.map((task) => `${task.id}:${task.status}`).join(', ')}.`);
-      }
-    } else {
-      const active = next[0];
-      if (!Array.isArray(active.read_first) || !active.read_first.length) errors.push(`Active task ${active.id} needs read_first paths.`);
-      if (!Array.isArray(active.acceptance) || !active.acceptance.length) errors.push(`Active task ${active.id} needs acceptance criteria.`);
-      if (!Array.isArray(active.checks) || !active.checks.includes('npm run check')) errors.push(`Active task ${active.id} must require npm run check.`);
-      if (!(active.requirements?.length || active.audit_all_requirements)) errors.push(`Active task ${active.id} needs canonical requirement ids or audit_all_requirements.`);
-      for (const relative of active.read_first ?? []) {
-        if (!fs.existsSync(path.join(root, relative))) errors.push(`Active task read_first path does not exist: ${relative}`);
-      }
-    }
-  } catch (error) {
-    errors.push(`Invalid docs/task-queue.json: ${error.message}`);
+for (const file of tracked) {
+  if (forbiddenTracked.some((pattern) => pattern.test(file))) {
+    errors.push(`Generated/junk file must not be tracked: ${file}`);
   }
 }
 
@@ -161,4 +149,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, fingerprinted scope guard, verified check receipt, non-mutating advance verification, safe task advancement, and standalone boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements, one canonical deck, real assets, clean tracked tree, and standalone presentation boundaries preserved.`);
