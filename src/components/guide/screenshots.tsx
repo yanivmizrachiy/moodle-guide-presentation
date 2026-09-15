@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { m, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import { Expand } from 'lucide-react';
 import type { GuideScreenshot, GuideSlide } from '@/data/guideDeck';
-import { getGuideScreenshotHotspots } from '@/data/guideHotspots';
+import { getVisibleGuideHotspots } from '@/data/hotspotPolicy';
 
 /** Lightbox request: which capture to show full-size, under which slide title. */
 export type LightboxState = {
@@ -40,14 +40,11 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
   ];
 }
 
-/* Hand-drawn red marker circles, like a teacher annotating a printout: two
- * slightly rotated, imperfect ellipse strokes over the real control. */
+/* Red focus is deliberate, not automatic: no hotspotIds means a clean screenshot.
+ * A use can request one verified target; the policy helper caps the visible result
+ * at one so a page never gets covered in competing red circles. */
 export function HotspotLayer({ src, only }: { src: string; only?: readonly string[] }) {
-  const all = getGuideScreenshotHotspots(src);
-  // A screenshot reused across steps carries all its stem's hotspots. When a
-  // step names which controls it is about (`only`), mark just those — so a
-  // shared capture doesn't circle a button the current step never mentions.
-  const hotspots = only ? all.filter((hotspot) => only.includes(hotspot.id)) : all;
+  const hotspots = getVisibleGuideHotspots(src, only);
   if (hotspots.length === 0) return null;
 
   return (
@@ -67,16 +64,16 @@ export function HotspotLayer({ src, only }: { src: string; only?: readonly strin
         >
           <title>{hotspot.label}</title>
           <ellipse
-            cx="50" cy="50" rx="49" ry="44"
-            fill="none" stroke="#dc2626" strokeWidth="3.4"
-            strokeLinecap="round" vectorEffect="non-scaling-stroke"
-            transform="rotate(-3 50 50)" opacity="0.92"
-          />
-          <ellipse
-            cx="51" cy="48.5" rx="47" ry="46"
-            fill="none" stroke="#dc2626" strokeWidth="2.2"
-            strokeLinecap="round" vectorEffect="non-scaling-stroke"
-            transform="rotate(2.5 50 50)" opacity="0.55"
+            cx="50"
+            cy="50"
+            rx="48"
+            ry="43"
+            fill="none"
+            stroke="#dc2626"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            opacity="0.9"
           />
         </svg>
       ))}
