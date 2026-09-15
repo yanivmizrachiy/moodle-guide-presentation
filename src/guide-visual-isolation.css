@@ -9,8 +9,8 @@
   --guide-gold: #fbbf24;
   --guide-blue: #1d4ed8;
   --guide-glass-ink: #0f172a;
-  --guide-glass-icon: #2563eb;
-  --guide-glass-border: rgba(147, 197, 253, 0.68);
+  --guide-glass-icon: #334155;
+  --guide-glass-border: rgba(191, 219, 254, 0.94);
   color-scheme: light;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -61,48 +61,60 @@
   opacity: 1 !important;
 }
 
-/* Canonical owner-selected CTA language: soft glassmorphism.
- * Every external action rendered inside a light content slide inherits this
- * automatically, so a new slide.link cannot silently fall back to the old dark
- * near-black pill. Presentation chrome (cover/header/footer/navigation) is
- * intentionally excluded because it serves a different role and background. */
-[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"] {
+/* Canonical owner-approved action style: compact soft glassmorphism.
+ * External CTAs on light content slides and their related copy-link action use
+ * the same visual language. The old solid dark CTA is intentionally overridden.
+ * Presentation chrome (cover/header/footer/navigation) stays separate. */
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"],
+[data-guide-shell="premium-presentation"] article:not([data-cover]) button[aria-label="העתקת הקישור"] {
+  min-height: 48px !important;
+  gap: 0.55rem !important;
+  padding-inline: 1.35rem !important;
   border: 1px solid var(--guide-glass-border) !important;
   border-radius: 9999px !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.82)) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(241, 246, 255, 0.82)) !important;
   color: var(--guide-glass-ink) !important;
+  font-size: 0.95rem !important;
+  font-weight: 900 !important;
   box-shadow:
-    0 12px 30px rgba(37, 99, 235, 0.12),
-    0 4px 12px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(145%);
-  backdrop-filter: blur(18px) saturate(145%);
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease,
-    color 180ms ease !important;
-}
-
-[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"] svg {
-  color: var(--guide-glass-icon) !important;
-  stroke-width: 2.25;
-}
-
-[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:hover {
-  border-color: rgba(96, 165, 250, 0.88) !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(219, 234, 254, 0.9)) !important;
-  color: #1e3a8a !important;
-  box-shadow:
-    0 16px 38px rgba(37, 99, 235, 0.16),
-    0 6px 16px rgba(15, 23, 42, 0.09),
+    0 9px 22px rgba(59, 130, 246, 0.10),
+    0 3px 9px rgba(15, 23, 42, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  backdrop-filter: blur(16px) saturate(135%);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease !important;
+}
+
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"] svg,
+[data-guide-shell="premium-presentation"] article:not([data-cover]) button[aria-label="העתקת הקישור"] svg {
+  width: 1rem !important;
+  height: 1rem !important;
+  color: var(--guide-glass-icon) !important;
+  stroke-width: 2.1;
+}
+
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:hover,
+[data-guide-shell="premium-presentation"] article:not([data-cover]) button[aria-label="העתקת הקישור"]:hover {
+  border-color: rgba(147, 197, 253, 1) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(232, 241, 255, 0.92)) !important;
+  color: #0f172a !important;
+  box-shadow:
+    0 12px 27px rgba(59, 130, 246, 0.13),
+    0 4px 11px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
   transform: translateY(-1px);
 }
 
-[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.3) !important;
+[data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"]:focus-visible,
+[data-guide-shell="premium-presentation"] article:not([data-cover]) button[aria-label="העתקת הקישור"]:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.26) !important;
   outline-offset: 3px !important;
 }
 
@@ -144,6 +156,13 @@
   [data-guide-shell="premium-presentation"] article h1.font-display {
     font-size: clamp(1.9rem, 8.5vw, 3rem) !important;
     line-height: 1.04 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article:not([data-cover]) a[target="_blank"],
+  [data-guide-shell="premium-presentation"] article:not([data-cover]) button[aria-label="העתקת הקישור"] {
+    min-height: 44px !important;
+    padding-inline: 1.1rem !important;
+    font-size: 0.9rem !important;
   }
 
   [data-guide-shell="premium-presentation"] .guide-shot-stage {
