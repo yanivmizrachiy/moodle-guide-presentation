@@ -668,7 +668,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'למידה עצמית',
   title: 'מהו מרחב לימוד עצמי?',
   summary: 'זהו מרחב ללא מורה. התלמיד מתרגל בו עצמאית והביצועים שם אינם משויכים למרחב של המורה.',
-  screenshots: [{ src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.' }],
+  screenshots: [{ src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.', hotspotIds: ['self-learning'] }],
   keywords: ['לימוד עצמי', 'למידה עצמית', 'מרחב אחר'],
   status: 'ready',
   },
@@ -917,6 +917,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   // requiresEditMode, so the visual grouping and the machine signal can never
   // drift apart (REQ-CONTENT-004, REQ-GUIDE-005).
   editModeGroup: true,
+  screenshots: [{ src: '06-course-edit-on.jpg', caption: 'מרחב הלמידה במצב עריכה — כפתורי ההוספה, העריכה ותפריטי ⋮.' }],
   keywords: ['מצב עריכה', 'פעולות עריכה', 'תלות במצב עריכה'],
   status: 'ready',
   },

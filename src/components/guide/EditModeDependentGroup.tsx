@@ -26,7 +26,9 @@ export function EditModeDependentGroup() {
             key={slide.id}
             className="rounded-2xl border border-blue-200 bg-white/90 px-3.5 py-3 text-sm font-black leading-relaxed text-slate-800 shadow-sm sm:text-base"
           >
-            {slide.title}
+            {/* Show the action, not the question: the dependent slides are titled
+                „איך …?"; here we list what the action IS, derived from that title. */}
+            {slide.title.replace(/^איך\s+/, '').replace(/\s*\?$/, '')}
           </li>
         ))}
       </ul>
