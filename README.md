@@ -15,6 +15,12 @@
 
 אין ליצור מקור תוכן נוסף ואין ליצור צילומי דמה. צילום חסר נשאר מסומן כ־`needs-capture` עד שקיים צילום אמיתי.
 
+- רשימת הצילומים החסרים: `docs/GUIDE_MISSING_CAPTURES.md`
+- מה מכיל כל צילום ומה הוסתר בו: `docs/GUIDE_SCREENSHOTS_MANIFEST.md`
+- **מדריך עריכה תפעולי (מאיפה עורכים כל דבר): `docs/EDITING_GUIDE.md`**
+
+> `SSOT.md` הוא הסמכות הנורמטיבית היחידה. ה-README ומדריך העריכה הם תפעוליים בלבד ואינם מקור דרישות שני.
+
 ## עבודה מקומית
 
 ```bash
@@ -22,10 +28,11 @@ npm ci
 npm run dev
 ```
 
-בדיקה מלאה לפני כל שינוי:
+בדיקות לפני commit/push:
 
 ```bash
-npm run check
+npm run check        # שער מהיר: typecheck + ssot + scope + בדיקות יחידה/אינוריאנטים + build
+npm run check:full   # שער רחב: check + בדיקות דפדפן/נגישות/ויזואל (Playwright)
 ```
 
 ## צילומים

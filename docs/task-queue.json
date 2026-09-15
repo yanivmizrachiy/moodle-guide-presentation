@@ -530,6 +530,48 @@
       "notes": [
         "This closes the last DONE-definition gap: green CI on the completed queue."
       ]
+    },
+    {
+      "id": "M1-single-source-maintainability",
+      "status": "done",
+      "title": "Remove the dead section decoy; add an editing guide; sharpen README",
+      "goal": "Guarantee a single editable source for each fact and make future edits obvious, without changing any slide wording, id, order, status, screenshot, hotspot, rendering or deep link.",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-STABILITY-007"
+      ],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "README.md",
+        "SSOT.md"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "tests/deck-invariants.test.ts",
+        "README.md",
+        "docs/EDITING_GUIDE.md"
+      ],
+      "ssot_sections": [],
+      "evidence": [
+        "Every authored slide carries a section: field, but the values ('spaces' x48, 'students' x12) are not valid GUIDE_SECTIONS ids and normalizeSlide always overrides section from the topic map — a dead, editable, wrong-valued second source for a slide's chapter."
+      ],
+      "acceptance": [
+        "The chapter of a slide has exactly one editable source (SLIDE_TOPICS -> GUIDE_TOPICS); the authored section field is removed and section is derived only, enforced by the authored type so it cannot be re-added.",
+        "Runtime is byte-identical: every published slide keeps the same derived section it had before; no wording, id, order, status, screenshot, hotspot, rendering, CSS or deep link changes.",
+        "docs/EDITING_GUIDE.md exists, opens with 'SSOT.md is the sole normative authority. This file is an operational editing guide only.', is short and practical, and does not restate the SSOT.",
+        "README lets a new developer find project/source-of-truth/content/screenshots/hotspots/editing-guide/dev/check/check:full/deploy in under a minute, without becoming a second requirements source.",
+        "No overengineering: no CMS/dashboard/new management system is added.",
+        "npm run check and npm run check:full pass; visual baselines are NOT updated (no intentional visual change)."
+      ],
+      "checks": [
+        "npm run check",
+        "npm run check:full"
+      ],
+      "notes": [
+        "Organization/maintainability only. If a structure is already single-source and good, leave it; do not split guideDeck.ts or Guide.tsx merely for size."
+      ]
     }
   ]
 }

@@ -307,7 +307,6 @@ describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
   it('schema additions cannot convert missing evidence to ready (truth stays strict)', () => {
     const normalized = normalizeSlide({
       id: '__truth_probe__',
-      section: 'x',
       eyebrow: 'x',
       title: 'x',
       status: 'ready',

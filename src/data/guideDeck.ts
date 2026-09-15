@@ -46,8 +46,9 @@ export type GuideBranch = {
 
 export type GuideSlide = {
   id: string;
+  /** Derived chapter — normalizeSlide sets it from SLIDE_TOPICS -> GUIDE_TOPICS. Not authored. */
   section: string;
-  /** Smaller TOC heading; filled from SLIDE_TOPICS during normalization. */
+  /** Smaller TOC heading; filled from SLIDE_TOPICS during normalization. Not authored. */
   topic?: string;
   eyebrow: string;
   title: string;
@@ -74,6 +75,14 @@ export type GuideSlide = {
   /** Renders the emphasized group of edit-mode-dependent operations, derived from requiresEditMode (REQ-CONTENT-004). */
   editModeGroup?: boolean;
 };
+
+/**
+ * How a slide is written in AUTHORED_GUIDE_SLIDES. `section` and `topic` are
+ * derived (normalizeSlide fills them from the topic map), so they are omitted
+ * here: a slide's chapter has exactly one editable source — SLIDE_TOPICS ->
+ * GUIDE_TOPICS — and cannot be set (or drift) on the slide itself.
+ */
+export type AuthoredGuideSlide = Omit<GuideSlide, 'section' | 'topic'>;
 
 /**
  * REQ-CONTENT-004 — owner-locked captions of the guide-side teaching toggle.
@@ -295,7 +304,7 @@ const normalizeBranchPath = (path: GuideBranchPath): GuideBranchPath => ({
   flow: normalizeFlow(path.flow),
 });
 
-export function normalizeSlide(slide: GuideSlide): GuideSlide {
+export function normalizeSlide(slide: AuthoredGuideSlide): GuideSlide {
   const topic = SLIDE_TOPICS[slide.id];
   const branch: GuideBranch | undefined = slide.branch
     ? { paths: [normalizeBranchPath(slide.branch.paths[0]), normalizeBranchPath(slide.branch.paths[1])] }
@@ -303,8 +312,11 @@ export function normalizeSlide(slide: GuideSlide): GuideSlide {
   return {
     ...slide,
     topic,
-    // Single filing source: the topic map decides the chapter as well.
-    section: (topic && TOPIC_SECTION[topic]) || slide.section,
+    // Single filing source: the topic map is the ONLY place a slide's chapter
+    // is set. Every real slide has a SLIDE_TOPICS entry (a deck invariant
+    // enforces it, and would fail loudly otherwise); the fallback only keeps a
+    // synthetic test slide with no topic from producing an undefined section.
+    section: (topic && TOPIC_SECTION[topic]) || GUIDE_SECTIONS[0].id,
     // Truth stays strict: a slide that still owes a real capture cannot be
     // published, no matter what schema (e.g. a branch) it also carries.
     status:
@@ -317,11 +329,11 @@ export function normalizeSlide(slide: GuideSlide): GuideSlide {
   };
 }
 
-// Single source of truth: every guide slide is authored here, in presentation order.
-const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
+// Single source of truth: every guide slide is authored here, in presentation
+// order. The chapter is NOT written here — it comes from the topic map.
+const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
     id: FIRST_GUIDE_SLIDE_ID,
-    section: 'spaces',
     eyebrow: 'מחוז ירושלים והעיר ירושלים — מנח״י',
     title: 'מדריך למורים במערכת Moodle',
     keywords: ['מודל', 'Moodle', 'מדריך', 'מצגת'],
@@ -330,7 +342,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: FIRST_TRAINING_SLIDE_ID,
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 1',
   title: 'איך פותחים מרחב למידה במודל?',
   flow: [
@@ -367,7 +378,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-my-courses',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 2',
   title: 'איפה לוחצים כדי לפתוח מרחב חדש?',
   summary: 'אחרי ההתחברות מגיעים ל„מרחבי הלמידה שלי”. הכניסה לתהליך היא „מרחב חדש”.',
@@ -381,7 +391,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-wizard',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 3',
   title: 'איך מתחילים באשף?',
   summary: 'בוחרים את קבוצת הלימוד הרצויה, או ממשיכים במסלול שבו ממלאים את מאפייני הכיתה.',
@@ -393,7 +402,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-two-paths',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שתי דרכים',
   title: 'פתיחת מרחב עם תלמידים / ללא תלמידים',
   branch: {
@@ -428,7 +436,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-group-choice',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 4',
   title: 'איך פותחים מרחב בלי קבוצת לימוד?',
   summary: 'אם בוחרים „ללא קבוצת לימוד”, המרחב ייפתח לרישום עצמאי של תלמידים באופן אוטומטי. לאחר יצירתו שולחים לתלמידים את קישור המרחב.',
@@ -440,7 +447,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-details-empty',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 5',
   title: 'איפה ממלאים את מאפייני הכיתה?',
   summary: 'במסלול ללא קבוצת לימוד ממלאים את הפרטים שמופיעים בפועל: בית ספר, מקצוע, שכבת גיל וכיתה.',
@@ -452,7 +458,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-details-check',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 6',
   title: 'מה עושים אחרי שמילאנו את מאפייני הכיתה?',
   summary: 'בודקים שהפרטים נכונים וממשיכים לשלב בחירת סוג מרחב הלמידה.',
@@ -464,7 +469,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-type',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 7',
   title: 'איזה סוג מרחב בוחרים?',
   summary: 'האשף מציג אפשרויות כמו מרחב ריק, „שכפול תוכן שלי” ו„תוכן מוכן”. כל אפשרות ממשיכה למסלול המתאים לה.',
@@ -476,7 +480,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-content',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 8',
   title: 'איך בוחרים תוכן מוכן למרחב?',
   summary: 'לאחר בחירת „תוכן מוכן” מוצגים מקצועות ופרויקטים זמינים. בוחרים את התוכן שמתאים למרחב.',
@@ -488,7 +491,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-confirm',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 9',
   title: 'מה לוחצים כדי ליצור את המרחב?',
   summary: 'במסך „אישור וסיום” בודקים את הפרטים ומבצעים את פעולת היצירה.',
@@ -500,7 +502,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-background-create',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 10',
   title: 'צריך להמתין מול המסך בזמן יצירת המרחב?',
   summary: 'לא. באשף החדש יצירת המרחב יכולה להמשיך ברקע, ואין צורך להישאר מול המסך עד לסיום.',
@@ -511,7 +512,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-created-notification',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 11',
   title: 'איך יודעים שהמרחב נוצר?',
   summary: 'לאחר שהמרחב נוצר, מתקבלת התראה במודל שמאשרת שהמערכת הצליחה ליצור את מרחב הלמידה.',
@@ -524,7 +524,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'open-space-result',
-  section: 'spaces',
   eyebrow: 'פתיחת מרחב למידה · שלב 12',
   title: 'מה רואים אחרי שהמרחב נפתח?',
   summary: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
@@ -535,7 +534,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-ready-content-catalog',
-  section: 'spaces',
   eyebrow: 'האשף החדש · תוכן מוכן',
   title: 'איזה תוכן מוכן אפשר להוסיף?',
   summary: '„תוכן מוכן” מאפשר ליצור מרחב עם תכנים מוכנים במקצועות ופרויקטים הזמינים במערכת, ובהם תכנים בעברית, אנגלית, מתמטיקה לחטיבה, מדע וטכנולוגיה ומשימות אוריינות מתוקשבות.',
@@ -546,7 +544,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-ready-content-search',
-  section: 'spaces',
   eyebrow: 'האשף החדש · חיפוש',
   title: 'איך מוצאים תוכן מוכן במהירות?',
   summary: 'משתמשים בשורת החיפוש החכמה כדי למצוא את התוכן המוכן הרלוונטי.',
@@ -558,7 +555,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-ready-content-list-toggle',
-  section: 'spaces',
   eyebrow: 'האשף החדש · תצוגה',
   title: 'איך משנים מתצוגת תמונות לרשימה?',
   summary: 'אפשר לשנות את תצוגת התוכן מתמונות לרשימה פשוטה כדי לסרוק את האפשרויות בדרך שנוחה לכם.',
@@ -570,7 +566,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-clone-my-content',
-  section: 'spaces',
   eyebrow: 'האשף החדש · שכפול',
   title: 'איך משכפלים מרחב שכבר יש לי?',
   summary: 'בוחרים „שכפול תוכן שלי” ואז מחפשים את מרחב הלמידה שרוצים לשכפל.',
@@ -582,7 +577,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-clone-search-sort',
-  section: 'spaces',
   eyebrow: 'האשף החדש · שכפול',
   title: 'איך מוצאים את המרחב שרוצים לשכפל?',
   summary: 'אפשר לחפש לפי מילת חיפוש ולמיין מרחבים לפי שם, בית ספר או שנת לימודים.',
@@ -594,7 +588,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'wizard-clone-previous-year',
-  section: 'spaces',
   eyebrow: 'האשף החדש · שכפול',
   title: 'אפשר לשכפל מרחב משנה קודמת לבד?',
   summary: 'כן. באשף החדש ניתן לשכפל באופן עצמאי מרחב למידה משנה קודמת, ללא צורך בהגשת טופס בקשה למשרד החינוך.',
@@ -605,7 +598,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'quick-start',
-  section: 'spaces',
   eyebrow: 'התחלה',
   title: 'מהו סדר העבודה במרחב חדש?',
   summary: 'פותחים, מגדירים, בודקים, מצרפים תלמידים ואז עוקבים.',
@@ -615,7 +607,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'workflow',
-  section: 'spaces',
   eyebrow: 'לפני שליחה',
   title: 'מה בודקים לפני שמפרסמים פעילות?',
   summary: 'מוודאים שהפעילות גלויה, פתוחה וברורה לתלמיד.',
@@ -626,7 +617,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'interface',
-  section: 'spaces',
   eyebrow: 'ממשק',
   title: 'איפה נמצאים הכפתורים המרכזיים במרחב?',
   summary: 'רוב הפעולות נמצאות בתפריט המרחב, בסרגל העליון ובעמוד היחידות.',
@@ -637,7 +627,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-space-view',
-  section: 'spaces',
   eyebrow: 'תצוגת תלמיד',
   title: 'איך תלמיד רואה את המרחב שלנו?',
   screenshots: [
@@ -649,7 +638,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'archive-space',
-  section: 'spaces',
   eyebrow: 'ארכיון',
   title: 'מה עושים עם מרחב שלא משתמשים בו?',
   summary: 'מעבירים מרחב שאינו בשימוש לארכיון במקום להשאיר אותו ברשימה הפעילה.',
@@ -662,7 +650,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-learning-space',
-  section: 'spaces',
   eyebrow: 'למידה עצמית',
   title: 'מהו מרחב לימוד עצמי?',
   summary: 'זהו מרחב ללא מורה. התלמיד מתרגל בו עצמאית והביצועים שם אינם משויכים למרחב של המורה.',
@@ -672,7 +659,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-enrol-auto',
-  section: 'students',
   eyebrow: 'הצטרפות תלמידים',
   title: 'איך מצרפים תלמידים חדשים למרחב הלימוד?',
   flow: [
@@ -701,7 +687,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'late-enrol-link',
-  section: 'users-roles',
   eyebrow: 'הצטרפות מאוחרת',
   title: 'צירוף תלמידים מאוחר יותר',
   summary: '„ללא תלמידים” אינו מצב קבוע — אפשר לצרף תלמידים למרחב גם מאוחר יותר באמצעות קישור המרחב.',
@@ -735,7 +720,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-enrol-troubleshoot-method',
-  section: 'students',
   eyebrow: 'פתרון תקלה · שיוך עצמי',
   title: 'מה בודקים אם תלמיד לא מצליח להירשם?',
   summary: 'במרחב שנפתח ללא קבוצת לימוד הרישום העצמי אמור להיות פעיל אוטומטית. אם תלמיד אינו מצליח להצטרף, בודקים ששיטת „שיוך עצמי (תלמיד)” פעילה.',
@@ -747,7 +731,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-enrol-troubleshoot-settings',
-  section: 'students',
   eyebrow: 'פתרון תקלה · שיוך עצמי',
   title: 'איזו הגדרה בודקים אם הרישום העצמי לא עובד?',
   summary: 'אם יש תקלה ברישום העצמי, בודקים בהגדרות השיוך שהאפשרות לרישום משתמשים חדשים פעילה.',
@@ -759,7 +742,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-enrol-student',
-  section: 'students',
   eyebrow: 'הצטרפות תלמיד',
   title: 'מה התלמיד לוחץ בפעם הראשונה?',
   summary: 'אחרי שהתלמיד מקבל את קישור המרחב ומגיע למסך ההצטרפות, הוא משלים את הרישום למרחב.',
@@ -771,7 +753,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'self-enrol-success',
-  section: 'students',
   eyebrow: 'הצטרפות תלמיד',
   title: 'איך יודעים שההרשמה הצליחה?',
   summary: 'אחרי ההרשמה התלמיד רואה הודעת הצלחה ונכנס למרחב.',
@@ -782,7 +763,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'task-link-first-enrol',
-  section: 'students',
   eyebrow: 'קישור למשימה',
   title: 'מה קורה אם תלמיד לא רשום ונכנס דרך קישור למשימה?',
   summary: 'תחילה נרשמים למרחב, ואז פותחים שוב את הקישור הישיר למשימה.',
@@ -806,7 +786,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'participants',
-  section: 'students',
   eyebrow: 'משתתפים',
   title: 'איך רואים מי נמצא במרחב?',
   summary: 'לוחצים „משתתפים” ורואים הרשמה, תפקיד, קבוצה וגישה אחרונה.',
@@ -834,7 +813,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'remove-participant',
-  section: 'students',
   eyebrow: 'משתתפים',
   title: 'איך מסירים משתתף?',
   summary: 'מסירים את השיוך של המשתמש למרחב ומאשרים את הפעולה.',
@@ -853,7 +831,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'groups',
-  section: 'students',
   eyebrow: 'קבוצות',
   title: 'איך מחלקים תלמידים לקבוצות?',
   summary: 'פותחים את ניהול הקבוצות, יוצרים קבוצה ומוסיפים אליה תלמידים.',
@@ -880,7 +857,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'group-data',
-  section: 'students',
   eyebrow: 'קבוצות',
   title: 'איך מורה רואה נתונים של קבוצה מסוימת?',
   summary: 'בוחרים את הקבוצה במסך הנתונים ורואים רק את הנתונים הרלוונטיים לה.',
@@ -899,7 +875,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'add-teacher',
-  section: 'students',
   eyebrow: 'מורים נוספים',
   title: 'איך מצרפים מורה נוסף למרחב הלימוד?',
   flow: [
@@ -930,7 +905,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'teacher-limit',
-  section: 'students',
   eyebrow: 'מורים נוספים',
   title: 'כמה מורים יכולים להתחבר לאותו מרחב?',
   // No teacher-facing answer is published until the owner supplies a binding
@@ -940,7 +914,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'edit-mode',
-  section: 'spaces',
   eyebrow: 'עריכה',
   title: 'מהו מצב עריכה במרחב הלמידה ומה אפשר לעשות בו?',
   summary: 'מדליקים את מתג „עריכה” בסרגל העליון.',
@@ -962,7 +935,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'edit-mode-dependent',
-  section: 'spaces',
   eyebrow: 'מצב עריכה · תלות',
   title: 'אילו פעולות אפשר לבצע רק כשמצב העריכה דולק?',
   // The emphasized group derives its list from every published slide flagged
@@ -974,7 +946,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'rename-space',
-  section: 'spaces',
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים את שם מרחב הלימוד?',
   summary: 'נכנסים להגדרות, משנים את שם המרחב ושומרים.',
@@ -997,7 +968,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'space-image',
-  section: 'spaces',
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים את התמונה הראשית של המרחב?',
   summary: 'נכנסים להגדרות, בוחרים תמונה ושומרים.',
@@ -1020,7 +990,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'space-heading',
-  section: 'spaces',
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים כותרת?',
   summary: 'מפעילים עריכה, פותחים את עריכת הכותרת, משנים ושומרים.',
@@ -1040,7 +1009,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'rename-task',
-  section: 'spaces',
   eyebrow: 'עריכת מרחב · שם משימה',
   title: 'איך משנים שם של משימה?',
   requiresEditMode: true,
@@ -1070,7 +1038,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'add-content',
-  section: 'spaces',
   eyebrow: 'תוכן',
   title: 'איך מוסיפים משאב או פעילות?',
   summary: 'מפעילים עריכה, לוחצים „הוספת משאב או פעילות” ובוחרים את הסוג.',
@@ -1092,7 +1059,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'organize-content',
-  section: 'spaces',
   eyebrow: 'ארגון',
   title: 'איך מארגנים יחידות ותוכן?',
   summary: 'נותנים שמות ברורים ושומרים על סדר קבוע כדי שהתלמיד ימצא במהירות את הפעילות.',
@@ -1103,7 +1069,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'hide-task',
-  section: 'spaces',
   eyebrow: 'ניהול משימות',
   title: 'איך מסתירים משימה או תוכן מהתלמידים?',
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
@@ -1117,7 +1082,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'delete-task',
-  section: 'spaces',
   eyebrow: 'ניהול משימות',
   title: 'איך מוחקים משימה, קישור או תוכן אחר מהמרחב?',
   summary: 'מחיקה מסירה את המשימה גם מתצוגת המורה; זו אינה הסתרה.',
@@ -1138,7 +1102,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'unhide-task',
-  section: 'spaces',
   eyebrow: 'ניהול משימות',
   title: 'איך מציגים מחדש תוכן שהוסתר?',
   flow: [
@@ -1155,7 +1118,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'digital-task-icon',
-  section: 'spaces',
   eyebrow: 'זיהוי משימה',
   title: 'איך מזהים משימה מתוקשבת?',
   summary: 'משימה מתוקשבת מסומנת באייקון ורוד.',
@@ -1167,7 +1129,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'drag-task',
-  section: 'spaces',
   eyebrow: 'סידור משימות',
   title: 'איך גוררים משימה ממקום למקום?',
   summary: 'במצב עריכה פותחים את תפריט המשימה, בוחרים „העברה” ובוחרים את המיקום החדש.',
@@ -1191,7 +1152,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-view',
-  section: 'spaces',
   eyebrow: 'בדיקה',
   title: 'איך בודקים את המרחב כתלמיד?',
   summary: 'מחליפים תפקיד לתלמיד ובודקים לפני ששולחים קישור או משימה.',
@@ -1203,7 +1163,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'external-tools',
-  section: 'spaces',
   eyebrow: 'כלים חיצוניים',
   title: 'איך מגיעים לכלי או שירות LTI חיצוני?',
   summary: 'פותחים „אפשרויות נוספות” ובוחרים „כלי או שירות LTI חיצוני”.',
@@ -1214,7 +1173,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'home-edit-controls',
-  section: 'spaces',
   eyebrow: 'עריכה',
   title: 'איפה רואים את פעולות העריכה בעמוד הבית?',
   summary: 'במצב עריכה מופיעות פעולות הוספה ועריכה ישירות בעמוד.',
@@ -1225,7 +1183,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'unit-menu',
-  section: 'spaces',
   eyebrow: 'עריכה',
   title: 'איפה פותחים את תפריט יחידת ההוראה?',
   summary: 'פותחים את תפריט שלוש הנקודות של היחידה כדי להגיע לפעולות היחידה.',
@@ -1236,7 +1193,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'section-menu-actions',
-  section: 'spaces',
   eyebrow: 'עריכה',
   title: 'אילו פעולות מופיעות בתפריט יחידת הוראה?',
   summary: 'בתפריט מופיעות פעולות עריכה, הסתרה, הזזה ומחיקה לפי ההרשאות.',
@@ -1247,7 +1203,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'hidden-items-appearance',
-  section: 'spaces',
   eyebrow: 'עריכה',
   title: 'איך נראים פריטים שמוסתרים מהתלמידים?',
   summary: 'Moodle מסמן פריטים מוסתרים כדי שהמורה יזהה מיד מה התלמידים אינם רואים.',
@@ -1258,7 +1213,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'activity-chooser-more',
-  section: 'spaces',
   eyebrow: 'תוכן',
   title: 'אילו פעילויות נוספות אפשר להוסיף?',
   summary: 'בורר הפעילויות כולל גם כלים נוספים כמו H5P, משחקים, Meet ו-SCORM כאשר הם זמינים.',
@@ -1269,7 +1223,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'import-task',
-  section: 'spaces',
   eyebrow: 'ייבוא',
   title: 'איך מייבאים משימה ממרחב אחר?',
   summary: 'נכנסים ל„שימוש חוזר בתכנים”, בוחרים מקור, משימה ויעד ומאשרים.',
@@ -1288,7 +1241,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'content-updates-meaning',
-  section: 'spaces',
   eyebrow: 'עדכונים למרחב',
   title: 'מה הם עדכונים למרחב?',
   summary: 'אלו משימות או תכנים שצוות מודל משנה, מעדכן או מוסיף במהלך השנה.',
@@ -1298,7 +1250,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'content-updates',
-  section: 'spaces',
   eyebrow: 'עדכונים למרחב',
   title: 'איך מכניסים עדכון למרחב?',
   summary: 'מפעילים עריכה, פותחים את רשימת העדכונים וגוררים את העדכון ליחידה המתאימה.',
@@ -1314,7 +1265,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'send-task',
-  section: 'tasks-grades',
   eyebrow: 'שליחת משימה',
   title: 'איך שולחים לתלמידים משימה?',
   summary: 'אפשר להפנות למיקום בתוך המרחב או לשלוח קישור ישיר למשימה.',
@@ -1325,7 +1275,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-reach-task',
-  section: 'tasks-grades',
   eyebrow: 'הגעה למשימה · שתי דרכים',
   title: 'איך תלמיד מגיע למשימה מסוימת שהמורה מבקש ממנו לבצע?',
   branch: {
@@ -1381,7 +1330,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-solve-task',
-  section: 'tasks-grades',
   eyebrow: 'תצוגת תלמיד',
   title: 'איך תלמיד פותר משימה במרחב?',
   flow: [
@@ -1403,7 +1351,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'task-correction',
-  section: 'tasks-grades',
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים אם תלמיד יכול לתקן את התשובות שלו?',
   summary: 'מגדירים את מספר הניסיונות ואת מנגנון המשוב בשאלות.',
@@ -1415,7 +1362,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'assignment-submissions',
-  section: 'tasks-grades',
   eyebrow: 'מטלה',
   title: 'איך בודקים הגשות של תלמידים?',
   summary: 'פותחים את המטלה, נכנסים להגשות, בוחרים תלמיד ובודקים את ההגשה.',
@@ -1427,7 +1373,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'task-feedback',
-  section: 'tasks-grades',
   eyebrow: 'משוב',
   title: 'איך מוסיפים משוב לתלמיד בסיום משימה?',
   summary: 'פותחים את ההגשה, כותבים משוב ושומרים.',
@@ -1437,7 +1382,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-result',
-  section: 'tasks-grades',
   eyebrow: 'תוצאה',
   title: 'איך תלמיד יודע אם עבר או נכשל במשימה?',
   summary: 'לאחר ההגשה התלמיד רואה את מסך התוצאה: ירוק מציין עבר, אדום מציין נכשל.',
@@ -1450,7 +1394,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'quiz-settings',
-  section: 'tasks-grades',
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים שתלמיד יוכל לנסות לפתור את המשימה שוב ושוב?',
   summary: 'בהגדרות הבוחן בוחרים את מספר הניסיונות המותרים.',
@@ -1475,7 +1418,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'pass-grade',
-  section: 'tasks-grades',
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים לתלמיד מהו ציון עובר במשימה?',
   summary: 'בהגדרות הבוחן, באזור הציון, קובעים את הערך בשדה „ציון "עובר"”.',
@@ -1500,7 +1442,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-correct-space',
-  section: 'tasks-grades',
   eyebrow: 'שיוך למרחב',
   title: 'למה המורה לא רואה ביצוע שהתלמיד אומר שביצע?',
   summary: 'בודקים שהתלמיד ביצע את המשימה במרחב של המורה ולא במרחב אחר או ב„למידה עצמית”.',
@@ -1511,7 +1452,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'logs',
-  section: 'tasks-grades',
   eyebrow: 'פעילות תלמיד',
   title: 'איך רואים את יומני המעקב של הפעילות במרחב הלמידה?',
   summary: 'פותחים יומני מעקב, בוחרים תלמיד ופעילות ורואים את מועד האירוע.',
@@ -1533,7 +1473,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'activity-dates',
-  section: 'tasks-grades',
   eyebrow: 'פעילות תלמיד · זמנים',
   title: 'איך רואים באילו תאריכים ושעות התקיימה פעילות?',
   flow: [
@@ -1559,7 +1498,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-attempt-count',
-  section: 'tasks-grades',
   eyebrow: 'ביצועי תלמיד',
   title: 'איך רואים כמה פעמים תלמיד ניסה לפתור משימה?',
   summary: 'פותחים את מסך התוצאות של המשימה ורואים את רשימת הניסיונות.',
@@ -1578,7 +1516,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'student-highest-score',
-  section: 'tasks-grades',
   eyebrow: 'ביצועי תלמיד',
   title: 'איך רואים את הציון הגבוה ביותר של תלמיד במשימה?',
   summary: 'במסך התוצאות משווים בין הניסיונות ורואים את הציון הגבוה ביותר.',
@@ -1591,7 +1528,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'gradebook',
-  section: 'tasks-grades',
   eyebrow: 'ציונים',
   title: 'איך רואים ציונים של תלמידים?',
   summary: 'כל שורה היא תלמיד וכל עמודה היא פריט ציון או סיכום.',
@@ -1605,7 +1541,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'export-grades',
-  section: 'tasks-grades',
   eyebrow: 'ייצוא',
   title: 'איך מורידים דוח ציונים לכיתה?',
   summary: 'פותחים „ציונים” → „יצוא”, בוחרים פורמט ופריטים ומורידים.',
@@ -1626,7 +1561,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'report-chooser',
-  section: 'tasks-grades',
   eyebrow: 'דוחות',
   title: 'איך בוחרים את הדוח המתאים?',
   summary: 'בוחרים דוח לפי השאלה שרוצים לבדוק.',
@@ -1637,7 +1571,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'completion',
-  section: 'tasks-grades',
   eyebrow: 'השלמות',
   title: 'מה ההבדל בין השלמה לציון?',
   summary: 'השלמה מציינת שתנאי בוצע; ציון מציג תוצאת הערכה.',
@@ -1647,7 +1580,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'learning-management',
-  section: 'tasks-grades',
   eyebrow: 'ניהול למידה',
   title: 'איך נכנסים לדוח „ניהול למידה”?',
   summary: 'פותחים „דוחות” ובוחרים „ניהול למידה”, אם הוא זמין במרחב.',
@@ -1663,7 +1595,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'notifications',
-  section: 'tasks-grades',
   eyebrow: 'התראות',
   title: 'איפה רואים התראות ומסרים?',
   summary: 'הפעמון פותח התראות ובועת המסרים פותחת שיחות.',
@@ -1676,7 +1607,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'common-mistakes',
-  section: 'tasks-grades',
   eyebrow: 'בדיקה',
   title: 'מה בודקים לפני שפונים לתמיכה?',
   summary: 'בודקים גלויוּת, תאריכים, שיוך תלמיד ותצוגת תלמיד לפני שינוי נוסף.',
@@ -1687,7 +1617,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'recovery',
-  section: 'tasks-grades',
   eyebrow: 'תיקון',
   title: 'מה עושים כשפעילות אינה עובדת לתלמיד?',
   summary: 'בודקים לפי סדר קבוע לפני שמוחקים או משנים הגדרות.',
@@ -1698,7 +1627,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   },
   {
   id: 'final-checklist',
-  section: 'tasks-grades',
   eyebrow: 'לפני שליחה',
   title: 'מה בודקים לפני ששולחים לתלמידים?',
   summary: 'עוברים על רשימה קצרה לפני פרסום.',
