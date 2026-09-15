@@ -69,6 +69,7 @@ const scope = Array.isArray(task.scope) ? task.scope : [];
 const acceptance = Array.isArray(task.acceptance) ? task.acceptance : [];
 const checks = Array.isArray(task.checks) ? task.checks : [];
 const notes = Array.isArray(task.notes) ? task.notes : [];
+const evidence = Array.isArray(task.evidence) ? task.evidence : [];
 const sectionNames = Array.isArray(task.ssot_sections) ? task.ssot_sections : [];
 const requirementIds = Array.isArray(task.requirements) ? task.requirements : [];
 
@@ -121,6 +122,12 @@ ${bullets(canonicalRequirements)}
 
 These are exact SSOT requirement lines. Do not reread the full SSOT unless it is listed under Read first or a concrete dependency/conflict requires it.
 
+## Evidence map
+
+${bullets(evidence)}
+
+Reuse verified existing evidence before capturing anything new. An evidence note is a navigation aid, never permission to assume a state is proven; verify the referenced asset/manifest entry before relying on it.
+
 ## Read first
 
 ${bullets(readFirst)}
@@ -163,7 +170,8 @@ ${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical r
 
 ## Execution contract
 
-- Preserve owner-authored wording unless this task explicitly authorizes wording changes.
+- Preserve owner-authored wording unless this task explicitly authorizes wording changes through its canonical REQ-CONTENT requirements.
+- Use only owner-approved facts, headings, and intent. Do not invent explanatory copy to fill gaps.
 - Never invent screenshots, hotspots, Moodle states, or missing evidence.
 - Do not perform unrelated cleanup or speculative refactors.
 - Prefer canonical shared mechanisms over duplicated local fixes when the task genuinely requires reuse.
@@ -174,4 +182,4 @@ ${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical r
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, output, 'utf8');
-console.log(`Generated ${path.relative(root, outPath)} for ${task.id} with ${requestedRequirementIds.length} canonical requirements.`);
+console.log(`Generated ${path.relative(root, outPath)} for ${task.id} with ${requestedRequirementIds.length} canonical requirements and ${evidence.length} evidence notes.`);
