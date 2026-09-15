@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
@@ -71,6 +72,15 @@ function statusPaths(lines) {
   return [...paths].sort();
 }
 
+function fingerprint(relative) {
+  const absolute = path.join(root, relative);
+  if (!fs.existsSync(absolute)) return '__MISSING__';
+  const stat = fs.lstatSync(absolute);
+  if (stat.isDirectory()) return '__DIRECTORY__';
+  if (stat.isSymbolicLink()) return `symlink:${fs.readlinkSync(absolute)}`;
+  return `sha256:${createHash('sha256').update(fs.readFileSync(absolute)).digest('hex')}`;
+}
+
 const queue = readJson(queuePath);
 const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
 const nextTasks = tasks.filter((task) => task.status === 'next');
@@ -135,12 +145,13 @@ if (fs.existsSync(baselinePath)) {
     baseline = null;
   }
 }
-if (!baseline || baseline.task_id !== task.id || baseline.head !== fullHead) {
+if (!baseline || baseline.task_id !== task.id || baseline.head !== fullHead || baseline.version !== 2) {
   baseline = {
-    version: 1,
+    version: 2,
     task_id: task.id,
     head: fullHead,
     initial_changed_paths: changedPaths,
+    initial_fingerprints: Object.fromEntries(changedPaths.map((relative) => [relative, fingerprint(relative)])),
     created_at: new Date().toISOString()
   };
   fs.writeFileSync(baselinePath, `${JSON.stringify(baseline, null, 2)}\n`, 'utf8');
@@ -185,7 +196,7 @@ Start with these files only. Expand beyond them only when a concrete dependency,
 
 ${bullets(scope)}
 
-This is a focus boundary. The scope guard compares work against the task-start baseline. If a proven dependency requires another path, add that path to the active task scope with a concrete reason before relying on it.
+This is a focus boundary. The scope guard compares work against the task-start baseline, including fingerprints of any pre-existing dirty files. If a proven dependency requires another path, add that path to the active task scope with a concrete reason before relying on it.
 
 ## Acceptance criteria
 
@@ -224,6 +235,7 @@ ${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical r
 - Do not perform unrelated cleanup or speculative refactors.
 - Prefer canonical shared mechanisms over duplicated local fixes when the task genuinely requires reuse.
 - Preserve existing working behavior and regression-check shared dependencies that were touched.
+- Preserve pre-existing working-tree changes outside scope exactly; the scope guard fingerprints them.
 - A change is not complete until the required checks pass.
 - Report only: CHANGED / VERIFIED / COMMIT / NEXT / BLOCKED. Do not repeat the SSOT or narrate the whole repository.
 `;
