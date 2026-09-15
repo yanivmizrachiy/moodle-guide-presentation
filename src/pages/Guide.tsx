@@ -39,8 +39,6 @@ import {
 
 type Panel = 'menu' | 'search' | null;
 
-const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
-
 function getSlideIndexFromUrl(): number {
   if (typeof window === 'undefined') return 0;
   const slideId = new URLSearchParams(window.location.search).get('slide');
@@ -152,13 +150,15 @@ function SlideContent({
   const flow = slide.flow ?? [];
   const hasFlow = flow.length > 0;
   const hasBranch = Boolean(slide.branch);
-  const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
+  // Only a slide with an explicit, relevant link shows the link row — no generic
+  // „פתיחת Moodle" button on concept slides that don't point anywhere specific.
+  const link = slide.link;
   // When a flow step already carries the link inline, don't repeat it as a big CTA
   // button — keep only "copy", centered under the step so the row lines up with the
   // flow's centered down-arrow.
   const flowHasInlineLink = flow.some((step) => step.link);
 
-  const linkRow = (
+  const linkRow = link ? (
     <div className={cn('flex flex-wrap items-center gap-3 pt-1', flowHasInlineLink && 'justify-center')}>
       {!flowHasInlineLink && (
         <Button
@@ -183,7 +183,7 @@ function SlideContent({
         {copied ? 'הקישור הועתק' : 'העתקת הקישור'}
       </Button>
     </div>
-  );
+  ) : null;
 
   return (
     <div className="relative min-h-full overflow-hidden bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_0%_100%,rgba(251,191,36,0.12),transparent_28%),linear-gradient(180deg,#ffffff,#f8fafc)] p-4 sm:p-6 lg:p-8">
