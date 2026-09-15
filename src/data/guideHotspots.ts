@@ -167,7 +167,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '68-quiz-view-teacher': [
     { id: 'results-tab', label: 'תוצאות', x: 60.5, y: 25.8, width: 4.3, height: 3.6 },
     { id: 'attempts', label: 'ניסיונות מענה', x: 71.7, y: 57.1, width: 7.4, height: 3.2 },
-    { id: 'grading-method', label: 'שיטת מתן הציון', x: 67.3, y: 49.5, width: 11.8, height: 3.1 },
+    { id: 'grading-method', label: 'שיטת מתן הציון', x: 64.3, y: 49.5, width: 14.8, height: 3.1 },
   ],
   // 3200x1800 edit mode: the section-title edit pencil.
   '69-section-rename-pencil': [
