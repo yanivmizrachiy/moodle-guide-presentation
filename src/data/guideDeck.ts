@@ -25,6 +25,9 @@ export type GuideSlideStatus = 'ready' | 'needs-capture' | 'needs-fact';
  */
 export type GuideFlowStep = {
   text: string;
+  /** Optional inline link whose label renders as an emphasized clickable link
+   *  right after the step text (e.g. „נכנסים לעמוד פתיחת מרחב בקישור המצורף"). */
+  link?: GuideLink;
   screenshot?: GuideScreenshot;
 };
 
@@ -344,7 +347,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה · שלב 1',
   title: 'איך פותחים מרחב למידה במודל?',
   flow: [
-    { text: 'נכנסים לעמוד פתיחת מרחב.' },
+    { text: 'נכנסים לעמוד פתיחת מרחב', link: { href: MOODLE_WIZARD, label: 'בקישור המצורף' } },
     {
       text: 'מתחברים באמצעות סיסמת משרד החינוך.',
       screenshot: { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.' },
@@ -364,7 +367,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'לחצו „אישור”.',
-      screenshot: { src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' },
+      screenshot: { src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.', hotspotIds: ['confirm-button'] },
     },
     {
       text: 'לאחר שהיצירה הסתיימה נכנסים למרחב שנוצר ומוודאים שזה המרחב הנכון.',
@@ -508,7 +511,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'מה לוחצים כדי ליצור את המרחב?',
   summary: 'במסך „אישור וסיום” בודקים את הפרטים ומבצעים את פעולת היצירה.',
   steps: ['לחצו „אישור”.'],
-  screenshots: [{ src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.' }],
+  screenshots: [{ src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.', hotspotIds: ['confirm-button'] }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['אישור', 'סיום', 'יצירת מרחב'],
   status: 'ready',

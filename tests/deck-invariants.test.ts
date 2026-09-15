@@ -173,11 +173,19 @@ describe('screenshots', () => {
 });
 
 describe('links', () => {
-  it('external links are https and labeled', () => {
-    for (const slide of GUIDE_SLIDES) {
-      if (!slide.link) continue;
-      expect(slide.link.href, `non-https link on slide "${slide.id}"`).toMatch(/^https:\/\//);
-      expect(slide.link.label.trim()).not.toBe('');
+  it('external links are https and labeled (slide links and inline flow-step links)', () => {
+    const allLinks = GUIDE_SLIDES.flatMap((slide) =>
+      [
+        ...(slide.link ? [slide.link] : []),
+        ...(slide.flow ?? []).flatMap((step) => (step.link ? [step.link] : [])),
+        ...(slide.branch?.paths ?? []).flatMap((path) =>
+          (path.flow ?? []).flatMap((step) => (step.link ? [step.link] : []))
+        ),
+      ].map((link) => ({ id: slide.id, link }))
+    );
+    for (const { id, link } of allLinks) {
+      expect(link.href, `non-https link on slide "${id}"`).toMatch(/^https:\/\//);
+      expect(link.label.trim(), `empty link label on slide "${id}"`).not.toBe('');
     }
   });
 

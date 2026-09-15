@@ -50,7 +50,22 @@ export function FlowSteps({
               strokeWidth={2.6}
             />
           )}
-          <NumberedStepRow index={index}>{step.text}</NumberedStepRow>
+          <NumberedStepRow index={index}>
+            {step.text}
+            {step.link && (
+              <>
+                {' '}
+                <a
+                  href={step.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-black text-blue-700 underline decoration-2 underline-offset-2 hover:text-blue-900"
+                >
+                  {step.link.label}
+                </a>
+              </>
+            )}
+          </NumberedStepRow>
           {index === 0 && afterFirstStep}
           {step.screenshot && (
             <ScreenshotCard
