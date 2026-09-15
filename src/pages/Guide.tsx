@@ -153,19 +153,25 @@ function SlideContent({
   const hasFlow = flow.length > 0;
   const hasBranch = Boolean(slide.branch);
   const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
+  // When a flow step already carries the link inline, don't repeat it as a big CTA
+  // button — keep only "copy", centered under the step so the row lines up with the
+  // flow's centered down-arrow.
+  const flowHasInlineLink = flow.some((step) => step.link);
 
   const linkRow = (
-    <div className="flex flex-wrap items-center gap-3 pt-1">
-      <Button
-        asChild
-        size="lg"
-        className="h-12 gap-2 rounded-2xl bg-slate-950 px-6 font-black text-white shadow-[0_12px_28px_rgba(15,23,42,0.20)] hover:bg-blue-900"
-      >
-        <a href={link.href} target="_blank" rel="noopener noreferrer">
-          {link.label}
-          <ExternalLink className="h-4 w-4" />
-        </a>
-      </Button>
+    <div className={cn('flex flex-wrap items-center gap-3 pt-1', flowHasInlineLink && 'justify-center')}>
+      {!flowHasInlineLink && (
+        <Button
+          asChild
+          size="lg"
+          className="h-12 gap-2 rounded-2xl bg-slate-950 px-6 font-black text-white shadow-[0_12px_28px_rgba(15,23,42,0.20)] hover:bg-blue-900"
+        >
+          <a href={link.href} target="_blank" rel="noopener noreferrer">
+            {link.label}
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </Button>
+      )}
       <Button
         size="lg"
         variant="outline"
