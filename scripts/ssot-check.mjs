@@ -9,6 +9,7 @@ const required = [
   'MIGRATION_MANIFEST.md',
   'docs/task-queue.json',
   'scripts/build-task-context.mjs',
+  'scripts/task-scope-check.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/pages/Guide.tsx',
@@ -65,12 +66,15 @@ for (const forbidden of ['@supabase/supabase-js', 'express', 'cookie-parser', 'h
 if (pkg.scripts?.['context:task'] !== 'node scripts/build-task-context.mjs') {
   errors.push('package.json must expose context:task through scripts/build-task-context.mjs.');
 }
-if (!String(pkg.scripts?.check ?? '').includes('npm run context:task')) {
-  errors.push('npm run check must validate/generate the active minimal task context.');
+if (pkg.scripts?.['audit:scope'] !== 'node scripts/task-scope-check.mjs') {
+  errors.push('package.json must expose audit:scope through scripts/task-scope-check.mjs.');
 }
+const checkScript = String(pkg.scripts?.check ?? '');
+if (!checkScript.includes('npm run context:task')) errors.push('npm run check must validate/generate the active minimal task context.');
+if (!checkScript.includes('npm run audit:scope')) errors.push('npm run check must enforce the active task scope.');
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
-for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md']) {
+for (const requiredIgnore of ['node_modules/', 'dist/', '.claude/TASK_CONTEXT.md', '.claude/TASK_BASELINE.json']) {
   if (!gitignore.includes(requiredIgnore)) errors.push(`.gitignore must contain ${requiredIgnore}`);
 }
 
@@ -89,6 +93,8 @@ if (fs.existsSync(queuePath)) {
       if (!task.id || !task.title || !task.goal) errors.push(`Task ${task.id ?? '<missing-id>'} is missing id/title/goal.`);
       if (!allowedStatuses.has(task.status)) errors.push(`Task ${task.id ?? '<missing-id>'} has invalid status ${task.status}.`);
       if (!Array.isArray(task.requirements)) errors.push(`Task ${task.id ?? '<missing-id>'} must define a requirements array.`);
+      if (!Array.isArray(task.scope) || !task.scope.length) errors.push(`Task ${task.id ?? '<missing-id>'} must define a non-empty scope.`);
+      if (!Array.isArray(task.evidence)) errors.push(`Task ${task.id ?? '<missing-id>'} must define an evidence array.`);
       for (const requirement of task.requirements ?? []) {
         if (!requirementSet.has(requirement)) errors.push(`Task ${task.id} references unknown SSOT requirement ${requirement}.`);
         coveredRequirements.add(requirement);
@@ -136,4 +142,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, minimal-context execution contract, and standalone boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements covered, one canonical deck, real assets, requirement-scoped context, task scope guard, and standalone boundaries preserved.`);
