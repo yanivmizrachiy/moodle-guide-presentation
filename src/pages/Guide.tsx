@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FlowSteps, NumberedStepRow } from '@/components/guide/FlowSteps';
+import { TwoPathBranch } from '@/components/guide/TwoPathBranch';
 import {
   collectSlideScreenshots,
   imageUrl,
@@ -148,6 +149,7 @@ function SlideContent({
   const hasScreenshots = Boolean(slide.screenshots?.length);
   const flow = slide.flow ?? [];
   const hasFlow = flow.length > 0;
+  const hasBranch = Boolean(slide.branch);
   const link = slide.link ?? { href: MOODLE_HOME, label: 'פתיחת Moodle' };
 
   const linkRow = (
@@ -184,14 +186,17 @@ function SlideContent({
         className={cn(
           'relative z-10 mx-auto grid min-h-full gap-6 lg:gap-8',
           // A flow slide reads top-to-bottom: title pinned to the top, one column.
-          hasFlow
-            ? 'max-w-[1080px] content-start'
-            : hasScreenshots
-              ? 'max-w-[1540px] content-center lg:grid-cols-[0.72fr_1.28fr]'
-              : 'max-w-5xl content-center'
+          // A branch slide needs the width for two side-by-side lanes.
+          hasBranch
+            ? 'max-w-[1400px] content-start'
+            : hasFlow
+              ? 'max-w-[1080px] content-start'
+              : hasScreenshots
+                ? 'max-w-[1540px] content-center lg:grid-cols-[0.72fr_1.28fr]'
+                : 'max-w-5xl content-center'
         )}
       >
-        <div className={cn('flex min-w-0 flex-col', hasFlow ? 'justify-start' : 'justify-center')}>
+        <div className={cn('flex min-w-0 flex-col', hasFlow || hasBranch ? 'justify-start' : 'justify-center')}>
           {/* The attribution card lives on the cover; repeating it here pushed the
               slide title down, so the title now starts at the top. */}
           <header>
@@ -263,6 +268,15 @@ function SlideContent({
                   afterFirstStep={linkRow}
                 />
               </section>
+            )}
+
+            {slide.branch && (
+              <TwoPathBranch
+                idPrefix={slide.id}
+                slideTitle={slide.title}
+                branch={slide.branch}
+                onOpenScreenshot={onOpenScreenshot}
+              />
             )}
           </div>
         </div>

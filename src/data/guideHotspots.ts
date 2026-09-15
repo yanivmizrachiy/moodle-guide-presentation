@@ -95,6 +95,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '59-quiz-after-enrol': [
     { id: 'start-attempt', label: 'התחלת ניסיון מענה', x: 64.8, y: 35.3, width: 9.6, height: 4.6 },
   ],
+  // 1600x900 opening wizard, step 1: the two real choice cards. Each branch
+  // path opts into its own card via hotspotIds, so the shared screen circles
+  // only the option that path is about.
+  '45-open-space-choice': [
+    { id: 'with-group', label: 'עם קבוצת לימוד', x: 50.3, y: 29.8, width: 22.2, height: 45.3 },
+    { id: 'without-group', label: 'ללא קבוצת לימוד', x: 27.5, y: 29.8, width: 22.2, height: 45.3 },
+  ],
   // 3200x1800 course page: the space-navigation tabs. Shared across several
   // slides, so each is marked only on steps that opt in via hotspotIds.
   '10-course-page': [

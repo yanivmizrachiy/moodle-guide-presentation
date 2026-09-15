@@ -161,6 +161,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'open-space-start': 'opening',
   'open-space-my-courses': 'opening',
   'open-space-wizard': 'opening',
+  'open-space-two-paths': 'opening',
   'open-space-group-choice': 'opening',
   'open-space-details-empty': 'opening',
   'open-space-details-check': 'opening',
@@ -205,6 +206,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'hidden-items-appearance': 'editing',
   'activity-chooser-more': 'editing',
   'send-task': 'tasks',
+  'student-reach-task': 'tasks',
   'student-solve-task': 'tasks',
   'quiz-settings': 'grading',
   'task-correction': 'grading',
@@ -360,6 +362,41 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   screenshots: [{ src: '45-open-space-choice.png', caption: 'מסך הבחירה — „עם קבוצת לימוד” או „ללא קבוצת לימוד”.' }],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['אשף', 'פתיחת מרחב', 'קבוצת לימוד'],
+  status: 'ready',
+  },
+  {
+  id: 'open-space-two-paths',
+  section: 'spaces',
+  eyebrow: 'פתיחת מרחב למידה · שתי דרכים',
+  title: 'פתיחת מרחב עם תלמידים / ללא תלמידים',
+  branch: {
+    paths: [
+      {
+        label: 'עם קבוצת לימוד',
+        steps: ['המרחב נוצר עם שיוך תלמידים/קבוצה לפי הנתונים הרשמיים הזמינים במערכת.'],
+        screenshots: [
+          {
+            src: '45-open-space-choice.png',
+            caption: 'מסך הבחירה — הכרטיס „עם קבוצת לימוד”.',
+            hotspotIds: ['with-group'],
+          },
+        ],
+      },
+      {
+        label: 'ללא קבוצת לימוד',
+        steps: ['המרחב מתחיל ללא תלמידים.', 'אפשר לצרף תלמידים למרחב גם מאוחר יותר.'],
+        screenshots: [
+          {
+            src: '45-open-space-choice.png',
+            caption: 'מסך הבחירה — הכרטיס „ללא קבוצת לימוד”.',
+            hotspotIds: ['without-group'],
+          },
+        ],
+      },
+    ],
+  },
+  link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
+  keywords: ['עם קבוצת לימוד', 'ללא קבוצת לימוד', 'עם תלמידים', 'ללא תלמידים', 'שתי דרכים'],
   status: 'ready',
   },
   {
@@ -1169,6 +1206,62 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   summary: 'אפשר להפנות למיקום בתוך המרחב או לשלוח קישור ישיר למשימה.',
   points: ['דרך המרחב — מציינים איפה המשימה.', 'בקישור ישיר — שולחים את כתובת המשימה.'],
   keywords: ['שליחת משימה', 'קישור משימה', 'שיתוף'],
+  status: 'needs-capture',
+  missingCaptureId: 'M11',
+  },
+  {
+  id: 'student-reach-task',
+  section: 'tasks-grades',
+  eyebrow: 'הגעה למשימה · שתי דרכים',
+  title: 'איך תלמיד מגיע למשימה מסוימת שהמורה מבקש ממנו לבצע?',
+  branch: {
+    paths: [
+      {
+        label: 'דרך מרחב הלמידה',
+        flow: [
+          {
+            text: 'התלמיד נכנס למרחב.',
+            screenshot: { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד.' },
+          },
+          {
+            text: 'מאתר את המשימה במקומה.',
+            screenshot: {
+              src: '58-student-space-topic.png',
+              caption: 'המשימה ביחידה — „ממתין לביצוע”.',
+              hotspotIds: ['pending'],
+            },
+          },
+          {
+            text: 'פותח אותה.',
+            screenshot: {
+              src: '59-quiz-after-enrol.png',
+              caption: 'המשימה פתוחה — „התחלת ניסיון מענה”.',
+              hotspotIds: ['start-attempt'],
+            },
+          },
+        ],
+      },
+      {
+        label: 'קישור ישיר למשימה',
+        flow: [
+          {
+            text: 'המורה פותח את המשימה המדויקת.',
+            screenshot: {
+              src: '68-quiz-view-teacher.png',
+              caption: 'עמוד המשימה כפי שהמורה רואה אותו.',
+              hotspotIds: [],
+            },
+          },
+          // The address-bar copy step has no capture yet on purpose: proving
+          // where the URL is copied from needs a real browser-window shot
+          // (M11). Truth before design — no fake address bar.
+          { text: 'מעתיק את כתובת האינטרנט של המשימה משורת הכתובת של הדפדפן.' },
+          { text: 'שולח אותה לתלמיד ב-WhatsApp, בדוא"ל או בדרך אחרת.' },
+        ],
+      },
+    ],
+  },
+  keywords: ['קישור ישיר', 'תלמיד מגיע למשימה', 'שליחת קישור למשימה', 'שתי דרכים'],
   status: 'needs-capture',
   missingCaptureId: 'M11',
   },
