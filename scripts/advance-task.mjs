@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { readStatusPaths } from './git-status.mjs';
 
 const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
@@ -18,24 +19,6 @@ function gitText(args) {
   } catch {
     return '';
   }
-}
-
-function statusPaths() {
-  const output = gitText(['status', '--porcelain=v1', '--untracked-files=all']);
-  if (!output) return [];
-  const paths = new Set();
-  for (const line of output.split(/\r?\n/)) {
-    const raw = line.slice(3).trim();
-    if (!raw) continue;
-    if (raw.includes(' -> ')) {
-      const [from, to] = raw.split(' -> ');
-      if (from) paths.add(from.replace(/^"|"$/g, ''));
-      if (to) paths.add(to.replace(/^"|"$/g, ''));
-    } else {
-      paths.add(raw.replace(/^"|"$/g, ''));
-    }
-  }
-  return [...paths].sort();
 }
 
 function fingerprint(relative) {
@@ -73,7 +56,7 @@ try {
 
 const head = gitText(['rev-parse', 'HEAD']) || 'unknown';
 const queueHash = gitText(['hash-object', 'docs/task-queue.json']) || 'unknown';
-const currentPaths = statusPaths();
+const currentPaths = readStatusPaths(root);
 const receiptPaths = Array.isArray(receipt.changed_paths) ? [...receipt.changed_paths].sort() : [];
 
 if (receipt.version !== 1) fail('check receipt version is unsupported; rerun npm run check.');

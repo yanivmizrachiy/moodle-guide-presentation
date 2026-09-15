@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { readStatusPaths } from './git-status.mjs';
 
 const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
@@ -13,24 +14,6 @@ function gitText(args) {
   } catch {
     return '';
   }
-}
-
-function statusPaths() {
-  const output = gitText(['status', '--porcelain=v1', '--untracked-files=all']);
-  if (!output) return [];
-  const paths = new Set();
-  for (const line of output.split(/\r?\n/)) {
-    const raw = line.slice(3).trim();
-    if (!raw) continue;
-    if (raw.includes(' -> ')) {
-      const [from, to] = raw.split(' -> ');
-      if (from) paths.add(from.replace(/^"|"$/g, ''));
-      if (to) paths.add(to.replace(/^"|"$/g, ''));
-    } else {
-      paths.add(raw.replace(/^"|"$/g, ''));
-    }
-  }
-  return [...paths].sort();
 }
 
 function fingerprint(relative) {
@@ -51,7 +34,7 @@ if (!complete && next.length !== 1) {
   process.exit(1);
 }
 
-const changedPaths = statusPaths();
+const changedPaths = readStatusPaths(root);
 const receipt = {
   version: 1,
   task_id: complete ? null : next[0].id,

@@ -111,6 +111,44 @@
       ]
     },
     {
+      "id": "P0.6-gate-fix",
+      "status": "done",
+      "title": "Fix git-status parsing in the lifecycle gate scripts",
+      "goal": "Repair the shared git status --porcelain parsing so the first changed entry is never corrupted (e.g. src/... becoming rc/...), keeping scope enforcement fully strict, with regression tests proving the parser on modified/added/deleted/renamed/multiple entries and significant whitespace.",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-005"
+      ],
+      "read_first": [
+        "scripts/task-scope-check.mjs",
+        "scripts/build-task-context.mjs",
+        "scripts/advance-task.mjs",
+        "scripts/write-check-receipt.mjs"
+      ],
+      "scope": [
+        "scripts",
+        "tests/git-status-paths.test.ts"
+      ],
+      "ssot_sections": [],
+      "evidence": [
+        "npm run audit:scope failed for P1-contract with the phantom path 'rc/data/guideDeck.ts' while git status showed ' M src/data/guideDeck.ts' — the whole-output trim strips the first entry's leading status space before slice(3) parses it."
+      ],
+      "acceptance": [
+        "One canonical status parser is used by all four gate scripts and never trims the raw porcelain block before parsing entries.",
+        "Regression tests cover a modified first entry, added, deleted and renamed entries, multiple entries, preserved significant whitespace, and prove no phantom path is produced.",
+        "Scope checking is not weakened, no path special-cases are added, and no baseline is regenerated to mask the defect.",
+        "Pre-existing uncommitted P1 work in src/data/guideDeck.ts and tests/deck-invariants.test.ts is preserved byte-for-byte and left uncommitted.",
+        "npm run check passes."
+      ],
+      "checks": [
+        "npm run check"
+      ],
+      "notes": [
+        "The P1-contract implementation already sitting uncommitted in the working tree is pre-existing dirt for this task: fingerprint-preserved, not committed here.",
+        "Do not mix P0.6 and P1 changes in one commit."
+      ]
+    },
+    {
       "id": "P1-contract",
       "status": "next",
       "title": "Encode guide semantics and invariants",

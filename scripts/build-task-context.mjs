@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { readStatusPaths } from './git-status.mjs';
 
 const root = process.cwd();
 const queuePath = path.join(root, 'docs/task-queue.json');
@@ -54,22 +55,6 @@ function gitText(args) {
 function gitLines(args) {
   const value = gitText(args);
   return value ? value.split(/\r?\n/) : [];
-}
-
-function statusPaths(lines) {
-  const paths = new Set();
-  for (const line of lines) {
-    const raw = line.slice(3).trim();
-    if (!raw) continue;
-    if (raw.includes(' -> ')) {
-      const [from, to] = raw.split(' -> ');
-      if (from) paths.add(from.replace(/^"|"$/g, ''));
-      if (to) paths.add(to.replace(/^"|"$/g, ''));
-    } else {
-      paths.add(raw.replace(/^"|"$/g, ''));
-    }
-  }
-  return [...paths].sort();
 }
 
 function fingerprint(relative) {
@@ -129,8 +114,7 @@ const sections = sectionNames.map((heading) => {
   return text;
 });
 
-const statusLines = gitLines(['status', '--porcelain=v1', '--untracked-files=all']);
-const changedPaths = statusPaths(statusLines);
+const changedPaths = readStatusPaths(root);
 const branch = gitLines(['branch', '--show-current'])[0] ?? 'unknown';
 const head = gitLines(['rev-parse', '--short', 'HEAD'])[0] ?? 'unknown';
 const fullHead = gitText(['rev-parse', 'HEAD']) || 'unknown';
