@@ -1323,7 +1323,7 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   title: 'איך בוחרים את הדוח המתאים?',
   summary: 'בוחרים דוח לפי השאלה שרוצים לבדוק.',
   points: ['פעולה ומועד — יומני מעקב.', 'השלמה — דוח השלמות.', 'צפיות — פעילות מרחב.', 'ציונים — יומן ציונים.'],
-  screenshots: [{ src: '18-reports.jpg', caption: 'עמוד הדוחות — בוחרים את הדוח לפי הצורך.' }],
+  screenshots: [{ src: '18-reports.jpg', caption: 'עמוד הדוחות — בוחרים את הדוח לפי הצורך.', hotspotIds: [] }],
   keywords: ['דוחות', 'יומני מעקב', 'השלמות'],
   status: 'ready',
   },

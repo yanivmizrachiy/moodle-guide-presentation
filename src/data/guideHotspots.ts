@@ -193,6 +193,46 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '30-student-mycourses-selflearning': [
     { id: 'self-learning', label: 'למידה עצמית', x: 71.5, y: 50.5, width: 14, height: 5 },
   ],
+  // Concept-highlight audit: the one key term that answers each slide's question.
+  '20-wizard-step1-selected': [
+    { id: 'no-group', label: 'ללא קבוצת לימוד', x: 31.3, y: 66.2, width: 18.4, height: 6.3 },
+  ],
+  '46-open-space-form': [
+    { id: 'next', label: 'הבא', x: 4.2, y: 90.7, width: 3.9, height: 5.2 },
+  ],
+  '58-student-space-topic': [
+    { id: 'pending', label: 'ממתין לביצוע', x: 14.7, y: 93.4, width: 7.3, height: 4.7 },
+  ],
+  '54-student-enrolled': [
+    { id: 'enrolled-ok', label: 'נרשמתם לקורס בהצלחה', x: 58.5, y: 28.5, width: 12, height: 4.5 },
+  ],
+  '26-selfenrol-methods-list': [
+    { id: 'self-enrol-method', label: 'שיוך עצמי (תלמיד)', x: 75, y: 48, width: 20, height: 4.2 },
+  ],
+  '27-selfenrol-settings': [
+    { id: 'enrol-active', label: 'מנגנון רישום עצמי פעיל?', x: 75.4, y: 35.9, width: 17.7, height: 3.6 },
+  ],
+  '74-groups-two-groups': [
+    { id: 'add-members', label: 'הוספת/הסרת משתתפים מקבוצה', x: 33, y: 85.3, width: 16, height: 5.5 },
+  ],
+  '06-course-edit-on': [
+    { id: 'edit-toggle', label: 'מצב עריכה', x: 1.2, y: 2.2, width: 8.6, height: 4.6 },
+  ],
+  '09-user-menu': [
+    { id: 'switch-role', label: 'החלפת תפקיד ל...', x: 13.5, y: 25.9, width: 10, height: 3.4 },
+  ],
+  '08-more-options': [
+    { id: 'lti', label: 'כלי או שירות LTI חיצוני', x: 32.2, y: 68.2, width: 11.8, height: 3.5 },
+  ],
+  '07-unit-menu': [
+    { id: 'unit-kebab', label: 'תפריט יחידת ההוראה', x: 8.2, y: 74.5, width: 4.3, height: 7.8 },
+  ],
+  '14-hidden-items': [
+    { id: 'hidden-label', label: 'מוסתר בפני תלמידים', x: 56.5, y: 29.6, width: 11.5, height: 3.6 },
+  ],
+  '18-reports': [
+    { id: 'learning-mgmt', label: 'ניהול למידה', x: 68.3, y: 58.7, width: 6.4, height: 3.2 },
+  ],
   // 3200x1800 activity edit menu: the move entry.
   '80-activity-menu-move': [
     { id: 'move-entry', label: 'העברה', x: 17.7, y: 57.6, width: 6.3, height: 4.2 },
