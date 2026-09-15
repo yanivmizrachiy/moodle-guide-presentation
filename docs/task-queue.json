@@ -1,12 +1,14 @@
 {
-  "version": 2,
+  "version": 3,
   "execution_policy": {
     "quality": "Do not reduce reasoning, verification, or implementation quality to save tokens. Save tokens only by excluding irrelevant context and repeated explanations.",
     "one_next_task": true,
     "expand_scope_only_when_proven": true,
     "owner_controls_slide_wording": true,
+    "content_policy": "Use only owner-approved facts, headings, and intent from canonical REQ-CONTENT requirements. Do not invent explanatory copy to fill gaps.",
     "requirement_coverage_enforced": true,
     "full_ssot_read_only_when_required": true,
+    "reuse_verified_evidence_before_capture": true,
     "final_report": ["CHANGED", "VERIFIED", "COMMIT", "NEXT", "BLOCKED"]
   },
   "tasks": [
@@ -36,6 +38,7 @@
         "package.json"
       ],
       "ssot_sections": ["מקורות האמת בתוך הריפו"],
+      "evidence": [],
       "acceptance": [
         "Every REQ-* id in SSOT is referenced by at least one execution task and unknown requirement ids fail the audit.",
         "The active TASK_CONTEXT contains the exact canonical requirements for its task without forcing a full SSOT read unless that task actually needs it.",
@@ -60,8 +63,9 @@
         "REQ-STABILITY-002", "REQ-STABILITY-003", "REQ-STABILITY-004", "REQ-STABILITY-007"
       ],
       "read_first": ["src/pages/Guide.tsx", "src/data/guideDeck.ts", "tests/deck-invariants.test.ts"],
-      "scope": ["src/pages/Guide.tsx", "src/components", "tests"],
+      "scope": ["src/pages/Guide.tsx", "src/components", "src/index.css", "src/guide-visual-isolation.css", "tests"],
       "ssot_sections": ["מקורות האמת בתוך הריפו"],
+      "evidence": [],
       "acceptance": [
         "Recurring flow, screenshot/hotspot, and branch-capable presentation primitives have one canonical implementation.",
         "No owner-authored wording changes.",
@@ -77,14 +81,35 @@
       "title": "Add canonical two-path guidance",
       "goal": "Add a reusable responsive visual branch for procedures that genuinely have two paths, then use it for the approved student-task and space-opening cases.",
       "requirements": ["REQ-GUIDE-004", "REQ-CONTENT-001", "REQ-CONTENT-002"],
-      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components"],
-      "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "tests"],
+      "read_first": [
+        "src/data/guideDeck.ts",
+        "src/pages/Guide.tsx",
+        "src/components",
+        "src/data/guideHotspots.ts",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md"
+      ],
+      "scope": [
+        "src/data/guideDeck.ts",
+        "src/pages/Guide.tsx",
+        "src/components",
+        "src/data/guideHotspots.ts",
+        "public/guide/screenshots",
+        "docs/GUIDE_SCREENSHOTS_MANIFEST.md",
+        "docs/GUIDE_MISSING_CAPTURES.md",
+        "tests"
+      ],
       "ssot_sections": [],
+      "evidence": [
+        "M11 in GUIDE_MISSING_CAPTURES is the existing canonical missing-capture item for the exact direct task URL/share path; use it rather than inventing a share button.",
+        "45/46 are current real opening-space wizard screenshots and should be reused if they prove the with-students/without-students choice; do not recapture sufficient evidence."
+      ],
       "acceptance": [
         "Two-path guidance is visibly split on desktop and mobile.",
         "The student task flow shows both navigation through the space and a direct task URL path.",
         "The direct-link path explicitly shows where the browser URL is copied from using real screenshots/hotspots.",
         "The with-students/without-students choice is visually branched rather than text-only.",
+        "If M11 evidence is still missing, the affected content stays needs-capture rather than being faked or prematurely marked ready.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
@@ -95,9 +120,13 @@
       "title": "Teach later student joining by space link",
       "goal": "Show that a space opened without students can accept students later and teach the exact real link-copy path step by step.",
       "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-006", "REQ-CONTENT-003"],
-      "read_first": ["src/data/guideDeck.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
-      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs", "tests"],
+      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
+      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md", "tests"],
       "ssot_sections": [],
+      "evidence": [
+        "26-29 already document the real self-enrol setup/student flow and should be reused where relevant.",
+        "The exact browser-address copy step for the space URL must be proven separately if no existing screenshot shows it; record a real missing capture instead of inferring it."
+      ],
       "acceptance": [
         "The guide explicitly states that choosing ללא תלמידים does not prevent adding students later.",
         "The exact space URL location and copy action are shown, not merely described.",
@@ -113,9 +142,13 @@
       "title": "Make edit mode a first-class guide concept",
       "goal": "Create the approved edit-mode chapter structure and a real guide-side interactive on/off teaching control without pretending that the guide control is Moodle itself.",
       "requirements": ["REQ-GUIDE-005", "REQ-GUIDE-006", "REQ-CONTENT-004", "REQ-CONTENT-006"],
-      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/data/guideHotspots.ts"],
-      "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "src/data/guideHotspots.ts", "tests"],
+      "read_first": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md"],
+      "scope": ["src/data/guideDeck.ts", "src/pages/Guide.tsx", "src/components", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "tests"],
       "ssot_sections": [],
+      "evidence": [
+        "03-topbar-edit-off.png and 04-topbar-edit-on.png already prove the real Moodle edit-mode off/on states; reuse them.",
+        "05-home-edit-on.jpg and 06-course-edit-on.jpg already show real edit-mode consequences and can support the explanation of what becomes editable."
+      ],
       "acceptance": [
         "A main topic asks מה זה מצב עריכה? before dependent editing procedures.",
         "The guide clearly identifies operations that require edit mode.",
@@ -132,13 +165,20 @@
       "title": "Complete the space-editing chapter",
       "goal": "Organize the approved editing procedures under a clear main heading and teach each procedure click by click.",
       "requirements": ["REQ-GUIDE-001", "REQ-GUIDE-002", "REQ-GUIDE-003", "REQ-GUIDE-005", "REQ-CONTENT-005", "REQ-CONTENT-006"],
-      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md"],
-      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "tests"],
+      "read_first": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md"],
+      "scope": ["src/data/guideDeck.ts", "src/data/guideHotspots.ts", "public/guide/screenshots", "docs/GUIDE_SCREENSHOTS_MANIFEST.md", "docs/GUIDE_MISSING_CAPTURES.md", "tests"],
       "ssot_sections": [],
+      "evidence": [
+        "41/43 already prove the real space settings form/save path; 44 proves the real space-image area.",
+        "69/70 already prove the real heading rename pencil/field flow.",
+        "Do not assume task-name editing is fully evidenced: verify the manifest/assets and create a real needs-capture item if any required click/state is missing."
+      ],
       "acceptance": [
         "The chapter order teaches edit mode before edit-mode-dependent actions.",
         "Separate procedures cover editing the main heading, main image, and task name.",
         "Each procedure is complete, concise, screenshot-led, and marks the current target.",
+        "Existing verified screenshots are reused instead of being recaptured.",
+        "Any genuinely missing step remains needs-capture and is not represented by invented UI or text.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
@@ -149,9 +189,10 @@
       "title": "Add browser, visual, mobile and accessibility regression gates",
       "goal": "Protect the visual guide from regressions that typechecking and unit invariants cannot detect.",
       "requirements": ["REQ-STABILITY-001", "REQ-STABILITY-002", "REQ-STABILITY-005", "REQ-STABILITY-006", "REQ-GUIDE-004", "REQ-GUIDE-005"],
-      "read_first": ["package.json", ".github/workflows/ci.yml", "src/pages/Guide.tsx"],
-      "scope": ["package.json", "tests", ".github/workflows", "src/components", "src/pages/Guide.tsx"],
+      "read_first": ["package.json", "package-lock.json", ".github/workflows/ci.yml", "src/pages/Guide.tsx"],
+      "scope": ["package.json", "package-lock.json", "playwright.config.ts", "tests", ".github/workflows", "src/components", "src/pages/Guide.tsx"],
       "ssot_sections": [],
+      "evidence": [],
       "acceptance": [
         "Critical guide interactions are browser-tested.",
         "Representative desktop and mobile states are regression-tested.",
@@ -172,6 +213,7 @@
       "read_first": ["SSOT.md", "docs/task-queue.json", "src/data/guideDeck.ts", "tests"],
       "scope": ["repository as required by verified findings"],
       "ssot_sections": ["תחום הריפו", "מקורות האמת בתוך הריפו", "כללי גבול מחייבים"],
+      "evidence": ["Use the final canonical screenshot manifest, missing-capture list, task history, and browser/visual results as evidence; task status alone is not proof."],
       "acceptance": [
         "Every canonical REQ-* requirement is checked against the final implementation, not merely against task completion state.",
         "No unverified cleanup or speculative rewrite is performed.",
