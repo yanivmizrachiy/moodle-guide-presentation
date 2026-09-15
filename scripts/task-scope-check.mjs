@@ -38,11 +38,17 @@ function statusPaths() {
 }
 
 if (!fs.existsSync(queuePath)) fail('docs/task-queue.json is missing.');
+const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+const tasks = Array.isArray(queue.tasks) ? queue.tasks : [];
+const next = tasks.filter((task) => task.status === 'next');
+
+if (next.length === 0 && tasks.length && tasks.every((task) => task.status === 'done')) {
+  console.log('Task scope audit passed: task queue is fully complete.');
+  process.exit(0);
+}
+if (next.length !== 1) fail(`expected exactly one next task unless the queue is fully complete; found ${next.length}.`);
 if (!fs.existsSync(baselinePath)) fail('task baseline is missing; run npm run context:task before implementation.');
 
-const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
-const next = (queue.tasks ?? []).filter((task) => task.status === 'next');
-if (next.length !== 1) fail(`expected exactly one next task; found ${next.length}.`);
 const task = next[0];
 const baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
 const head = gitText(['rev-parse', 'HEAD']) || 'unknown';
