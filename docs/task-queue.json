@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "execution_policy": {
     "quality": "Do not reduce reasoning, verification, or implementation quality to save tokens. Save tokens only by excluding irrelevant context and repeated explanations.",
     "one_next_task": true,
@@ -108,7 +108,7 @@
       ],
       "ssot_sections": [],
       "evidence": [
-        "M11 in GUIDE_MISSING_CAPTURES is the existing canonical missing-capture item for the exact direct task URL/share path; use it rather than inventing a share button.",
+        "M11 in GUIDE_MISSING_CAPTURES is the canonical missing-capture item for the exact direct task URL/share path; use it rather than inventing a share button.",
         "45/46 are current real opening-space wizard screenshots and should be reused if they prove the with-students/without-students choice; do not recapture sufficient evidence."
       ],
       "acceptance": [
@@ -132,13 +132,13 @@
       "ssot_sections": [],
       "evidence": [
         "26-29 already document the real self-enrol setup/student flow and should be reused where relevant.",
-        "The exact browser-address copy step for the space URL must be proven separately if no existing screenshot shows it; record a real missing capture instead of inferring it."
+        "M12 in GUIDE_MISSING_CAPTURES is the canonical missing-capture item for the browser-address copy step of the space URL; it is distinct from M11, which proves a task URL."
       ],
       "acceptance": [
         "The guide explicitly states that choosing ללא תלמידים does not prevent adding students later.",
         "The exact space URL location and copy action are shown, not merely described.",
         "Every required click/action has a real screenshot and the established red focus marker when applicable.",
-        "Missing real evidence remains needs-capture rather than being mocked.",
+        "If M12 evidence is still missing, the affected content remains needs-capture and is not mocked or inferred from M11.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
@@ -180,14 +180,14 @@
       "evidence": [
         "41/43 already prove the real space settings form/save path; 44 proves the real space-image area.",
         "69/70 already prove the real heading rename pencil/field flow.",
-        "Do not assume task-name editing is fully evidenced: verify the manifest/assets and create a real needs-capture item if any required click/state is missing."
+        "M14 in GUIDE_MISSING_CAPTURES is the canonical missing-capture item for the complete task-name editing path; screenshot 42 alone does not prove rename + save + result."
       ],
       "acceptance": [
         "The chapter order teaches edit mode before edit-mode-dependent actions.",
         "Separate procedures cover editing the main heading, main image, and task name.",
         "Each procedure is complete, concise, screenshot-led, and marks the current target.",
         "Existing verified screenshots are reused instead of being recaptured.",
-        "Any genuinely missing step remains needs-capture and is not represented by invented UI or text.",
+        "If M14 evidence is still missing, task-name editing remains needs-capture rather than using invented UI or an incomplete screenshot sequence.",
         "npm run check passes."
       ],
       "checks": ["npm run check"]
