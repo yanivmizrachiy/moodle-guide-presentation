@@ -15,13 +15,10 @@ const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
 ];
 
 describe('red focus policy', () => {
-  it('keeps ambiguous multi-target screenshots clean unless one target is selected', () => {
+  it('shows no red focus unless the screenshot use explicitly selects one target', () => {
     expect(getVisibleGuideHotspots('45-open-space-choice.avif')).toEqual([]);
     expect(getVisibleGuideHotspots('45-open-space-choice.avif', [])).toEqual([]);
-  });
-
-  it('preserves one unambiguous authored focus when a screenshot has exactly one verified target', () => {
-    expect(getVisibleGuideHotspots('03-topbar-edit-off.avif').map((spot) => spot.id)).toEqual(['edit-toggle']);
+    expect(getVisibleGuideHotspots('03-topbar-edit-off.avif')).toEqual([]);
   });
 
   it('renders one requested verified focus and never multiple competing focuses', () => {
