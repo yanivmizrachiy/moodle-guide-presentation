@@ -68,10 +68,12 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 student quiz page after submission: the "ניסיון חדש" button.
   '56-quiz-retry': [
+    { id: 'result-badges', label: 'בוצע: קבלת ציון / נכשל: קבלת ציון "עובר"', x: 51.6, y: 26.1, width: 18.2, height: 4.8 },
     { id: 'new-attempt', label: 'ניסיון חדש', x: 63, y: 33.2, width: 9.4, height: 7.6 },
   ],
   // 3200x1800 activity kebab menu: the availability and delete entries.
   '42-activity-menu': [
+    { id: 'kebab', label: '⋮ — כפתור תפריט הפעילות (שלוש נקודות)', x: 14.1, y: 54.9, width: 4.8, height: 5.8 },
     { id: 'settings', label: 'הגדרות', x: 5.2, y: 59.3, width: 13.4, height: 7.6 },
     { id: 'availability', label: 'זמינות', x: 5.2, y: 68, width: 13.4, height: 7.6 },
     { id: 'delete', label: 'מחיקה', x: 5.2, y: 80.8, width: 13.4, height: 7.6 },
@@ -102,11 +104,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1800 course page: the space-navigation tabs. Shared across several
   // slides, so each is marked only on steps that opt in via hotspotIds.
   '10-course-page': [
+    { id: 'edit-toggle', label: 'עריכה', x: 0.85, y: 1.4, width: 7.4, height: 4.1 },
     { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
     { id: 'participants-tab', label: 'משתתפים', x: 51.6, y: 20.4, width: 5, height: 4.6 },
   ],
   // 3200x1800 participants list: the roles column (each participant's תפקיד).
   '47-participants-list': [
+    { id: 'users-selector', label: 'משתתפים רשומים', x: 66.6, y: 24.7, width: 13.1, height: 3.8 },
     { id: 'roles-column', label: 'תפקיד', x: 41, y: 76, width: 11, height: 10 },
   ],
   // 3200x1800 role editor open: the role picker with its options.
@@ -119,6 +123,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 new wizard, ready-content step: the search row.
   '34-wizard-ready-content-search': [
+    { id: 'project-list', label: 'בחר פרויקט', x: 4.2, y: 31.8, width: 92, height: 11.4 },
+    { id: 'content-card', label: 'מתמטיקה לחט"ב ז\' – 2027', x: 72.5, y: 54.3, width: 23.3, height: 31.1 },
+    { id: 'next', label: 'הבא', x: 3.5, y: 86.5, width: 5.3, height: 6.3 },
     { id: 'search', label: 'חיפוש', x: 87.3, y: 26.0, width: 8.7, height: 4.1 },
   ],
   // 3200x1800 ready-content list view: the view-toggle buttons.
@@ -127,6 +134,8 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 clone step: the breadcrumb showing the chosen path.
   '36-wizard-clone-my-content': [
+    { id: 'space-row', label: 'המרחב של רות ויניב', x: 86.9, y: 66.4, width: 8.4, height: 3.4 },
+    { id: 'next', label: 'הבא', x: 3.5, y: 85.3, width: 5.3, height: 6.2 },
     { id: 'clone-path', label: 'שכפול תוכן שלי', x: 76.5, y: 21.9, width: 7.1, height: 3.0 },
   ],
   // 3200x1800 clone list: search row and the year sort control.
@@ -140,10 +149,12 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 grader report: the "ציונים" tab in the space navigation.
   '65-gradebook-grader': [
+    { id: 'group-selector', label: 'בחירת קבוצות נראות — קבוצה 1', x: 47.8, y: 29.3, width: 10.8, height: 5.7 },
     { id: 'grades-tab', label: 'ציונים', x: 72.7, y: 21.7, width: 4.4, height: 5.0 },
   ],
   // 3200x1800 export page: the format dropdown and the download button.
   '66-gradebook-export': [
+    { id: 'export-items', label: 'רשימת תיבות הסימון של פרטי הציון (תחת „יש לכלול את פרטי הציון")', x: 46.9, y: 53.2, width: 25.4, height: 37.1 },
     { id: 'format', label: 'יצוא לגליון האלקטרוני של Excel', x: 61.6, y: 25.1, width: 10.9, height: 3.2 },
     { id: 'download', label: 'הורדה', x: 3.3, y: 93.1, width: 5.4, height: 5.1 },
   ],
@@ -154,6 +165,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 teacher quiz view: attempts count and grading method.
   '68-quiz-view-teacher': [
+    { id: 'results-tab', label: 'תוצאות', x: 60.5, y: 25.8, width: 4.3, height: 3.6 },
     { id: 'attempts', label: 'ניסיונות מענה', x: 71.7, y: 57.1, width: 7.4, height: 3.2 },
     { id: 'grading-method', label: 'שיטת מתן הציון', x: 67.3, y: 49.5, width: 11.8, height: 3.1 },
   ],
@@ -205,6 +217,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'next', label: 'הבא', x: 4.2, y: 90.7, width: 3.9, height: 5.2 },
   ],
   '58-student-space-topic': [
+    { id: 'activity-link', label: 'יחס - בסיסי', x: 59.8, y: 94, width: 6.4, height: 3.6 },
     { id: 'pending', label: 'ממתין לביצוע', x: 14.7, y: 93.4, width: 7.3, height: 4.7 },
   ],
   '54-student-enrolled': [
@@ -217,9 +230,11 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'edit-toggle', label: 'מצב עריכה', x: 1.2, y: 2.2, width: 8.6, height: 4.6 },
   ],
   '09-user-menu': [
+    { id: 'user-button', label: 'יניב', x: 8.4, y: 1.9, width: 3.7, height: 2.9 },
     { id: 'switch-role', label: 'החלפת תפקיד ל...', x: 13.5, y: 25.9, width: 10, height: 3.4 },
   ],
   '08-more-options': [
+    { id: 'more-tab', label: 'אפשרויות נוספות', x: 30.2, y: 23.4, width: 12.4, height: 10.2 },
     { id: 'lti', label: 'כלי או שירות LTI חיצוני', x: 32.2, y: 68.2, width: 11.8, height: 3.5 },
   ],
   '07-unit-menu': [
@@ -237,6 +252,35 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '82-move-activity-result': [
     { id: 'moved-activity', label: 'המשימה במיקום החדש', x: 68.7, y: 60.2, width: 5.3, height: 3.7 },
   ],
+  // 3200x1800 generic activity settings form (a forum): the name field.
+  '100-activity-settings-name': [
+    { id: 'activity-name', label: 'שם הפעילות', x: 28, y: 38.3, width: 35.9, height: 5.8 },
+  ],
+  // 3200x1800 same form: availability and the „הגבלת גישה" section.
+  '101-activity-settings-access': [
+    { id: 'availability-select', label: 'זמינות', x: 38.5, y: 23.6, width: 25.4, height: 5.6 },
+    { id: 'add-restriction', label: 'הוספת הגבלה', x: 54.4, y: 76.5, width: 8.6, height: 5.6 },
+  ],
+  // 3200x1800 same form, bottom: the save buttons.
+  '102-activity-settings-save': [
+    { id: 'save', label: 'שמירת שינויים וחזרה למרחב־לימוד', x: 47.2, y: 89.9, width: 16.6, height: 5.4 },
+  ],
+  // 3200x1800 group-creation form, bottom: the save button.
+  '103-group-form-save': [
+    { id: 'save', label: 'שמירת שינויים', x: 63.6, y: 85.5, width: 8.8, height: 5.7 },
+  ],
+  // 3200x1800 „החלפת תפקיד ל..." screen: the role buttons.
+  '104-switch-role-choice': [
+    { id: 'student-role', label: 'תלמיד', x: 89.5, y: 47.8, width: 5.6, height: 5.5 },
+  ],
+  // 3200x1800 the space as a student sees it: the current-role indicator.
+  '105-student-view-space': [
+    { id: 'role-indicator', label: 'תלמיד — סימון התפקיד הנוכחי', x: 0.5, y: 1.4, width: 5.8, height: 4 },
+  ],
+  // 3200x1800 user menu while the role is switched: the way back.
+  '106-return-to-teacher-role': [
+    { id: 'return-role', label: 'חזרה לתפקיד הרגיל שלי', x: 0.8, y: 21, width: 15.5, height: 4.2 },
+  ],
   // 3200x1800 space home page: the real button that copies the space address.
   '02-copy-space-link': [
     { id: 'copy-space-link', label: 'העתקת כתובת מרחב הלמידה ללוח', x: 61.4, y: 52.4, width: 15.3, height: 5.6 },
@@ -252,6 +296,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1420 participants page (cropped above the table for privacy): the menu
   // that leads to the enrolment methods.
   '25-participants-nav': [
+    { id: 'groups-entry', label: 'קבוצות', x: 86.5, y: 62.1, width: 9.7, height: 5.2 },
     { id: 'users-menu', label: 'תפריט „משתמשים רשומים”', x: 82.6, y: 30.2, width: 13, height: 6.8 },
     { id: 'enrol-methods-entry', label: 'שיטות שיוך לתפקיד', x: 84.6, y: 46.8, width: 10.3, height: 5.4 },
   ],
@@ -260,6 +305,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'pass-grade', label: 'ציון "עובר"', x: 50.1, y: 64.9, width: 13.7, height: 5.6 },
     { id: 'unlimited-attempts', label: 'מספר נסיונות מותרים — אין הגבלה', x: 56.2, y: 71.2, width: 7.7, height: 5.6 },
     { id: 'grading-method', label: 'שיטת מתן ציונים — הציון הגבוה ביותר', x: 53.1, y: 77.5, width: 10.8, height: 5.6 },
+    { id: 'timing', label: 'תזמון — תחילת הבוחן וסיום הבוחן', x: 20.5, y: 15.2, width: 58.5, height: 33.5 },
   ],
   // 3200x1800 quiz settings, „התנהגות השאלה" area: the feedback-mechanism field.
   '87-quiz-settings-behaviour': [
@@ -312,6 +358,48 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1800 course page in edit mode: the „מוסתר בפני תלמידים" badge.
   '99-hidden-item': [
     { id: 'hidden-badge', label: 'מוסתר בפני תלמידים', x: 66.4, y: 42.4, width: 10.1, height: 4.2 },
+  ],
+  '22-wizard-step2': [
+    { id: 'type-cards', label: 'תוכן מוכן (שאוכל לערוך) | שכפול תוכן שלי (ללא תלמידים) | פיתוח תכנים במרחב למידה', x: 15.5, y: 30.4, width: 69, height: 46.5 },
+    { id: 'next', label: 'הבא', x: 3.5, y: 79.8, width: 5.3, height: 6.2 },
+  ],
+  '40-wizard-notification-update': [
+    { id: 'bell', label: 'סמל הפעמון — התראות', x: 14.4, y: 1.4, width: 2.5, height: 3.6 },
+    { id: 'created-notice', label: 'המערכת הצליחה ליצור את המרחב הלמידה שלך: מתמטיקה ח\'2 - יניב רז - (מתמטיקה לחט"ב', x: 15.2, y: 9.8, width: 23.3, height: 4.9 },
+  ],
+  '11-notifications': [
+    { id: 'bell', label: 'סמל הפעמון — התראות', x: 18.6, y: 1.7, width: 2.7, height: 4.3 },
+  ],
+  '12-messages': [
+    { id: 'messages-icon', label: 'סמל בועת ההודעות — הודעות', x: 16, y: 1.7, width: 2.5, height: 4.5 },
+  ],
+  '57-student-space-home': [
+    { id: 'grades-tab', label: 'ציונים', x: 58.7, y: 21.2, width: 3.6, height: 3.2 },
+  ],
+  '64-quiz-question': [
+    { id: 'next-page', label: 'העמוד הבא', x: 21.8, y: 52.2, width: 7.4, height: 6.4 },
+    { id: 'save-finish', label: 'שמירה וסיום', x: 12.8, y: 33.9, width: 6.1, height: 3.5 },
+  ],
+  '60-student-grade-report': [
+    { id: 'task-grade-row', label: 'בוחן — פרופורציה - שליטה (תרגול 2)', x: 15.8, y: 61.6, width: 60, height: 7 },
+  ],
+  '16-activity-chooser': [
+    { id: 'type-card', label: 'בוחן', x: 50, y: 23.8, width: 8.9, height: 14.1 },
+  ],
+  '31-updates-drawer': [
+    { id: 'updates-row', label: 'נוספו 24 עדכונים ברכיבים', x: 3.4, y: 86.1, width: 26.9, height: 6.4 },
+  ],
+  '32-updates-list-expanded': [
+    { id: 'drag-handle', label: 'סמל ארבעת החצים — ידית גרירה של פריט עדכון', x: 26, y: 46, width: 3.4, height: 4.3 },
+  ],
+  '83-import-source': [
+    { id: 'source-row', label: 'מתמטיקה ח\'2 - יניב רז - (מתמטיקה לחט"ב ז\' – 2027) - תשפ"ז — שורת בחירת מרחב המ', x: 22.9, y: 63.8, width: 52.9, height: 10.9 },
+  ],
+  '84-import-select': [
+    { id: 'select-all', label: 'הכל / אין', x: 88.6, y: 59.5, width: 5.2, height: 3.3 },
+  ],
+  '85-import-confirm': [
+    { id: 'import-table', label: 'טבלת „יבוא הגדרות" — סימוני ✓/✗ לכל הגדרה', x: 21.6, y: 52.8, width: 73.5, height: 45.2 },
   ],
 });
 

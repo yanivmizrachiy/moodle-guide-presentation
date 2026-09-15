@@ -167,7 +167,7 @@ describe('screenshots', () => {
 
   it('screenshot filenames follow the naming convention', () => {
     for (const name of screenshotFiles) {
-      expect(name).toMatch(/^\d{2}-[a-z0-9-]+\.(?:avif|webp|jpe?g|png)$/);
+      expect(name).toMatch(/^\d{2,3}-[a-z0-9-]+\.(?:avif|webp|jpe?g|png)$/);
     }
   });
 });

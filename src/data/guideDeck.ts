@@ -363,13 +363,22 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'לוחצים על „הבא” כדי להמשיך.',
+      text: 'לוחצים על „הבא”.',
       screenshot: { src: '46-open-space-form.png', caption: 'טופס שלב 1 לאחר מילוי הפרטים.', hotspotIds: ['next'] },
     },
     {
       text: 'בוחרים את סוג מרחב הלמידה.',
       screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
     },
+    { text: 'לוחצים על „הבא”.' },
+    {
+      text: 'בוחרים את תוכן מרחב הלמידה.',
+      screenshot: {
+        src: '34-wizard-ready-content-search.png',
+        caption: 'שלב „תוכן מרחב הלמידה” — בחירת פרויקט ותוכן מוכן.',
+      },
+    },
+    { text: 'לוחצים על „הבא”.' },
     {
       text: 'לוחצים על „אישור”.',
       screenshot: { src: '24-wizard-step4.png', caption: 'שלב „אישור וסיום” עם כפתור „אישור”.', hotspotIds: ['confirm-button'] },
@@ -533,12 +542,13 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'open-space-type',
   eyebrow: 'פתיחת מרחב למידה · שלב 7',
   title: 'איזה סוג מרחב בוחרים?',
-  summary: 'האשף מציג אפשרויות כמו מרחב ריק, „שכפול תוכן שלי” ו„תוכן מוכן”. כל אפשרות ממשיכה למסלול המתאים לה.',
+  summary: 'כל אפשרות ממשיכה למסלול המתאים לה.',
   flow: [
     {
-      text: 'בוחרים את סוג מרחב הלמידה.',
+      text: 'בוחרים „תוכן מוכן”, „שכפול תוכן שלי” או „פיתוח תכנים במרחב למידה ריק”.',
       screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
     },
+    { text: 'לוחצים על „הבא”.' },
   ],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['סוג מרחב', 'מרחב ריק', 'שכפול תוכן שלי', 'תוכן מוכן'],
@@ -548,15 +558,26 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'open-space-content',
   eyebrow: 'פתיחת מרחב למידה · שלב 8',
   title: 'איך בוחרים תוכן מוכן למרחב?',
-  summary: 'לאחר בחירת „תוכן מוכן” מוצגים מקצועות ופרויקטים זמינים. בוחרים את התוכן שמתאים למרחב.',
   flow: [
     {
-      text: 'בוחרים את התוכן שמתאים למרחב.',
+      text: 'בוחרים „תוכן מוכן”.',
+      screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
+    },
+    {
+      text: 'בוחרים פרויקט מתוך „בחר פרויקט”.',
       screenshot: {
         src: '34-wizard-ready-content-search.png',
         caption: 'שלב „תוכן מרחב הלמידה” — בחירת פרויקט ותוכן מוכן.',
       },
     },
+    {
+      text: 'בוחרים את פריט התוכן מתוך „בחרו תוכן מוכן”.',
+      screenshot: {
+        src: '34-wizard-ready-content-search.png',
+        caption: 'שלב „תוכן מרחב הלמידה” — בחירת פרויקט ותוכן מוכן.',
+      },
+    },
+    { text: 'לוחצים על „הבא”.' },
   ],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['בחירת תוכן', 'תוכן מוכן', 'מקצועות', 'פרויקטים'],
@@ -594,9 +615,15 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'open-space-created-notification',
   eyebrow: 'פתיחת מרחב למידה · שלב 11',
   title: 'איך יודעים שהמרחב נוצר?',
-  summary: 'לאחר שהמרחב נוצר, מתקבלת התראה במודל שמאשרת שהמערכת הצליחה ליצור את מרחב הלמידה.',
-  screenshots: [
-    { src: '40-wizard-notification-update.png', caption: 'פעמון ההתראות במודל עם ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.' },
+  flow: [
+    { text: 'לוחצים על פעמון ההתראות.' },
+    {
+      text: 'רואים את ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
+      screenshot: {
+        src: '40-wizard-notification-update.png',
+        caption: 'פעמון ההתראות במודל עם ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
+      },
+    },
   ],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['הודעה', 'יצירת מרחב', 'סיום יצירה'],
@@ -675,12 +702,13 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.' },
     },
     {
-      text: 'מחפשים את מרחב הלמידה שרוצים לשכפל.',
+      text: 'בוחרים את מרחב הלמידה שרוצים לשכפל מתוך הרשימה.',
       screenshot: {
         src: '36-wizard-clone-my-content.png',
         caption: 'רשימת המרחבים לשכפול — שם מרחב הלמידה, בית ספר ושנת לימודים.',
       },
     },
+    { text: 'לוחצים על „הבא”.' },
   ],
   link: { href: MOODLE_WIZARD, label: 'פתיחת אשף יצירת מרחב' },
   keywords: ['שכפול תוכן שלי', 'שכפול מרחב'],
@@ -993,7 +1021,19 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'קבוצות',
   title: 'איך מחלקים תלמידים לקבוצות?',
   flow: [
-    { text: 'בעמוד „משתתפים” בוחרים „קבוצות”.' },
+    {
+      text: 'לוחצים על „משתתפים” בתפריט המרחב.',
+      screenshot: {
+        src: '90-course-tabs.png',
+        caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.',
+        hotspotIds: ['participants-tab'],
+      },
+    },
+    {
+      text: 'פותחים את התפריט „משתמשים רשומים”.',
+      screenshot: { src: '47-participants-list.png', caption: 'עמוד „משתתפים” — רשימת המשתתפים במרחב.' },
+    },
+    { text: 'בוחרים „קבוצות”.' },
     {
       text: 'לוחצים „יצירת קבוצה”.',
       screenshot: {
@@ -1010,7 +1050,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['group-name'],
       },
     },
-    { text: 'לוחצים „שמירת השינויים”.' },
+    {
+      text: 'לוחצים „שמירת שינויים”.',
+      screenshot: {
+        src: '103-group-form-save.png',
+        caption: 'סוף טופס הקבוצה — הכפתור „שמירת שינויים”.',
+        hotspotIds: ['save'],
+      },
+    },
     { text: 'בוחרים את הקבוצה ברשימת הקבוצות.' },
     {
       text: 'לוחצים „הוספת/הסרת משתתפים מקבוצה”.',
@@ -1045,7 +1092,21 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'קבוצות',
   title: 'איך מורה רואה נתונים של קבוצה מסוימת?',
   flow: [
-    { text: 'פותחים את „בחירת קבוצות נראות” בדוח הציונים.' },
+    {
+      text: 'לוחצים על „ציונים” בתפריט המרחב.',
+      screenshot: {
+        src: '90-course-tabs.png',
+        caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.',
+        hotspotIds: ['grades-tab'],
+      },
+    },
+    {
+      text: 'פותחים את „בחירת קבוצות נראות” בדוח הציונים.',
+      screenshot: {
+        src: '65-gradebook-grader.png',
+        caption: 'דוח הציונים — שורה לכל תלמיד ועמודה לכל פריט ציון, עם חיפוש ובחירת קבוצות.',
+      },
+    },
     {
       text: 'בוחרים את הקבוצה מהרשימה.',
       screenshot: {
@@ -1127,7 +1188,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'edit-mode',
   eyebrow: 'עריכה',
   title: 'מהו מצב עריכה במרחב הלמידה ומה אפשר לעשות בו?',
-  summary: 'מדליקים את מתג „עריכה” בסרגל העליון.',
   flow: [
     {
       text: 'מאתרים את מתג „מצב עריכה” בסרגל העליון.',
@@ -1305,7 +1365,22 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       text: 'בוחרים את סוג המשאב או הפעילות בבורר.',
       screenshot: { src: '16-activity-chooser.png', caption: 'בורר הפעילויות והמשאבים.' },
     },
-    { text: 'שומרים.' },
+    {
+      text: 'מזינים את שם המשאב או הפעילות בטופס ההגדרות.',
+      screenshot: {
+        src: '100-activity-settings-name.png',
+        caption: 'טופס ההגדרות של פעילות — שדה השם בראש „הגדרות כלליות”.',
+        hotspotIds: ['activity-name'],
+      },
+    },
+    {
+      text: 'לוחצים על „שמירת שינויים וחזרה למרחב־לימוד”.',
+      screenshot: {
+        src: '102-activity-settings-save.png',
+        caption: 'סוף טופס ההגדרות של פעילות — כפתורי השמירה והביטול.',
+        hotspotIds: ['save'],
+      },
+    },
   ],
   keywords: ['פעילות', 'משאב', 'קובץ', 'מטלה', 'בוחן'],
   requiresEditMode: true,
@@ -1363,6 +1438,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'מחיקה מסירה את המשימה גם מתצוגת המורה; זו אינה הסתרה.',
   warning: 'יש להבדיל בין הסתרה למחיקה.',
   flow: [
+    {
+      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      screenshot: {
+        src: '04-topbar-edit-on.png',
+        caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.',
+        hotspotIds: ['edit-toggle'],
+      },
+    },
     {
       text: 'פותחים את תפריט ⋮ של הפעילות.',
       screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „מחיקה” בתחתית התפריט.' },
@@ -1431,7 +1514,15 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך גוררים משימה ממקום למקום?',
   flow: [
     {
-      text: 'במצב עריכה פותחים את תפריט שלוש הנקודות של המשימה.',
+      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      screenshot: {
+        src: '04-topbar-edit-on.png',
+        caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.',
+        hotspotIds: ['edit-toggle'],
+      },
+    },
+    {
+      text: 'פותחים את תפריט ⋮ של המשימה.',
       screenshot: { src: '80-activity-menu-move.png', caption: 'תפריט המשימה במצב עריכה — „העברה” בין הפעולות.' },
     },
     {
@@ -1469,14 +1560,21 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך בודקים את המרחב כתלמיד?',
   flow: [
     {
-      text: 'מכבים את „מצב עריכה”.',
+      text: 'מכבים את מתג „מצב עריכה” בסרגל העליון.',
       screenshot: {
         src: '03-topbar-edit-off.png',
         caption: 'מתג „מצב עריכה” בסרגל העליון, במצב כבוי.',
         hotspotIds: ['edit-toggle'],
       },
     },
-    { text: 'פותחים את תפריט המשתמש.' },
+    {
+      text: 'לוחצים על שם המשתמש בסרגל העליון.',
+      screenshot: {
+        src: '09-user-menu.png',
+        caption: 'תפריט המשתמש — מכאן מגיעים להחלפת תפקיד.',
+        hotspotIds: ['user-button'],
+      },
+    },
     {
       text: 'בוחרים „החלפת תפקיד ל...”.',
       screenshot: {
@@ -1485,9 +1583,37 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['switch-role'],
       },
     },
-    { text: 'בוחרים „תלמיד”.' },
-    { text: 'בודקים את המרחב לפני ששולחים קישור או משימה.' },
-    { text: 'חוזרים לתפקיד הרגיל.' },
+    {
+      text: 'בוחרים „תלמיד”.',
+      screenshot: {
+        src: '104-switch-role-choice.png',
+        caption: 'מסך „החלפת תפקיד ל...” — הכפתורים „תלמיד” ו„אורח”.',
+        hotspotIds: ['student-role'],
+      },
+    },
+    {
+      text: 'בודקים את המרחב לפני ששולחים קישור או משימה.',
+      screenshot: {
+        src: '105-student-view-space.png',
+        caption: 'המרחב בתצוגת תלמיד — בסרגל העליון מופיע התפקיד הנוכחי „תלמיד”.',
+        hotspotIds: ['role-indicator'],
+      },
+    },
+    {
+      text: 'לוחצים שוב על שם המשתמש בסרגל העליון.',
+      screenshot: {
+        src: '106-return-to-teacher-role.png',
+        caption: 'תפריט המשתמש בתצוגת תלמיד — „חזרה לתפקיד הרגיל שלי”.',
+      },
+    },
+    {
+      text: 'בוחרים „חזרה לתפקיד הרגיל שלי”.',
+      screenshot: {
+        src: '106-return-to-teacher-role.png',
+        caption: 'תפריט המשתמש בתצוגת תלמיד — „חזרה לתפקיד הרגיל שלי”.',
+        hotspotIds: ['return-role'],
+      },
+    },
   ],
   warning: 'לבדיקת הרשמה או הרשאות מיוחדות משתמשים בחשבון בדיקה מאושר.',
   keywords: ['תצוגת תלמיד', 'החלפת תפקיד', 'בדיקה'],
@@ -1498,7 +1624,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'כלים חיצוניים',
   title: 'איך מגיעים לכלי או שירות LTI חיצוני?',
   flow: [
-    { text: 'פותחים „אפשרויות נוספות”.' },
+    {
+      text: 'לוחצים על „אפשרויות נוספות” בתפריט המרחב.',
+      screenshot: { src: '08-more-options.jpg', caption: 'תפריט „אפשרויות נוספות” כולל ניהול כלי LTI.' },
+    },
     {
       text: 'בוחרים „כלי או שירות LTI חיצוני”.',
       screenshot: { src: '08-more-options.jpg', caption: 'תפריט „אפשרויות נוספות” כולל ניהול כלי LTI.', hotspotIds: ['lti'] },
@@ -1524,7 +1653,15 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איפה פותחים את תפריט יחידת ההוראה?',
   flow: [
     {
-      text: 'פותחים את תפריט שלוש הנקודות של היחידה כדי להגיע לפעולות היחידה.',
+      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      screenshot: {
+        src: '04-topbar-edit-on.png',
+        caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.',
+        hotspotIds: ['edit-toggle'],
+      },
+    },
+    {
+      text: 'לוחצים על תפריט שלוש הנקודות של יחידת ההוראה.',
       screenshot: { src: '07-unit-menu.jpg', caption: 'תפריט יחידת הוראה במצב עריכה.', hotspotIds: ['unit-kebab'] },
     },
   ],
@@ -1570,12 +1707,41 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'import-task',
   eyebrow: 'ייבוא',
   title: 'איך מייבאים משימה ממרחב אחר?',
-  summary: 'נכנסים ל„שימוש חוזר בתכנים”, בוחרים מקור, משימה ויעד ומאשרים.',
-  screenshots: [
-    { src: '96-more-options-menu.png', caption: 'תפריט „אפשרויות נוספות” פתוח — „שימוש חוזר בתכנים” ברשימה.', hotspotIds: ['more-menu'] },
-    { src: '83-import-source.png', caption: 'אשף הייבוא — בחירת מרחב־הלימוד שממנו מייבאים מתוך רשימת המרחבים.' },
-    { src: '84-import-select.png', caption: '„הגדרות בחירה” — סימון הפריטים לייבוא מהמרחב שנבחר.' },
-    { src: '85-import-confirm.png', caption: '„אישור ותצוגה” — סקירת מה ייובא, לפני שלב „ביצוע יבוא”.' },
+  flow: [
+    {
+      text: 'לוחצים על „אפשרויות נוספות” בתפריט המרחב.',
+      screenshot: {
+        src: '96-more-options-menu.png',
+        caption: 'תפריט „אפשרויות נוספות” פתוח — „שימוש חוזר בתכנים” ברשימה.',
+        hotspotIds: ['more-options-tab'],
+      },
+    },
+    {
+      text: 'בוחרים „שימוש חוזר בתכנים”.',
+      screenshot: {
+        src: '96-more-options-menu.png',
+        caption: 'תפריט „אפשרויות נוספות” פתוח — „שימוש חוזר בתכנים” ברשימה.',
+        hotspotIds: ['more-menu'],
+      },
+    },
+    {
+      text: 'בוחרים את מרחב־הלימוד שממנו מייבאים.',
+      screenshot: {
+        src: '83-import-source.png',
+        caption: 'אשף הייבוא — בחירת מרחב־הלימוד שממנו מייבאים מתוך רשימת המרחבים.',
+      },
+    },
+    { text: 'עוברים לשלב „הגדרות התחלתיות”.' },
+    {
+      text: 'מסמנים את הפריטים לייבוא בשלב „הגדרות בחירה”.',
+      screenshot: { src: '84-import-select.png', caption: '„הגדרות בחירה” — סימון הפריטים לייבוא מהמרחב שנבחר.' },
+    },
+    {
+      text: 'בודקים את שלב „אישור ותצוגה”.',
+      screenshot: { src: '85-import-confirm.png', caption: '„אישור ותצוגה” — סקירת מה ייובא, לפני שלב „ביצוע יבוא”.' },
+    },
+    { text: 'מבצעים את שלב „ביצוע יבוא”.' },
+    { text: 'רואים את שלב „הושלם”.' },
   ],
   keywords: ['ייבוא', 'שימוש חוזר בתכנים', 'מרחב אחר'],
   // M18 still needs-capture: steps 1–4 of the import wizard are real captures;
@@ -1597,11 +1763,25 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'content-updates',
   eyebrow: 'עדכונים למרחב',
   title: 'איך מכניסים עדכון למרחב?',
-  summary: 'מפעילים עריכה, פותחים את רשימת העדכונים וגוררים את העדכון ליחידה המתאימה.',
-  steps: ['מפעילים עריכה.', 'פותחים את פאנל העדכונים.', 'תופסים את ידית הגרירה.', 'גוררים ליחידה המתאימה.'],
-  screenshots: [
-    { src: '31-updates-drawer.jpg', caption: 'פאנל העדכונים.' },
-    { src: '32-updates-list-expanded.jpg', caption: 'רשימת העדכונים וידית הגרירה.' },
+  flow: [
+    {
+      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      screenshot: {
+        src: '04-topbar-edit-on.png',
+        caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.',
+        hotspotIds: ['edit-toggle'],
+      },
+    },
+    { text: 'פותחים את פאנל העדכונים של המרחב.' },
+    {
+      text: 'לוחצים על „נוספו 24 עדכונים ברכיבים”.',
+      screenshot: { src: '31-updates-drawer.jpg', caption: 'פאנל העדכונים.' },
+    },
+    {
+      text: 'תופסים את ידית הגרירה שליד העדכון.',
+      screenshot: { src: '32-updates-list-expanded.jpg', caption: 'רשימת העדכונים וידית הגרירה.' },
+    },
+    { text: 'גוררים את העדכון ליחידת ההוראה המתאימה.' },
   ],
   keywords: ['עדכונים', 'גרירה', 'תוכן ארצי'],
   requiresEditMode: true,
@@ -1696,7 +1876,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך תלמיד מתחיל לענות על משימה במרחב?',
   flow: [
     {
-      text: 'פותחים את המשימה.',
+      text: 'נכנסים למרחב־הלימוד.',
+      screenshot: { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד.' },
+    },
+    {
+      text: 'לוחצים על המשימה ביחידה.',
       screenshot: { src: '58-student-space-topic.png', caption: 'המשימה ביחידה — „ממתין לביצוע”.' },
     },
     {
@@ -1704,11 +1888,12 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '59-quiz-after-enrol.png', caption: 'עמוד הבוחן בתצוגת תלמיד עם „התחלת ניסיון מענה”.', hotspotIds: ['start-attempt'] },
     },
     {
-      text: 'עונים על השאלות, עמוד אחרי עמוד.',
+      text: 'מזינים את התשובה בשאלה.',
       screenshot: { src: '64-quiz-question.png', caption: 'עמוד שאלה בבוחן — הזנת התשובה ו„העמוד הבא”.' },
     },
-    { text: 'בסיום לוחצים „שמירה וסיום”.' },
-    { text: 'לוחצים „הגשה סופית”.' },
+    { text: 'לוחצים על „העמוד הבא”.' },
+    { text: 'בסיום לוחצים על „שמירה וסיום”.' },
+    { text: 'לוחצים על „הגשה סופית”.' },
     {
       text: 'רואים את „סקירת ניסיון מענה” לאחר ההגשה הסופית.',
       screenshot: { src: '55-quiz-review.png', caption: '„סקירת ניסיון מענה” לאחר ההגשה הסופית.' },
@@ -1723,16 +1908,36 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מגדירים אם תלמיד יכול לתקן את התשובות שלו?',
   flow: [
     {
-      text: 'בהגדרות הבוחן קובעים „מספר נסיונות מותרים”.',
+      text: 'מפעילים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.', hotspotIds: ['edit-toggle'] },
+    },
+    {
+      text: 'לוחצים על תפריט ⋮ של הבוחן.',
+      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.' },
+    },
+    {
+      text: 'לוחצים על „הגדרות”.',
+      screenshot: {
+        src: '42-activity-menu.png',
+        caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.',
+        hotspotIds: ['settings'],
+      },
+    },
+    {
+      text: 'קובעים את „מספר נסיונות מותרים”.',
       screenshot: { src: '86-quiz-settings-grades.png', caption: 'אזור „ציונים” בהגדרות הבוחן: „ציון עובר”, „מספר נסיונות מותרים” ו„שיטת מתן ציונים”.', hotspotIds: ['unlimited-attempts'] },
     },
     {
-      text: 'בהגדרות הבוחן קובעים את „מנגנון המשוב בשאלות”.',
+      text: 'קובעים את „מנגנון המשוב בשאלות”.',
       screenshot: {
         src: '87-quiz-settings-behaviour.png',
         caption: 'אזור „התנהגות השאלה” בהגדרות הבוחן — השדה „מנגנון המשוב בשאלות”.',
         hotspotIds: ['question-behaviour'],
       },
+    },
+    {
+      text: 'לוחצים על „שמירת שינויים וחזרה למרחב־לימוד”.',
+      screenshot: { src: '88-quiz-settings-save.png', caption: 'סוף טופס ההגדרות — כפתורי השמירה והביטול.', hotspotIds: ['save'] },
     },
     {
       text: 'בודקים בתצוגת התלמיד אם ניתן לנסות שוב.',
@@ -1766,10 +1971,30 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'student-result',
   eyebrow: 'תוצאה',
   title: 'איך תלמיד יודע אם עבר או נכשל במשימה?',
-  summary: 'לאחר ההגשה התלמיד רואה את מצב הביצוע ואת הציון שלו מול ציון העובר.',
-  screenshots: [
-    { src: '56-quiz-retry.png', caption: '„בוצע” בירוק מציין שהמשימה הוגשה; „נכשל” באדום מציין שהציון לא הגיע לציון העובר — בדוגמה הזו התלמיד נכשל.' },
-    { src: '60-student-grade-report.png', caption: '„דוח ציוני התלמיד במרחב־לימוד זה” — „ציונים” בתפריט התלמיד.' },
+  flow: [
+    {
+      text: 'נכנסים למרחב־הלימוד.',
+      screenshot: { src: '57-student-space-home.png', caption: 'דף הבית של המרחב בתצוגת תלמיד.' },
+    },
+    {
+      text: 'לוחצים על המשימה.',
+      screenshot: { src: '58-student-space-topic.png', caption: 'המשימה ביחידה — „ממתין לביצוע”.' },
+    },
+    {
+      text: 'רואים בעמוד המשימה „בוצע” בירוק או „נכשל” באדום מול ציון העובר.',
+      screenshot: {
+        src: '56-quiz-retry.png',
+        caption: '„בוצע” בירוק מציין שהמשימה הוגשה; „נכשל” באדום מציין שהציון לא הגיע לציון העובר — בדוגמה הזו התלמיד נכשל.',
+      },
+    },
+    { text: 'לוחצים על „ציונים” בתפריט התלמיד.' },
+    {
+      text: 'רואים ב„דוח ציוני התלמיד במרחב־לימוד זה” את הציון במשימה.',
+      screenshot: {
+        src: '60-student-grade-report.png',
+        caption: '„דוח ציוני התלמיד במרחב־לימוד זה” — „ציונים” בתפריט התלמיד.',
+      },
+    },
   ],
   keywords: ['עבר', 'נכשל', 'ירוק', 'אדום', 'תוצאה'],
   status: 'ready',
@@ -1778,14 +2003,17 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'quiz-settings',
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים שתלמיד יוכל לנסות לפתור את המשימה שוב ושוב?',
-  summary: 'בהגדרות הבוחן בוחרים את מספר הניסיונות המותרים.',
   flow: [
     {
       text: 'מפעילים את מצב העריכה.',
       screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.', hotspotIds: ['edit-toggle'] },
     },
     {
-      text: 'פותחים את הגדרות הבוחן.',
+      text: 'לוחצים על תפריט ⋮ של הבוחן.',
+      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.' },
+    },
+    {
+      text: 'לוחצים על „הגדרות”.',
       screenshot: {
         src: '42-activity-menu.png',
         caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.',
@@ -1814,10 +2042,17 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'pass-grade',
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים לתלמיד מהו ציון עובר במשימה?',
-  summary: 'בהגדרות הבוחן, באזור הציון, קובעים את הערך בשדה „ציון "עובר"”.',
   flow: [
     {
-      text: 'פותחים את הגדרות הבוחן.',
+      text: 'מפעילים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.', hotspotIds: ['edit-toggle'] },
+    },
+    {
+      text: 'לוחצים על תפריט ⋮ של הבוחן.',
+      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.' },
+    },
+    {
+      text: 'לוחצים על „הגדרות”.',
       screenshot: {
         src: '42-activity-menu.png',
         caption: 'תפריט ⋮ של פעילות במצב עריכה — „הגדרות” בראש התפריט.',
@@ -1949,6 +2184,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'ביצועי תלמיד',
   title: 'איך רואים כמה פעמים תלמיד ניסה לפתור משימה?',
   flow: [
+    { text: 'לוחצים על הבוחן במרחב־הלימוד.' },
     {
       text: 'בעמוד הבוחן רואים את „ניסיונות מענה”.',
       screenshot: {
@@ -1957,7 +2193,13 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['attempts'],
       },
     },
-    { text: 'לוחצים „תוצאות”.' },
+    {
+      text: 'לוחצים על „תוצאות”.',
+      screenshot: {
+        src: '68-quiz-view-teacher.png',
+        caption: 'עמוד הבוחן למורה — „ניסיונות מענה: 1”, שיטת מתן הציון וציון עובר.',
+      },
+    },
     {
       text: 'בטבלה רואים לכל תלמיד את הניסיונות, מועדי ההתחלה והסיום והציון של כל ניסיון.',
       screenshot: { src: '67-quiz-attempts-report.png', caption: 'דוח „תוצאות” — שורת ניסיון לכל תלמיד עם מצב, זמנים וציון.' },
@@ -2008,11 +2250,18 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מורידים דוח ציונים לכיתה?',
   flow: [
     {
-      text: 'פותחים „ציונים”.',
+      text: 'לוחצים על „ציונים” בתפריט המרחב.',
+      screenshot: {
+        src: '90-course-tabs.png',
+        caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.',
+        hotspotIds: ['grades-tab'],
+      },
+    },
+    {
+      text: 'רואים את דוח הציונים.',
       screenshot: {
         src: '65-gradebook-grader.png',
         caption: 'דוח הציונים בלשונית „ציונים” במרחב — נקודת המוצא ל„יצוא”.',
-        hotspotIds: ['grades-tab'],
       },
     },
     { text: 'בוחרים „יצוא”.' },
@@ -2026,7 +2275,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     { text: 'מסמנים את הפריטים הנחוצים.' },
     {
-      text: 'לוחצים „הורדה”.',
+      text: 'לוחצים על „הורדה”.',
       screenshot: {
         src: '66-gradebook-export.png',
         caption: 'מסך היצוא — בחירת הפורמט וסימון פריטי הציון.',
@@ -2083,10 +2332,17 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'notifications',
   eyebrow: 'התראות',
   title: 'איפה רואים התראות ומסרים?',
-  summary: 'הפעמון פותח התראות ובועת המסרים פותחת שיחות.',
-  screenshots: [
-    { src: '11-notifications.jpg', caption: 'פאנל ההתראות.' },
-    { src: '12-messages.jpg', caption: 'פאנל המסרים.' },
+  flow: [
+    { text: 'לוחצים על סמל הפעמון בסרגל העליון.' },
+    {
+      text: 'רואים את פאנל ההתראות.',
+      screenshot: { src: '11-notifications.jpg', caption: 'פאנל ההתראות.' },
+    },
+    { text: 'לוחצים על סמל בועת המסרים בסרגל העליון.' },
+    {
+      text: 'רואים את פאנל המסרים.',
+      screenshot: { src: '12-messages.jpg', caption: 'פאנל המסרים.' },
+    },
   ],
   keywords: ['התראות', 'מסרים', 'פעמון'],
   status: 'ready',
@@ -2106,7 +2362,60 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'תיקון',
   title: 'מה עושים כשפעילות אינה עובדת לתלמיד?',
   summary: 'בודקים לפי סדר קבוע לפני שמוחקים או משנים הגדרות.',
-  steps: ['מוודאים שהתלמיד במרחב הנכון.', 'בודקים זמינות, תאריכים וקבוצה.', 'בודקים בתצוגת תלמיד.', 'אם הבעיה נמשכת — פונים למנהל המודל.'],
+  flow: [
+    {
+      text: 'מוודאים שהתלמיד נמצא במרחב הנכון ולא ב„למידה עצמית”.',
+      screenshot: {
+        src: '30-student-mycourses-selflearning.jpg',
+        caption: 'מרחב המורה לצד מרחב „למידה עצמית” — המסומן הוא מרחב הלימוד העצמי.',
+        hotspotIds: ['self-learning'],
+      },
+    },
+    {
+      text: 'בודקים שהפריט אינו נושא את התג „מוסתר בפני תלמידים”.',
+      screenshot: {
+        src: '99-hidden-item.png',
+        caption:
+          'תגית „מוסתר בפני תלמידים” על פריט במרחב, לצד תגית „זמין לסטודנטים, אך אינו מוצג בעמוד הראשי של הקורס”.',
+        hotspotIds: ['hidden-badge'],
+      },
+    },
+    {
+      text: 'בודקים בהגדרות הפעילות את „זמינות” ואת „הגבלת גישה”.',
+      screenshot: {
+        src: '101-activity-settings-access.png',
+        caption: 'בהגדרות הפעילות: השדה „זמינות” ואזור „הגבלת גישה” עם „הוספת הגבלה”.',
+        hotspotIds: ['add-restriction'],
+      },
+    },
+    {
+      text: 'בודקים את תאריכי הפעילות.',
+      screenshot: {
+        src: '86-quiz-settings-grades.png',
+        caption: 'אזור „תזמון” בהגדרות הבוחן — „תחילת הבוחן” ו„סיום הבוחן”.',
+        hotspotIds: ['timing'],
+      },
+    },
+    { text: 'בודקים את שיוך התלמיד לקבוצה.' },
+    {
+      text: 'פותחים את תפריט המשתמש.',
+      screenshot: {
+        src: '09-user-menu.png',
+        caption: 'תפריט המשתמש — מכאן מגיעים להחלפת תפקיד.',
+        hotspotIds: ['user-button'],
+      },
+    },
+    {
+      text: 'בוחרים „החלפת תפקיד ל...”.',
+      screenshot: {
+        src: '09-user-menu.png',
+        caption: 'תפריט המשתמש — מכאן מגיעים להחלפת תפקיד.',
+        hotspotIds: ['switch-role'],
+      },
+    },
+    { text: 'בודקים את הפעילות בתצוגת התלמיד.' },
+    { text: 'אם הבעיה נמשכת — פונים למנהל המודל.' },
+  ],
   warning: 'לא מוחקים פעילות עם הגשות לפני בדיקת ההשלכות.',
   keywords: ['תיקון', 'פעילות לא עובדת', 'הרשאות'],
   status: 'ready',
