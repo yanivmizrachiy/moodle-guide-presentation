@@ -536,7 +536,6 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'למידה עצמית',
   title: 'מהו מרחב לימוד עצמי?',
   summary: 'זהו מרחב ללא מורה. התלמיד מתרגל בו עצמאית והביצועים שם אינם משויכים למרחב של המורה.',
-  points: ['ללא מורה.', 'תרגול עצמאי.', 'ביצועים שם אינם מוצגים למורה במרחב שלו.'],
   screenshots: [{ src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.' }],
   keywords: ['לימוד עצמי', 'למידה עצמית', 'מרחב אחר'],
   status: 'ready',

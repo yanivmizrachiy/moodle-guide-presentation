@@ -189,6 +189,10 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '78-unenrol-confirm-dialog': [
     { id: 'confirm-unenrol', label: 'ביטול שיוך לתפקיד בקורס', x: 34.9, y: 21.5, width: 13.1, height: 5.2 },
   ],
+  // 958x910 student my-courses: the "למידה עצמית" self-learning space card.
+  '30-student-mycourses-selflearning': [
+    { id: 'self-learning', label: 'למידה עצמית', x: 71.5, y: 50.5, width: 14, height: 5 },
+  ],
   // 3200x1800 activity edit menu: the move entry.
   '80-activity-menu-move': [
     { id: 'move-entry', label: 'העברה', x: 17.7, y: 57.6, width: 6.3, height: 4.2 },
