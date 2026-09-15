@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 // REQ-GUIDE-001/002/003: a procedure is a numbered vertical sequence whose
-// screenshots really load and whose action focus carries the red mark.
+// screenshots really load. Red focus appears only on screenshot uses that
+// explicitly request one verified hotspot.
 test.describe('flow slides and hotspots', () => {
-  test('the edit-mode flow renders ordered steps with loaded, marked screenshots', async ({ page }) => {
+  test('the edit-mode flow renders ordered steps with loaded, clean screenshots', async ({ page }) => {
     await page.goto('./?slide=edit-mode');
     const flow = page.getByRole('region', { name: 'רצף הפעולות' }).first();
     await expect(flow).toBeVisible();
@@ -22,8 +23,8 @@ test.describe('flow slides and hotspots', () => {
       expect(width, `screenshot ${index} failed to load`).toBeGreaterThan(0);
     }
 
-    // The real toggle is red-marked on both the off and on captures.
-    await expect(flow.locator('svg title', { hasText: 'מצב עריכה' })).toHaveCount(2);
+    // These screenshot uses do not explicitly request a hotspot, so they stay clean.
+    await expect(flow.locator('svg title', { hasText: 'מצב עריכה' })).toHaveCount(0);
   });
 
   test('the honest failure state never appears on published slides', async ({ page }) => {
