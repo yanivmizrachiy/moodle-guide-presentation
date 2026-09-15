@@ -1,0 +1,67 @@
+import type { ReactNode } from 'react';
+import { ChevronsDown } from 'lucide-react';
+import type { GuideFlowStep } from '@/data/guideDeck';
+import { ScreenshotCard, type LightboxState } from '@/components/guide/screenshots';
+
+/**
+ * One numbered action row — the shared visual for a step, used by both the
+ * plain steps list and the vertical flow (and, through the flow, by branch
+ * paths). One canonical implementation keeps every procedure looking alike
+ * (REQ-GUIDE-001/003).
+ */
+export function NumberedStepRow({ index, children }: { index: number; children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white/88 px-3.5 py-3 shadow-sm backdrop-blur">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-black text-white shadow-md">
+        {index + 1}
+      </span>
+      <span className="pt-1 text-sm font-black leading-relaxed text-slate-700 sm:text-base">{children}</span>
+    </div>
+  );
+}
+
+/**
+ * The vertical click-by-click procedure: numbered action, its real screen
+ * below it, and the double down-arrow to the next action (REQ-GUIDE-003).
+ * Pure data in, so a two-path branch can render one FlowSteps per path.
+ */
+export function FlowSteps({
+  idPrefix,
+  slideTitle,
+  flow,
+  onOpenScreenshot,
+  afterFirstStep,
+}: {
+  idPrefix: string;
+  slideTitle: string;
+  flow: readonly GuideFlowStep[];
+  onOpenScreenshot: (state: LightboxState) => void;
+  /** Rendered right after step 1 — the slide's link row lives there today. */
+  afterFirstStep?: ReactNode;
+}) {
+  return (
+    <ol className="grid gap-3">
+      {flow.map((step, index) => (
+        <li key={`${idPrefix}-flow-${index}`} className="grid gap-3">
+          {index > 0 && (
+            <ChevronsDown
+              aria-hidden="true"
+              className="mx-auto h-12 w-12 text-amber-500 drop-shadow-sm"
+              strokeWidth={2.6}
+            />
+          )}
+          <NumberedStepRow index={index}>{step.text}</NumberedStepRow>
+          {index === 0 && afterFirstStep}
+          {step.screenshot && (
+            <ScreenshotCard
+              screenshot={step.screenshot}
+              slideTitle={slideTitle}
+              onOpen={onOpenScreenshot}
+              hideCaption
+            />
+          )}
+        </li>
+      ))}
+    </ol>
+  );
+}

@@ -192,7 +192,7 @@
     },
     {
       "id": "P2-primitives",
-      "status": "next",
+      "status": "done",
       "title": "Extract reusable guide primitives",
       "goal": "Reduce regression risk by extracting only the recurring guide UI primitives from Guide.tsx while preserving behavior and visuals.",
       "requirements": [
@@ -236,7 +236,7 @@
     },
     {
       "id": "P3-two-paths",
-      "status": "pending",
+      "status": "next",
       "title": "Add canonical two-path guidance",
       "goal": "Add a reusable responsive visual branch for procedures that genuinely have two paths, then use it for the approved student-task and space-opening cases.",
       "requirements": [
