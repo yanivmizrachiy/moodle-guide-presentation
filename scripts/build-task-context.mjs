@@ -36,13 +36,22 @@ function extractSection(markdown, heading) {
   return lines.slice(start, end).join('\n').trim();
 }
 
-function gitLines(args) {
+function extractRequirement(markdown, id) {
+  const line = markdown.split(/\r?\n/).find((candidate) => candidate.includes(`[${id}]`));
+  return line?.trim() ?? null;
+}
+
+function gitText(args) {
   try {
-    const value = execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-    return value ? value.split(/\r?\n/) : [];
+    return execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
   } catch {
-    return [];
+    return '';
   }
+}
+
+function gitLines(args) {
+  const value = gitText(args);
+  return value ? value.split(/\r?\n/) : [];
 }
 
 const queue = readJson(queuePath);
@@ -61,6 +70,7 @@ const acceptance = Array.isArray(task.acceptance) ? task.acceptance : [];
 const checks = Array.isArray(task.checks) ? task.checks : [];
 const notes = Array.isArray(task.notes) ? task.notes : [];
 const sectionNames = Array.isArray(task.ssot_sections) ? task.ssot_sections : [];
+const requirementIds = Array.isArray(task.requirements) ? task.requirements : [];
 
 for (const relative of readFirst) {
   const absolute = path.join(root, relative);
@@ -68,6 +78,14 @@ for (const relative of readFirst) {
 }
 
 const ssot = fs.readFileSync(ssotPath, 'utf8');
+const allRequirementIds = [...ssot.matchAll(/\[(REQ-[A-Z]+-\d{3})\]/g)].map((match) => match[1]);
+const requestedRequirementIds = task.audit_all_requirements ? allRequirementIds : requirementIds;
+const canonicalRequirements = requestedRequirementIds.map((id) => {
+  const text = extractRequirement(ssot, id);
+  if (!text) die(`canonical SSOT requirement not found: ${id}`);
+  return text;
+});
+
 const sections = sectionNames.map((heading) => {
   const text = extractSection(ssot, heading);
   if (!text) die(`SSOT section not found: ${heading}`);
@@ -77,13 +95,15 @@ const sections = sectionNames.map((heading) => {
 const changed = gitLines(['status', '--short']);
 const branch = gitLines(['branch', '--show-current'])[0] ?? 'unknown';
 const head = gitLines(['rev-parse', '--short', 'HEAD'])[0] ?? 'unknown';
+const ssotHash = gitText(['hash-object', 'SSOT.md']) || 'unknown';
+const queueHash = gitText(['hash-object', 'docs/task-queue.json']) || 'unknown';
 
 const bullets = (items) => items.length ? items.map((item) => `- ${item}`).join('\n') : '- none';
 const numbered = (items) => items.length ? items.map((item, index) => `${index + 1}. ${item}`).join('\n') : '1. none';
 
 const output = `# TASK CONTEXT — generated, do not hand-edit
 
-This file is intentionally minimal. It exists to preserve full implementation quality while avoiding repeated full-repository context loading.
+This file is intentionally minimal. It preserves full implementation quality while avoiding repeated full-repository context loading.
 
 ## Active task
 
@@ -93,7 +113,13 @@ ${task.goal}
 
 ## Quality rule
 
-Do not save tokens by reducing reasoning, verification, or correctness. Save tokens only by avoiding irrelevant files, repeated explanations, and repeated repository-wide audits.
+Do not save tokens by reducing reasoning, verification, correctness, implementation quality, or necessary dependency inspection. Save tokens only by avoiding irrelevant files, repeated explanations, and repeated repository-wide audits.
+
+## Canonical requirements for this task
+
+${bullets(canonicalRequirements)}
+
+These are exact SSOT requirement lines. Do not reread the full SSOT unless it is listed under Read first or a concrete dependency/conflict requires it.
 
 ## Read first
 
@@ -119,9 +145,15 @@ ${bullets(checks)}
 
 ${bullets(notes)}
 
-## Relevant SSOT excerpts
+## Additional relevant SSOT excerpts
 
-${sections.join('\n\n---\n\n')}
+${sections.length ? sections.join('\n\n---\n\n') : 'none — use the canonical requirement lines above unless a proven dependency requires more.'}
+
+## Context provenance
+
+- SSOT hash: ${ssotHash}
+- Task queue hash: ${queueHash}
+- Requirement ids: ${requestedRequirementIds.length ? requestedRequirementIds.join(', ') : 'none'}
 
 ## Current repository state
 
@@ -132,12 +164,14 @@ ${sections.join('\n\n---\n\n')}
 ## Execution contract
 
 - Preserve owner-authored wording unless this task explicitly authorizes wording changes.
+- Never invent screenshots, hotspots, Moodle states, or missing evidence.
 - Do not perform unrelated cleanup or speculative refactors.
 - Prefer canonical shared mechanisms over duplicated local fixes when the task genuinely requires reuse.
+- Preserve existing working behavior and regression-check shared dependencies that were touched.
 - A change is not complete until the required checks pass.
 - Report only: CHANGED / VERIFIED / COMMIT / NEXT / BLOCKED. Do not repeat the SSOT or narrate the whole repository.
 `;
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, output, 'utf8');
-console.log(`Generated ${path.relative(root, outPath)} for ${task.id}.`);
+console.log(`Generated ${path.relative(root, outPath)} for ${task.id} with ${requestedRequirementIds.length} canonical requirements.`);
