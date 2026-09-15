@@ -356,12 +356,19 @@ describe('space-opening choice as a vertical flow (REQ-CONTENT-008)', () => {
     const path = twoPaths!.branch!.paths.find((candidate) => candidate.label === 'ללא קבוצת לימוד');
     const texts = (path!.flow ?? []).map((step) => step.text);
     // The enrolment continuation the owner asked for, in one source.
-    expect(texts).toContain('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.');
+    expect(texts).toContain('המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.');
+    expect(texts).toContain('המורה שולח לתלמיד את הקישור שהועתק.');
     expect(texts).toContain('התלמיד לוחץ על הכפתור „רשום אותי”.');
     // Backed by the real Moodle captures, moved here (not invented).
     const stems = (path!.flow ?? [])
       .flatMap((step) => (step.screenshot ? [stemOf(step.screenshot.src)] : []));
-    expect(stems).toEqual(['01-login', '53-student-enrol', '54-student-enrolled', '47-participants-list']);
+    expect(stems).toEqual([
+      '02-copy-space-link',
+      '01-login',
+      '53-student-enrol',
+      '54-student-enrolled',
+      '47-participants-list',
+    ]);
   });
 
   it("the 'with study group' path requests only its own card's focus", () => {
@@ -386,7 +393,8 @@ describe('add-students guidance has a single source (REQ-CONTENT-009)', () => {
     const count = (needle: string) => allStepTexts.filter((text) => text === needle).length;
     // Single source (REQ-CONTENT-009): the add-students how-to is taught once, in
     // the open-space-two-paths card — never re-taught by another slide.
-    expect(count('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.'), 'send-link step duplicated').toBe(1);
+    expect(count('המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.'), 'copy-link step duplicated').toBe(1);
+    expect(count('המורה שולח לתלמיד את הקישור שהועתק.'), 'send-link step duplicated').toBe(1);
     expect(count('התלמיד לוחץ על הכפתור „רשום אותי”.'), 'enrol step duplicated').toBe(1);
     expect(count('התלמיד רואה שההרשמה הצליחה ונכנס למרחב.'), 'success step duplicated').toBe(1);
   });

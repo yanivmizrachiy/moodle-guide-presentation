@@ -41,7 +41,7 @@ test.describe('two-path branch', () => {
     await page.goto('./?slide=open-space-two-paths');
     const withoutPath = page.getByRole('region', { name: 'ללא קבוצת לימוד' });
     const step1 = withoutPath.getByText('המרחב מתחיל ללא תלמידים.');
-    const sendLink = withoutPath.getByText('המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.');
+    const sendLink = withoutPath.getByText('המורה שולח לתלמיד את הקישור שהועתק.');
     const enrol = withoutPath.getByText('התלמיד לוחץ על הכפתור „רשום אותי”.');
     await expect(step1).toBeVisible();
     await expect(sendLink).toBeVisible();
@@ -65,7 +65,12 @@ test.describe('two-path branch', () => {
       expect(width, `capture ${index} failed to load`).toBeGreaterThan(0);
     }
 
-    // The enrol action buttons are marked red — „רשום אותי" and the success banner.
-    await expect(withoutPath.locator('svg title')).toHaveText(['רשום אותי', 'נרשמתם לקורס בהצלחה']);
+    // The action of each step is marked red — copying the space address, then
+    // „רשום אותי" and the success banner.
+    await expect(withoutPath.locator('svg title')).toHaveText([
+      'העתקת כתובת מרחב הלמידה ללוח',
+      'רשום אותי',
+      'נרשמתם לקורס בהצלחה',
+    ]);
   });
 });

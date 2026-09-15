@@ -440,7 +440,15 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         flow: [
           { text: 'המרחב מתחיל ללא תלמידים.' },
           { text: 'אפשר לצרף תלמידים למרחב גם מאוחר יותר.' },
-          { text: 'המורה שולח לתלמיד את הקישור הישיר למרחב הלימוד.' },
+          {
+            text: 'המורה לוחץ על „העתקת כתובת מרחב הלמידה ללוח”.',
+            screenshot: {
+              src: '02-copy-space-link.png',
+              caption: 'הכפתור „העתקת כתובת מרחב הלמידה ללוח” בעמוד המרחב — לחיצה מעתיקה את כתובת המרחב.',
+              hotspotIds: ['copy-space-link'],
+            },
+          },
+          { text: 'המורה שולח לתלמיד את הקישור שהועתק.' },
           {
             text: 'התלמיד פותח את הקישור ומתחבר למערכת.',
             screenshot: { src: '01-login.png', caption: 'התחברות באמצעות סיסמת משרד החינוך.' },
@@ -783,32 +791,59 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   // Single source (REQ-CONTENT-009): the student-side self-enrol continuation
   // (login → „רשום אותי” → success → רשימת המשתתפים) is taught once, in the
   // open-space-two-paths „ללא קבוצת לימוד” card. This slide keeps only its unique
-  // part — copying the space URL from the browser address bar — which is M12.
+  // part — getting the space address and sending it (REQ-CONTENT-003).
   flow: [
     {
       text: 'המורה פותח את מרחב הלמידה המדויק.',
       screenshot: { src: '10-course-page.png', caption: 'מרחב הלמידה פתוח.', hotspotIds: [] },
     },
-    // The space-URL copy step has no capture yet on purpose: proving where
-    // the space address is copied from needs a real browser-window shot
-    // (M12, distinct from M11). Truth before design — no fake address bar.
-    { text: 'מעתיק את כתובת האינטרנט של המרחב משורת הכתובת של הדפדפן.' },
+    {
+      text: 'מעתיק את כתובת האינטרנט של המרחב משורת הכתובת של הדפדפן.',
+      screenshot: {
+        src: '19-space-address-bar.png',
+        caption: 'שורת הכתובת של הדפדפן בעמוד המרחב — משם מעתיקים את כתובת המרחב.',
+        hotspotIds: ['space-url'],
+      },
+    },
+    {
+      text: 'אפשר גם ללחוץ על „העתקת כתובת מרחב הלמידה ללוח” בעמוד המרחב.',
+      screenshot: {
+        src: '02-copy-space-link.png',
+        caption: 'הכפתור „העתקת כתובת מרחב הלמידה ללוח” בעמוד המרחב — לחיצה מעתיקה את כתובת המרחב.',
+        hotspotIds: ['copy-space-link'],
+      },
+    },
     { text: 'שולח את הקישור לתלמידים.' },
   ],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['צירוף תלמידים מאוחר', 'קישור למרחב', 'הצטרפות מאוחרת', 'ללא תלמידים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M12',
+  status: 'ready',
   },
   {
   id: 'self-enrol-troubleshoot-method',
   eyebrow: 'פתרון תקלה · שיוך עצמי',
-  title: 'מה בודקים אם תלמיד לא מצליח להירשם?',
-  summary: 'במרחב שנפתח ללא קבוצת לימוד הרישום העצמי אמור להיות פעיל אוטומטית. אם תלמיד אינו מצליח להצטרף, בודקים את שיטת „שיוך עצמי (תלמיד)” ואת הגדרותיה.',
+  title: 'מה כדאי לבדוק אם תלמיד לא מצליח להירשם למרחב?',
+  summary: 'במרחב שנפתח ללא קבוצת לימוד הרישום העצמי פעיל אוטומטית.',
   flow: [
     {
       text: 'לוחצים על „משתתפים” בתפריט המרחב.',
       screenshot: { src: '90-course-tabs.png', caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.', hotspotIds: ['participants-tab'] },
+    },
+    {
+      text: 'פותחים את התפריט „משתמשים רשומים”.',
+      screenshot: {
+        src: '25-participants-nav.png',
+        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” פתוח.',
+        hotspotIds: ['users-menu'],
+      },
+    },
+    {
+      text: 'בוחרים „שיטות שיוך לתפקיד”.',
+      screenshot: {
+        src: '25-participants-nav.png',
+        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” פתוח.',
+        hotspotIds: ['enrol-methods-entry'],
+      },
     },
     {
       text: 'בודקים שסמל העין של „שיוך עצמי (תלמיד)” פתוח — כלומר השיטה פעילה.',
@@ -846,14 +881,23 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'אחרי שהתלמיד מקבל את קישור המרחב ומגיע למסך ההצטרפות, הוא משלים את הרישום למרחב.',
   flow: [
     {
-      text: 'לוחצים „רשום אותי”.',
+      text: 'המורה מעתיק את כתובת המרחב בלחיצה על „העתקת כתובת מרחב הלמידה ללוח”.',
+      screenshot: {
+        src: '02-copy-space-link.png',
+        caption: 'הכפתור „העתקת כתובת מרחב הלמידה ללוח” בעמוד המרחב — לחיצה מעתיקה את כתובת המרחב.',
+        hotspotIds: ['copy-space-link'],
+      },
+    },
+    { text: 'התלמיד פותח את הקישור שקיבל.' },
+    {
+      text: 'התלמיד לוחץ „רשום אותי”.',
       screenshot: { src: '53-student-enrol.png', caption: 'מסך התלמיד עם הכפתור „רשום אותי”.', hotspotIds: ['enrol-me'] },
     },
     {
-      text: 'רואים את ההודעה „נרשמתם לקורס בהצלחה”.',
+      text: 'התלמיד רואה את ההודעה „נרשמתם לקורס בהצלחה”.',
       screenshot: { src: '54-student-enrolled.png', caption: '„נרשמתם לקורס בהצלחה” — תצוגת התלמיד לאחר ההרשמה.', hotspotIds: ['enrolled-ok'] },
     },
-    { text: 'נכנסים למרחב.' },
+    { text: 'התלמיד נכנס למרחב.' },
   ],
   keywords: ['רשום אותי', 'קישור למרחב', 'תלמיד', 'הרשמה הצליחה'],
   status: 'ready',
@@ -1569,10 +1613,24 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'שליחת משימה',
   title: 'איך שולחים לתלמידים משימה?',
   summary: 'אפשר להפנות למיקום בתוך המרחב או לשלוח קישור ישיר למשימה.',
+  flow: [
+    {
+      text: 'פותחים את המשימה במרחב.',
+      screenshot: { src: '89-quiz-tabs-settings.png', caption: 'עמוד המשימה כפי שהמורה רואה אותו.' },
+    },
+    {
+      text: 'מעתיקים את כתובת המשימה משורת הכתובת של הדפדפן.',
+      screenshot: {
+        src: '23-task-address-bar.png',
+        caption: 'שורת הכתובת של הדפדפן בעמוד המשימה — משם מעתיקים את כתובת המשימה.',
+        hotspotIds: ['task-url'],
+      },
+    },
+    { text: 'שולחים לתלמיד את הכתובת שהועתקה.' },
+  ],
   points: ['דרך המרחב — מציינים איפה המשימה.', 'בקישור ישיר — שולחים את כתובת המשימה.'],
   keywords: ['שליחת משימה', 'קישור משימה', 'שיתוף'],
-  status: 'needs-capture',
-  missingCaptureId: 'M11',
+  status: 'ready',
   },
   {
   id: 'student-reach-task',
@@ -1616,18 +1674,21 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
               hotspotIds: [],
             },
           },
-          // The address-bar copy step has no capture yet on purpose: proving
-          // where the URL is copied from needs a real browser-window shot
-          // (M11). Truth before design — no fake address bar.
-          { text: 'מעתיק את כתובת האינטרנט של המשימה משורת הכתובת של הדפדפן.' },
+          {
+            text: 'מעתיק את כתובת האינטרנט של המשימה משורת הכתובת של הדפדפן.',
+            screenshot: {
+              src: '23-task-address-bar.png',
+              caption: 'שורת הכתובת של הדפדפן בעמוד המשימה — משם מעתיקים את כתובת המשימה.',
+              hotspotIds: ['task-url'],
+            },
+          },
           { text: 'שולח אותה לתלמיד ב-WhatsApp, בדוא"ל או בדרך אחרת.' },
         ],
       },
     ],
   },
   keywords: ['קישור ישיר', 'תלמיד מגיע למשימה', 'שליחת קישור למשימה', 'שתי דרכים'],
-  status: 'needs-capture',
-  missingCaptureId: 'M11',
+  status: 'ready',
   },
   {
   id: 'student-solve-task',

@@ -237,6 +237,24 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '82-move-activity-result': [
     { id: 'moved-activity', label: 'המשימה במיקום החדש', x: 68.7, y: 60.2, width: 5.3, height: 3.7 },
   ],
+  // 3200x1800 space home page: the real button that copies the space address.
+  '02-copy-space-link': [
+    { id: 'copy-space-link', label: 'העתקת כתובת מרחב הלמידה ללוח', x: 61.4, y: 52.4, width: 15.3, height: 5.6 },
+  ],
+  // 1616x150 browser strip: the space address in the browser address bar.
+  '19-space-address-bar': [
+    { id: 'space-url', label: 'כתובת המרחב בשורת הכתובת', x: 9.3, y: 28, width: 24.6, height: 30 },
+  ],
+  // 1616x150 browser strip: the task address in the browser address bar.
+  '23-task-address-bar': [
+    { id: 'task-url', label: 'כתובת המשימה בשורת הכתובת', x: 9.3, y: 28, width: 26.6, height: 30 },
+  ],
+  // 3200x1420 participants page (cropped above the table for privacy): the menu
+  // that leads to the enrolment methods.
+  '25-participants-nav': [
+    { id: 'users-menu', label: 'תפריט „משתמשים רשומים”', x: 82.6, y: 30.2, width: 13, height: 6.8 },
+    { id: 'enrol-methods-entry', label: 'שיטות שיוך לתפקיד', x: 84.6, y: 46.8, width: 10.3, height: 5.4 },
+  ],
   // 3200x1800 quiz settings, „ציונים" area: pass grade, attempts and grading method.
   '86-quiz-settings-grades': [
     { id: 'pass-grade', label: 'ציון "עובר"', x: 50.1, y: 64.9, width: 13.7, height: 5.6 },
