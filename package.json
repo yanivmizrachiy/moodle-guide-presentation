@@ -14,7 +14,8 @@
     "audit:scope": "node scripts/task-scope-check.mjs",
     "task:advance": "node scripts/advance-task.mjs",
     "shots:derive": "node scripts/derive-screenshots.mjs",
-    "check": "npm run typecheck && npm run audit:ssot && npm run context:task && npm run audit:scope && npm run test && npm run build"
+    "check": "npm run typecheck && npm run audit:ssot && npm run context:task && npm run audit:scope && npm run test && npm run build",
+    "check:full": "npm run check"
   },
   "dependencies": {
     "@fontsource-variable/heebo": "^5.3.0",
