@@ -1016,7 +1016,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מוסיפים משאב או פעילות?',
   summary: 'מפעילים עריכה, לוחצים „הוספת משאב או פעילות” ובוחרים את הסוג.',
   flow: [
-    { text: 'מפעילים עריכה.' },
+    {
+      text: 'מפעילים עריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.' },
+    },
     {
       text: 'לוחצים „הוספת משאב או פעילות”.',
       screenshot: { src: '15-add-activity-button.png', caption: 'כפתור „+ הוספת משאב או פעילות”.' },
@@ -1046,9 +1049,19 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'ניהול משימות',
   title: 'איך מסתירים משימה או תוכן מהתלמידים?',
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
-  screenshots: [
-    { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] },
-    { src: '14-hidden-items.jpg', caption: 'התוצאה — התג „מוסתר בפני תלמידים” על הפריט.' },
+  flow: [
+    {
+      text: 'מדליקים את מצב העריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.' },
+    },
+    {
+      text: 'פותחים את תפריט ⋮ של הפעילות ובוחרים „זמינות” כדי להסתיר.',
+      screenshot: { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] },
+    },
+    {
+      text: 'רואים את התג „מוסתר בפני תלמידים” על הפריט.',
+      screenshot: { src: '14-hidden-items.jpg', caption: 'התוצאה — התג „מוסתר בפני תלמידים” על הפריט.' },
+    },
   ],
   keywords: ['הסתרה', 'משימה', 'זמינות'],
   requiresEditMode: true,
@@ -1079,7 +1092,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'ניהול משימות',
   title: 'איך מציגים מחדש תוכן שהוסתר?',
   flow: [
-    { text: 'נכנסים למצב עריכה.' },
+    {
+      text: 'נכנסים למצב עריכה.',
+      screenshot: { src: '04-topbar-edit-on.png', caption: 'מתג „מצב עריכה” לאחר ההדלקה, במצב פעיל.' },
+    },
     {
       text: 'פותחים את תפריט ⋮ של הפריט המוסתר.',
       screenshot: { src: '49-hidden-item-menu.png', caption: 'תפריט ⋮ של פריט „מוסתר בפני תלמידים” — האפשרות „זמינות”.' },
@@ -1328,9 +1344,19 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'הגדרות משימה',
   title: 'איך מגדירים אם תלמיד יכול לתקן את התשובות שלו?',
   summary: 'מגדירים את מספר הניסיונות ואת מנגנון המשוב בשאלות.',
-  steps: ['פותחים הגדרות בוחן.', 'בוחרים מספר ניסיונות.', 'בוחרים מנגנון משוב.', 'שומרים ובודקים כתלמיד.'],
   points: ['ניסיון אחד — אין ניסיון נוסף לאחר ההגשה.', 'במצב אינטראקטיבי ניתן לאפשר ניסיונות מענה לשאלה ורמזים.'],
-  screenshots: [{ src: '33-quiz-question-behaviour.jpg', caption: 'מספר ניסיונות ומנגנון המשוב בשאלות.' }],
+  flow: [
+    { text: 'פותחים הגדרות בוחן.' },
+    {
+      text: 'בוחרים מספר ניסיונות.',
+      screenshot: { src: '33-quiz-question-behaviour.jpg', caption: 'מספר ניסיונות ומנגנון המשוב בשאלות.' },
+    },
+    { text: 'בוחרים מנגנון משוב.' },
+    {
+      text: 'שומרים ובודקים כתלמיד.',
+      screenshot: { src: '56-quiz-retry.png', caption: 'עמוד הבוחן לאחר ההגשה — „ניסיון חדש”.' },
+    },
+  ],
   keywords: ['תיקון', 'ניסיון נוסף', 'משוב', 'רמזים'],
   status: 'ready',
   },
@@ -1419,8 +1445,15 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'שיוך למרחב',
   title: 'למה המורה לא רואה ביצוע שהתלמיד אומר שביצע?',
   summary: 'בודקים שהתלמיד ביצע את המשימה במרחב של המורה ולא במרחב אחר או ב„למידה עצמית”.',
-  steps: ['התלמיד פותח „מרחבי־הלימוד שלי”.', 'בוחר במרחב של הכיתה והמורה.', 'מוודא שהמשימה נמצאת באותו מרחב.', 'רק אז בודקים ביצוע.'],
-  screenshots: [{ src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.' }],
+  flow: [
+    {
+      text: 'התלמיד פותח „מרחבי־הלימוד שלי”.',
+      screenshot: { src: '30-student-mycourses-selflearning.jpg', caption: 'מרחב המורה לצד מרחב „למידה עצמית”.' },
+    },
+    { text: 'בוחר במרחב של הכיתה והמורה.' },
+    { text: 'מוודא שהמשימה נמצאת באותו מרחב.' },
+    { text: 'רק אז בודקים ביצוע.' },
+  ],
   keywords: ['מרחב אחר', 'למידה עצמית', 'שיוך', 'תלמיד'],
   status: 'ready',
   },
