@@ -54,6 +54,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 3200x1800 logs table: the results header area.
   '52-logs-table': [
     { id: 'log-rows', label: 'עמודות היומן: מי, מה, מתי', x: 3.6, y: 60.2, width: 77, height: 9 },
+    { id: 'time-column', label: 'עמודת „זמן” — תאריך ושעה', x: 72.8, y: 61.5, width: 6.2, height: 12.5 },
   ],
   // 3200x1800 new my-courses page: the "מרחב חדש" button.
   '61-my-courses-new': [

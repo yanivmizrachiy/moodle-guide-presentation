@@ -462,7 +462,7 @@
     },
     {
       "id": "P8-adversarial-audit",
-      "status": "next",
+      "status": "done",
       "title": "Run final adversarial audit",
       "goal": "Attempt to prove that the completed implementation violates the SSOT, owner requirements, mobile behavior, truth rules, or regression guarantees; fix only verified findings.",
       "requirements": [],

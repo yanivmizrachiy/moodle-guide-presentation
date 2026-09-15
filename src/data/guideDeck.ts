@@ -240,6 +240,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'student-result': 'tasks',
   'student-correct-space': 'monitoring',
   logs: 'monitoring',
+  'activity-dates': 'monitoring',
   'student-attempt-count': 'monitoring',
   'student-highest-score': 'monitoring',
   gradebook: 'monitoring',
@@ -1106,7 +1107,10 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   eyebrow: 'ניהול משימות',
   title: 'איך מסתירים משימה או תוכן מהתלמידים?',
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
-  screenshots: [{ src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] }],
+  screenshots: [
+    { src: '42-activity-menu.png', caption: 'תפריט ⋮ של פעילות במצב עריכה — „זמינות” להסתרה.', hotspotIds: ['availability'] },
+    { src: '14-hidden-items.jpg', caption: 'התוצאה — התג „מוסתר בפני תלמידים” על הפריט.' },
+  ],
   keywords: ['הסתרה', 'משימה', 'זמינות'],
   requiresEditMode: true,
   status: 'ready',
@@ -1525,6 +1529,32 @@ const AUTHORED_GUIDE_SLIDES: GuideSlide[] = [
   ],
   warning: 'יומן המעקב מציג אירועים; הוא אינו מודד זמן קשב או איכות למידה.',
   keywords: ['מתי תרגל', 'יומני מעקב', 'פעילות תלמיד', 'לוגים'],
+  status: 'ready',
+  },
+  {
+  id: 'activity-dates',
+  section: 'tasks-grades',
+  eyebrow: 'פעילות תלמיד · זמנים',
+  title: 'איך רואים באילו תאריכים ושעות התקיימה פעילות?',
+  flow: [
+    {
+      text: 'פותחים את יומני המעקב ולוחצים „הצגת יומני מעקב אלו”.',
+      screenshot: {
+        src: '51-logs-chooser.png',
+        caption: '„בחירת יומני מעקב אותם יש להציג”.',
+        hotspotIds: ['show-logs'],
+      },
+    },
+    {
+      text: 'עמודת „זמן” מציגה לכל פעולה את התאריך ואת השעה.',
+      screenshot: {
+        src: '52-logs-table.png',
+        caption: 'עמודת „זמן” בטבלת יומני המעקב — תאריך ושעה לכל אירוע.',
+        hotspotIds: ['time-column'],
+      },
+    },
+  ],
+  keywords: ['תאריכים ושעות', 'מתי הייתה פעילות', 'זמן', 'יומני מעקב'],
   status: 'ready',
   },
   {
