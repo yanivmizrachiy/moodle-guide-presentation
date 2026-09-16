@@ -462,7 +462,8 @@ export default function Guide() {
     if (position < 0) return;
     const nextId = sequence[position + delta];
     if (!nextId) return;
-    setDirection(delta > 0 ? 1 : -1);
+    // No setDirection here: jumpToSlide derives the same value from the target
+    // index a line later, and setting it twice only invites the two to disagree.
     jumpToSlide(nextId);
   }
 

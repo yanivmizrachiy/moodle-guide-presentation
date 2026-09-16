@@ -118,6 +118,9 @@
     line-height: 1.02 !important;
   }
 
+  /* Latent on purpose: the cover carries no summary today, so this matches
+   * nothing. It is the cover half of the pair below and keeps the cover inside
+   * one viewport (REQ-PRESENTATION-001) if a summary is ever added. */
   [data-guide-shell="premium-presentation"] article[data-cover="true"] h1.font-display + p {
     margin-top: 0.5rem !important;
     font-size: clamp(0.9rem, 2.2dvh, 1.1rem) !important;
