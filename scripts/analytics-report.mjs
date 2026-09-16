@@ -119,8 +119,19 @@ function int(value) {
 /** A visitor counts as a real reader from this much active time on. */
 const READER_MS = 10000;
 
-const daysFlag = process.argv.indexOf('--days');
-const days = daysFlag > -1 ? Math.max(1, Math.min(365, Number(process.argv[daysFlag + 1]) || 14)) : 14;
+/** A browser seen within this window counts as "right now". */
+const LIVE_MINUTES = 5;
+
+function numericFlag(name, fallback, min, max) {
+  const at = process.argv.indexOf(name);
+  if (at < 0) return fallback;
+  const value = Number(process.argv[at + 1]);
+  return Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : fallback;
+}
+
+const days = numericFlag('--days', 14, 1, 365);
+/** `--hours N` answers "how many in the last N hours", for any moment. */
+const hours = numericFlag('--hours', 0, 1, 24 * 365);
 
 const credential = readConnectionString();
 if (!credential) {
@@ -129,6 +140,31 @@ if (!credential) {
 }
 
 console.log(`קורא נתונים… (מקור החיבור: ${credential.from})\n`);
+
+/**
+ * The count for any moment, not only for a calendar day (REQ-ANALYTICS-013):
+ * who is on the guide right now, how many in an arbitrary window, and the totals
+ * since measurement began. `now()` is the database clock, so the answer does not
+ * depend on the clock of whoever runs the report.
+ */
+let live;
+try {
+  const rows = await runSql(
+    credential.value,
+    `SELECT
+       (SELECT count(DISTINCT visitor_id) FROM public.analytics_events
+         WHERE received_at > now() - interval '${LIVE_MINUTES} minutes')::int AS now_visitors,
+       (SELECT count(DISTINCT visitor_id) FROM public.analytics_events
+         WHERE received_at > now() - interval '${hours || 24} hours')::int AS window_visitors,
+       (SELECT count(DISTINCT visitor_id) FROM public.analytics_events)::int AS all_visitors,
+       (SELECT count(DISTINCT session_id) FROM public.analytics_events)::int AS all_sessions,
+       (SELECT min(received_at) FROM public.analytics_events)::text AS first_event`
+  );
+  live = rows[0] ?? null;
+} catch (error) {
+  console.error(`אזהרה: לא ניתן היה לקרוא את הנתונים החיים (${error.message}).\n`);
+  live = null;
+}
 
 let rows;
 try {
@@ -178,6 +214,28 @@ try {
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
 const todayRow = rows.find((row) => String(row.day).startsWith(today));
 
+if (live) {
+  const windowHours = hours || 24;
+  const windowLabel = windowHours === 24 ? '24 השעות האחרונות' : `${windowHours} השעות האחרונות`;
+  console.log('══════════════════════════════════════════════');
+  console.log(`  ברגע זה במדריך:       ${int(live.now_visitors)}   (${LIVE_MINUTES} דקות אחרונות)`);
+  console.log(`  ב${windowLabel}:  ${int(live.window_visitors)}`);
+  console.log(`  מאז תחילת המדידה:     ${int(live.all_visitors)} דפדפנים · ${int(live.all_sessions)} ביקורים`);
+  if (live.first_event) {
+    const started = new Date(live.first_event);
+    if (!Number.isNaN(started.valueOf())) {
+      console.log(
+        `  המדידה החלה:          ${new Intl.DateTimeFormat('he-IL', {
+          timeZone: 'Asia/Jerusalem',
+          dateStyle: 'short',
+          timeStyle: 'short',
+        }).format(started)}`
+      );
+    }
+  }
+  console.log('══════════════════════════════════════════════\n');
+}
+
 console.log('══════════════════════════════════════════════');
 if (todayRow) {
   console.log(`  היום קראו את המדריך:  ${int(todayRow.readers)}`);
@@ -216,5 +274,6 @@ console.log(
     'ומי שסגר מיד, ולכן הוא תמיד המספר הגבוה יותר.\n\n' +
     'שניהם סופרים דפדפנים ולא אנשים: אותו מורה מהטלפון ומהמחשב נספר פעמיים.\n' +
     'כדי שהביקורים שלך עצמך לא ייספרו — פתח את האתר פעם אחת עם ‎?analytics=off‎\n' +
-    'בסוף הכתובת, בכל מכשיר שלך. לביטול: ‎?analytics=on‎.\n'
+    'בסוף הכתובת, בכל מכשיר שלך. לביטול: ‎?analytics=on‎.\n\n' +
+    'לכל טווח זמן אחר:  npm run analytics -- --hours 3   ·   --days 30\n'
 );

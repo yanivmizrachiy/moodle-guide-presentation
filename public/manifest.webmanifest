@@ -1,0 +1,28 @@
+{
+  "name": "מדריך למורים במערכת Moodle",
+  "short_name": "מדריך Moodle",
+  "description": "מצגת הדרכה למורים במערכת Moodle של משרד החינוך — מחוז ירושלים והעיר ירושלים.",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "/moodle-guide-presentation/",
+  "scope": "/moodle-guide-presentation/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "guide/jerusalem-math-logo.png",
+      "sizes": "511x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "guide/jerusalem-math-logo.webp",
+      "sizes": "511x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

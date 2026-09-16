@@ -104,6 +104,60 @@ for (const duplicate of ['src/pages/Guide.tsx', 'src/main.tsx']) {
   }
 }
 
+// REQ-PRESENTATION-004 layer (א) + (ג): the shell fills the screen on every device,
+// and on iPhone — where the Fullscreen API reaches nothing but <video> — the only
+// real fullscreen is the home-screen install. Deleting any of this silently takes
+// fullscreen away from a whole class of devices, so the gate holds it in place.
+const indexHtmlPath = path.join(root, 'index.html');
+if (fs.existsSync(indexHtmlPath)) {
+  const html = fs.readFileSync(indexHtmlPath, 'utf8');
+  if (!html.includes('viewport-fit=cover')) {
+    errors.push('index.html must keep viewport-fit=cover so the guide fills a notched phone screen.');
+  }
+  if (!html.includes('rel="manifest"')) {
+    errors.push('index.html must link the web app manifest; without it there is no fullscreen on iPhone.');
+  }
+  if (!html.includes('apple-mobile-web-app-capable')) {
+    errors.push('index.html must keep apple-mobile-web-app-capable; it is what makes iOS open the guide without browser chrome.');
+  }
+  if (!html.includes('apple-mobile-web-app-status-bar-style')) {
+    errors.push('index.html must keep apple-mobile-web-app-status-bar-style for the iOS standalone status bar.');
+  }
+}
+
+const manifestPath = path.join(root, 'public/manifest.webmanifest');
+if (fs.existsSync(manifestPath)) {
+  let manifest;
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    errors.push('public/manifest.webmanifest is not valid JSON.');
+  }
+  if (manifest) {
+    if (manifest.display !== 'fullscreen') {
+      errors.push('Web app manifest must declare display "fullscreen" (REQ-PRESENTATION-004).');
+    }
+    if (!Array.isArray(manifest.display_override) || !manifest.display_override.includes('standalone')) {
+      errors.push('Web app manifest must keep a display_override fallback that includes "standalone".');
+    }
+    for (const field of ['start_url', 'scope']) {
+      if (typeof manifest[field] !== 'string' || !manifest[field].includes('/moodle-guide-presentation/')) {
+        errors.push(`Web app manifest ${field} must sit under the GitHub Pages base path.`);
+      }
+    }
+    if (!Array.isArray(manifest.icons) || manifest.icons.length === 0) {
+      errors.push('Web app manifest must list at least one real icon.');
+    } else {
+      for (const icon of manifest.icons) {
+        const iconPath = path.join(root, 'public', String(icon.src ?? ''));
+        if (!fs.existsSync(iconPath)) errors.push(`Web app manifest icon is missing on disk: ${icon.src}`);
+      }
+    }
+  }
+} else {
+  errors.push('Missing required project item: public/manifest.webmanifest');
+}
+
 const visualIsolationPath = path.join(root, 'src/guide-visual-isolation.css');
 if (fs.existsSync(visualIsolationPath)) {
   const css = fs.readFileSync(visualIsolationPath, 'utf8');

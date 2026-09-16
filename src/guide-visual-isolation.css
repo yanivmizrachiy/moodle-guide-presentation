@@ -24,6 +24,22 @@
   opacity: 1;
 }
 
+/* REQ-PRESENTATION-004: with viewport-fit=cover the guide paints edge to edge, so
+ * the chrome pads itself back out of the notch, the status bar and the home
+ * indicator. On a device with no insets every value is zero and nothing moves. */
+[data-guide-shell="premium-presentation"] {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+[data-guide-shell="premium-presentation"] > header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+[data-guide-shell="premium-presentation"] > footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* REQ-PRESENTATION-006: a control you hit with a thumb is at least 44px square.
  * The header icons are 40px, which is fine under a mouse and too small on a
  * phone, so the floor is raised only where the pointer is coarse — touch devices.
