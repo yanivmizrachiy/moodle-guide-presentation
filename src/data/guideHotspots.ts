@@ -58,6 +58,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // 1200x603 course page in edit mode: the „מצב עריכה" toggle, top-left corner.
   '06-course-edit-on': [
     { id: 'edit-toggle', label: 'מצב עריכה', x: 1.9, y: 1.8, width: 7.3, height: 4.8 },
+    // The same ⋮ as on capture 07, still closed. Measured on this file: the dots
+    // centre on 10.2% across and 78.3% down, which is the box capture 07 uses.
+    { id: 'unit-kebab', label: 'תפריט יחידת ההוראה', x: 8.2, y: 74.5, width: 4.3, height: 7.8 },
   ],
   // 3200x1800 home page in edit mode: the "עריכה" toggle, top-left corner.
   '05-home-edit-on': [
@@ -138,6 +141,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'space-row', label: 'המרחב של רות ויניב', x: 86.9, y: 66.4, width: 8.4, height: 3.4 },
     { id: 'next', label: 'הבא', x: 3.5, y: 85.3, width: 5.3, height: 6.2 },
     { id: 'clone-path', label: 'שכפול תוכן שלי', x: 76.5, y: 21.9, width: 7.1, height: 3.0 },
+    // The same header cell as on capture 37, one state earlier: here its caret
+    // points up, there it points down. Verified by cropping both files.
+    { id: 'year-sort', label: 'מיון לפי שנת לימודים', x: 5.3, y: 32.9, width: 7.5, height: 2.8 },
   ],
   // 3200x1800 clone list: search row and the year sort control.
   '37-wizard-clone-sort': [

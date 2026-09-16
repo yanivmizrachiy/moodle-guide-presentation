@@ -684,11 +684,21 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
+      // Marked on the state the teacher presses from: on capture 36 the
+      // „שנת לימודים” caret still points up. Capture 37 is that same header
+      // after the click, so marking it there taught the button on the wrong screen.
       text: 'ממיינים את הרשימה לפי „שנת לימודים”.',
       screenshot: {
-        src: '37-wizard-clone-sort.png',
-        caption: 'רשימת מרחבים לשכפול עם אפשרויות חיפוש ומיון.',
+        src: '36-wizard-clone-my-content.png',
+        caption: 'רשימת המרחבים לשכפול — שם מרחב הלמידה, בית ספר ושנת לימודים.',
         hotspotIds: ['year-sort'],
+      },
+    },
+    {
+      text: 'הרשימה ממוינת מחדש לפי שנת הלימודים.',
+      screenshot: {
+        src: '37-wizard-clone-sort.png',
+        caption: 'אותו מסך לאחר הלחיצה — הרשימה ממוינת לפי שנת לימודים.',
       },
     },
   ],
@@ -1742,8 +1752,18 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
+      // The ⋮ is pressed while it is still closed, so that is the state that
+      // carries the mark; capture 07 is the same control after the press.
       text: 'לוחצים על תפריט שלוש הנקודות של יחידת ההוראה.',
-      screenshot: { src: '07-unit-menu.jpg', caption: 'תפריט יחידת הוראה במצב עריכה.', hotspotIds: ['unit-kebab'] },
+      screenshot: {
+        src: '06-course-edit-on.jpg',
+        caption: 'מרחב במצב עריכה — תפריט ⋮ של יחידת ההוראה, סגור.',
+        hotspotIds: ['unit-kebab'],
+      },
+    },
+    {
+      text: 'נפתח תפריט יחידת ההוראה.',
+      screenshot: { src: '07-unit-menu.jpg', caption: 'אותו מסך לאחר הלחיצה — תפריט יחידת הוראה פתוח.' },
     },
   ],
   requiresEditMode: true,
