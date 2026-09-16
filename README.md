@@ -4,14 +4,7 @@
 
 ## מקור האמת היחיד
 
-- תוכן, סדר, סטטוס ושיוך השקפים: `src/data/guideDeck.ts`
-- סימונים חזותיים מאומתים: `src/data/guideHotspots.ts`
-- ממשק המצגת: `src/pages/Guide.tsx`
-- עיצוב: `src/index.css` ו־`src/guide-visual-isolation.css`
-- צילומי המסך והלוגו האמיתיים: `public/guide/`
-- בדיקות שלמות אוטומטיות (מזהי שקפים, צילומים, קישורים, איכות תצוגה): `tests/deck-invariants.test.ts`
-- כללי הפרויקט: `SSOT.md`
-- הנחיות Claude Code: `CLAUDE.md`
+רשימת מקורות האמת בריפו נמצאת במקום אחד בלבד: `SSOT.md`, פרק „מקורות האמת בתוך הריפו". כללי הפרויקט נמצאים ב-`SSOT.md` והנחיות Claude Code ב-`CLAUDE.md`.
 
 אין ליצור מקור תוכן נוסף ואין ליצור צילומי דמה. צילום חסר נשאר מסומן כ־`needs-capture` עד שקיים צילום אמיתי.
 
@@ -31,7 +24,7 @@ npm run dev
 בדיקות לפני commit/push:
 
 ```bash
-npm run check        # שער מהיר: typecheck + ssot + scope + בדיקות יחידה/אינוריאנטים + build
+npm run check        # שער מהיר: typecheck + ssot + בדיקות יחידה/אינוריאנטים + build
 npm run check:full   # שער רחב: check + בדיקות דפדפן/נגישות/ויזואל (Playwright)
 ```
 
@@ -51,7 +44,6 @@ GitHub Pages נבנה אוטומטית מ־`main` באמצעות GitHub Actions.
 
 ## מקור ההעברה
 
-המצגת הופרדה מתוך `yanivmizrachiy/www` בנקודת המקור:
-`112ecaf0b25b4fdd72e1b8aac0e4dbf0b4018ce6`.
+פרטי ההעברה (הריפו המקורי ו-commit המקור) מתועדים ב-`MIGRATION_MANIFEST.md`.
 
 הריפו הזה מיועד למצגת בלבד ואינו מכיל Teacher Hub, ‏LTI, ‏Supabase, תלמידים, ציונים או backend.

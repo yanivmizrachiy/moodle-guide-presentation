@@ -4,8 +4,6 @@
 
 [data-guide-shell="premium-presentation"] {
   --guide-ink: #020617;
-  --guide-muted: #475569;
-  --guide-white: #ffffff;
   --guide-gold: #fbbf24;
   --guide-blue: #1d4ed8;
   --guide-glass-ink: #0f172a;
@@ -45,8 +43,7 @@
 }
 
 [data-guide-shell="premium-presentation"] section[class*="bg-white"] h2,
-[data-guide-shell="premium-presentation"] section[class*="bg-white"] h3,
-[data-guide-shell="premium-presentation"] section[class*="bg-white"] span[class*="text-slate-950"] {
+[data-guide-shell="premium-presentation"] section[class*="bg-white"] h3 {
   color: var(--guide-ink) !important;
 }
 

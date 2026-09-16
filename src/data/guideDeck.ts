@@ -1,8 +1,6 @@
 export type GuideScreenshot = {
   src: string;
   caption: string;
-  /** Renders small beside/below the main capture (e.g. a login thumbnail). */
-  secondary?: boolean;
   /**
    * The single verified control this step marks (id from guideHotspots.ts).
    * Red focus is explicit per use: omit it — or leave it empty — for a clean
@@ -11,12 +9,11 @@ export type GuideScreenshot = {
    */
   hotspotIds?: readonly string[];
   /**
-   * How the capture is framed on the slide. By default a step that marks one
-   * SMALL control (a button, a pencil, a tab) is shown zoomed in on that
-   * control, so the teacher sees what to press instead of hunting for a red
-   * circle on a full-page screenshot; the full capture is always one click
-   * away in the lightbox. `false` forces the whole screen, `true` forces the
-   * close-up even for a larger target.
+   * How the capture is framed on the slide. The WHOLE screen is shown by
+   * default, so the teacher sees where on the page the control sits. A use may
+   * opt into a close-up with `zoom: true` — and only for a control that stands
+   * alone on an otherwise empty part of the screen (REQ-GUIDE-008). `false` is
+   * identical to omitting the field.
    */
   zoom?: boolean;
 };
@@ -161,8 +158,10 @@ export function isEditModeMetadataConsistent(slide: GuideSlide): boolean {
 }
 
 const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
-const MOODLE_MY = 'https://moodlemoe.lms.education.gov.il/my/';
 const MOODLE_WIZARD = 'https://moodlemoe.lms.education.gov.il/local/auto_course_create/wizard.php';
+
+/** The one way back to Moodle's home page: one href and one label for every slide that offers it. */
+const MOODLE_HOME_LINK: GuideLink = { href: MOODLE_HOME, label: 'פתיחת Moodle' };
 
 /**
  * Fixed presentation attribution, shown on the cover and the opening slide.
@@ -441,7 +440,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '10-course-page.png', caption: 'עמוד מרחב Moodle לאחר פתיחת המרחב.' },
     },
   ],
-  link: { href: MOODLE_WIZARD, label: 'לפתיחת מרחב למידה' },
   keywords: ['פתיחת מרחב', 'כניסה', 'Moodle', 'מודל', 'עם תלמידים', 'ללא תלמידים'],
   status: 'ready',
   },
@@ -539,7 +537,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['הודעה', 'יצירת מרחב', 'סיום יצירה'],
   status: 'ready',
   },
@@ -842,7 +840,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     { text: 'שולח את הקישור לתלמידים.' },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['צירוף תלמידים מאוחר', 'קישור למרחב', 'הצטרפות מאוחרת', 'ללא תלמידים'],
   status: 'ready',
   },
@@ -897,7 +895,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '95-selfenrol-settings.png', caption: 'טופס „שיוך עצמי”: „מנגנון רישום עצמי פעיל?” ו„האם לאפשר רישום למשתמשים חדשים”.', hotspotIds: ['allow-new-users'] },
     },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['שיוך עצמי', 'פתרון תקלה', 'עין פתוחה', 'רישום משתמשים חדשים'],
   status: 'ready',
   },
@@ -1253,7 +1251,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   screenshots: [
     {
       src: '06-course-edit-on.jpg',
-      caption: 'מרחב הלמידה במצב עריכה — המתג „מצב עריכה" דלוק בסרגל העליון.',
+      caption: 'מרחב הלמידה במצב עריכה — המתג „מצב עריכה” דלוק בסרגל העליון.',
       hotspotIds: ['edit-toggle'],
     },
   ],
@@ -1679,7 +1677,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איפה רואים את פעולות העריכה בעמוד הבית של המרחב?',
   summary: 'במצב עריכה מופיעות פעולות הוספה ועריכה ישירות בעמוד.',
   screenshots: [{ src: '05-home-edit-on.png', caption: 'עמוד הבית של המרחב במצב עריכה, עם פעולות ההוספה והעריכה.' }],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['עמוד הבית', 'מצב עריכה', 'הוספת משבצת'],
   status: 'ready',
   },
@@ -1701,7 +1699,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '07-unit-menu.jpg', caption: 'תפריט יחידת הוראה במצב עריכה.', hotspotIds: ['unit-kebab'] },
     },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   requiresEditMode: true,
   keywords: ['יחידת הוראה', 'שלוש נקודות', 'תפריט'],
   status: 'ready',
@@ -1712,7 +1710,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'אילו פעולות מופיעות בתפריט יחידת הוראה?',
   summary: 'בתפריט מופיעות פעולות עריכה, הסתרה, הזזה ומחיקה לפי ההרשאות.',
   screenshots: [{ src: '13-section-menu-full.jpg', caption: 'תפריט יחידת הוראה מלא עם פעולות העריכה.' }],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['תפריט יחידה', 'הסתרה', 'הזזה', 'מחיקה'],
   status: 'ready',
   },
@@ -1724,7 +1722,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   screenshots: [
     { src: '99-hidden-item.png', caption: 'תגית „מוסתר בפני תלמידים” על פריט במרחב, לצד תגית „זמין לסטודנטים, אך אינו מוצג בעמוד הראשי של הקורס”.', hotspotIds: ['hidden-badge'] },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['מוסתר בפני תלמידים', 'זמין', 'הסתרה'],
   status: 'ready',
   },
@@ -1736,7 +1734,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   screenshots: [
     { src: '97-activity-chooser-more.png', caption: 'סוף רשימת הבורר: „תוכן אינטראקטיבי H5P”, „Google Meet™ for Moodle” ו„תקנים - חבילת לומדה SCORM”.' },
   ],
-  link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
+  link: MOODLE_HOME_LINK,
   keywords: ['H5P', 'SCORM', 'Meet', 'פעילויות נוספות'],
   status: 'ready',
   },
@@ -1874,7 +1872,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
             text: 'לוחצים על שם המשימה „יחס - בסיסי”.',
             screenshot: {
               src: '58-student-space-topic.png',
-              caption: 'המשימה ביחידה — „ממתין לביצוע”.',
+              caption: 'הבוחן „יחס - בסיסי” עם האייקון הוורוד ביחידת ההוראה.',
               hotspotIds: ['activity-link'],
             },
           },
@@ -1926,7 +1924,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'לוחצים על המשימה ביחידה.',
-      screenshot: { src: '58-student-space-topic.png', caption: 'המשימה ביחידה — „ממתין לביצוע”.', hotspotIds: ['activity-link'] },
+      screenshot: { src: '58-student-space-topic.png', caption: 'הבוחן „יחס - בסיסי” עם האייקון הוורוד ביחידת ההוראה.', hotspotIds: ['activity-link'] },
     },
     {
       text: 'לוחצים על הכפתור „התחלת ניסיון מענה”.',
@@ -2029,7 +2027,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'לוחצים על המשימה.',
-      screenshot: { src: '58-student-space-topic.png', caption: 'המשימה ביחידה — „ממתין לביצוע”.', hotspotIds: ['activity-link'] },
+      screenshot: { src: '58-student-space-topic.png', caption: 'הבוחן „יחס - בסיסי” עם האייקון הוורוד ביחידת ההוראה.', hotspotIds: ['activity-link'] },
     },
     {
       text: 'בעמוד המשימה מופיע „בוצע” בירוק או „נכשל” באדום מול ציון העובר.',

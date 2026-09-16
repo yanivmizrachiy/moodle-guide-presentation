@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Real-browser gate for the guide (P7): navigation, two-path branches,
+ * Real-browser gate for the guide: navigation, two-path branches,
  * flows/hotspots, the edit-mode teaching control, accessibility scans and
  * visual regression, on representative desktop and mobile viewports.
  * Runs against the real production build served by vite preview.

@@ -18,15 +18,8 @@
     --primary: 199 89% 38%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary — quiet slate */
-    --secondary: 220 20% 95%;
-    --secondary-foreground: 222 30% 18%;
-
     --accent: 199 90% 95%;
     --accent-foreground: 199 89% 28%;
-
-    --destructive: 0 75% 50%;
-    --destructive-foreground: 0 0% 100%;
 
     --border: 220 18% 90%;
 

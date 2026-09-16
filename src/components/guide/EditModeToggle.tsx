@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
  * accessible, and is deliberately styled as a guide widget — a dashed
  * practice frame, nothing like the screenshot cards — so it can never be
  * mistaken for a real Moodle screen. The real Moodle evidence stays in the
- * 03/04 captures beside it. The caption wording is owner-locked in
+ * captures beside it. The caption wording is owner-locked in
  * EDIT_MODE_TOGGLE_COPY and pinned by the invariant tests.
  */
 export function EditModeToggle() {

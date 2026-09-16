@@ -120,18 +120,6 @@ describe('publication policy (truth rules)', () => {
 });
 
 describe('screenshots', () => {
-  it('published slides reference real files with avif, webp and an original', () => {
-    for (const slide of PUBLISHED_GUIDE_SLIDES) {
-      for (const screenshot of shotsOf(slide)) {
-        const stem = stemOf(screenshot.src);
-        expect(screenshotFiles, `missing ${stem}.avif for slide "${slide.id}"`).toContain(`${stem}.avif`);
-        expect(screenshotFiles, `missing ${stem}.webp for slide "${slide.id}"`).toContain(`${stem}.webp`);
-        const hasOriginal = ['jpg', 'jpeg', 'png'].some((ext) => screenshotFiles.includes(`${stem}.${ext}`));
-        expect(hasOriginal, `missing original capture for ${stem} (slide "${slide.id}")`).toBe(true);
-      }
-    }
-  });
-
   it('every rendered screenshot src (classic and flow) is a modern .avif with real siblings', () => {
     // The renderer serves `src` as the avif <source> and `src.replace(ext,'.webp')`
     // as the <img> fallback. If a raw .jpg/.png src survives normalization, the
@@ -144,6 +132,8 @@ describe('screenshots', () => {
         const stem = stemOf(screenshot.src);
         expect(screenshotFiles, `rendered avif "${stem}.avif" missing (slide "${slide.id}")`).toContain(`${stem}.avif`);
         expect(screenshotFiles, `rendered webp "${stem}.webp" missing (slide "${slide.id}")`).toContain(`${stem}.webp`);
+        const hasOriginal = ['jpg', 'jpeg', 'png'].some((ext) => screenshotFiles.includes(`${stem}.${ext}`));
+        expect(hasOriginal, `missing original capture for ${stem} (slide "${slide.id}")`).toBe(true);
       }
     }
   });

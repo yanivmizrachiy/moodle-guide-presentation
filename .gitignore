@@ -13,7 +13,6 @@ Thumbs.db
 Desktop.ini
 .env
 .env.*
-!.env.example
 .idea/
 .vscode/
 /raw/

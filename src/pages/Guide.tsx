@@ -170,12 +170,14 @@ function SlideContent({
   const link = slide.link;
   // When a flow step already carries the link inline, don't repeat it as a big CTA
   // button — keep only "copy", centered under the step so the row lines up with the
-  // flow's centered down-arrow.
-  const flowHasInlineLink = flow.some((step) => step.link);
+  // flow's centered down-arrow. The inline link is then the one the row copies.
+  const inlineFlowLink = flow.find((step) => step.link)?.link;
+  const flowHasInlineLink = Boolean(inlineFlowLink);
+  const copyHref = link?.href ?? inlineFlowLink?.href;
 
-  const linkRow = link ? (
+  const linkRow = copyHref ? (
     <div className={cn('flex flex-wrap items-center gap-3 pt-1', flowHasInlineLink && 'justify-center')}>
-      {!flowHasInlineLink && (
+      {link && !flowHasInlineLink && (
         <Button
           asChild
           size="lg"
@@ -190,7 +192,7 @@ function SlideContent({
       <Button
         size="lg"
         variant="outline"
-        onClick={() => void copyLink(link.href)}
+        onClick={() => void copyLink(copyHref)}
         aria-label="העתקת הקישור"
         className="h-12 gap-2 rounded-2xl border-slate-300 bg-white/80 px-5 font-black text-slate-700 hover:bg-slate-100"
       >
@@ -344,18 +346,11 @@ function SlideContent({
           <div
             className={cn(
               'grid content-center gap-5 lg:py-2',
-              // A secondary capture renders small under the main one instead of
-              // splitting the slide into two equal columns.
-              (slide.screenshots?.length ?? 0) > 1 && !slide.screenshots?.some((s) => s.secondary)
-                ? 'md:grid-cols-2'
-                : 'grid-cols-1'
+              (slide.screenshots?.length ?? 0) > 1 ? 'md:grid-cols-2' : 'grid-cols-1'
             )}
           >
             {slide.screenshots?.map((screenshot) => (
-              <div
-                key={screenshot.src}
-                className={cn(screenshot.secondary && 'mx-auto w-full max-w-[400px]')}
-              >
+              <div key={screenshot.src}>
                 <ScreenshotCard
                   screenshot={screenshot}
                   slideTitle={slide.title}
@@ -422,13 +417,13 @@ export default function Guide() {
     });
   }, [query]);
 
-  function writeUrl(slideId: string, replace = false) {
+  function writeUrl(slideId: string) {
     const url = new URL(window.location.href);
     url.searchParams.set('slide', slideId);
-    window.history[replace ? 'replaceState' : 'pushState']({}, '', url);
+    window.history.pushState({}, '', url);
   }
 
-  function jumpToSlide(slideId: string, replace = false) {
+  function jumpToSlide(slideId: string) {
     const index = PUBLISHED_GUIDE_SLIDES.findIndex((item) => item.id === slideId);
     if (index < 0) return;
 
@@ -436,7 +431,7 @@ export default function Guide() {
     setCurrentIndex(index);
     setPanel(null);
     setQuery('');
-    writeUrl(slideId, replace);
+    writeUrl(slideId);
   }
 
   function goBy(delta: number) {
@@ -838,11 +833,6 @@ export default function Guide() {
                             </h3>
                             {isOpen && (
                               <div className="px-4 pb-4 pt-1 sm:px-5">
-                                {section.description && (
-                                  <p className="mb-3 mt-2 text-xs font-bold leading-relaxed text-slate-500">
-                                    {section.description}
-                                  </p>
-                                )}
                                 {sectionTopics.map((topic) => {
                                   const topicSlides = sectionSlides.filter((item) => item.topic === topic.id);
                                   if (topicSlides.length === 0) return null;

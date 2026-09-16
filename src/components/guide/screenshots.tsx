@@ -4,6 +4,9 @@ import { Expand } from 'lucide-react';
 import type { GuideScreenshot, GuideSlide } from '@/data/guideDeck';
 import { getVisibleGuideHotspots } from '@/data/hotspotPolicy';
 
+/** The one thing a failed capture says, in the card and in the lightbox alike. */
+const SHOT_FAILED_TEXT = 'הצילום לא נטען. אין מוצג תחליף.';
+
 /** Lightbox request: which capture to show full-size, under which slide title. */
 export type LightboxState = {
   screenshot: GuideScreenshot;
@@ -19,7 +22,7 @@ export function imageUrl(src: string) {
  * and the audit enforces that. Serving AVIF alone left every screenshot blank on a
  * browser without AVIF support, so offer the WebP as a real fallback.
  */
-export function screenshotSources(src: string) {
+function screenshotSources(src: string) {
   const webp = src.replace(/\.[^.]+$/, '.webp');
   return { avif: imageUrl(src), webp: imageUrl(webp) };
 }
@@ -49,7 +52,7 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
  * close-up destroys. A use may opt into a close-up with `zoom: true` — only for
  * a control that stands alone on an otherwise empty part of the screen.
  */
-export function focusHotspot(screenshot: GuideScreenshot) {
+function focusHotspot(screenshot: GuideScreenshot) {
   if (screenshot.zoom !== true) return null;
   const hotspots = getVisibleGuideHotspots(screenshot.src, screenshot.hotspotIds);
   return hotspots.length === 1 ? hotspots[0] : null;
@@ -120,7 +123,7 @@ function HotspotArrow({
   );
 }
 
-export function HotspotLayer({
+function HotspotLayer({
   src,
   only,
   strokeWidth = 2.8,
@@ -190,7 +193,7 @@ export function LightboxImage({
   if (failed) {
     return (
       <span className="flex aspect-video w-full max-w-[900px] items-center justify-center rounded-xl bg-slate-200 px-6 text-center text-sm font-black text-slate-600">
-        הצילום לא נטען. אין מוצג תחליף.
+        {SHOT_FAILED_TEXT}
       </span>
     );
   }
@@ -302,7 +305,7 @@ export function ScreenshotCard({
 
           {failed ? (
             <span className="flex aspect-video items-center justify-center bg-slate-100 px-6 text-center text-sm font-black text-slate-500">
-              הצילום לא נטען. אין מוצג תחליף.
+              {SHOT_FAILED_TEXT}
             </span>
           ) : (
             // The inner relative wrapper hugs the painted image, so hotspot
