@@ -2,7 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const root = process.cwd();
+// The tree to audit. Normally the repo you are standing in; SSOT_ROOT lets a test
+// point the audit at a throwaway directory instead, so a guard can be PROVEN to
+// fail against a deliberately broken copy without ever touching the real files.
+// Three guards were found this week that could not fail at all — they watched a
+// file that never contained the thing they forbade. tests/audit-guards.test.ts
+// now catches that class of bug mechanically.
+const root = process.env.SSOT_ROOT ? path.resolve(process.env.SSOT_ROOT) : process.cwd();
 const errors = [];
 const required = [
   'SSOT.md',
@@ -277,7 +283,18 @@ if (fs.existsSync(analyticsSchemaPath)) {
   }
 }
 
-const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+// Report, never crash: an audit that throws on a missing file tells you nothing
+// about the other 30 guards behind it.
+const pkgPath = path.join(root, 'package.json');
+let pkg = { scripts: {}, dependencies: {}, devDependencies: {} };
+if (!fs.existsSync(pkgPath)) errors.push('Missing required project item: package.json');
+else {
+  try {
+    pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  } catch {
+    errors.push('package.json is not valid JSON.');
+  }
+}
 const deps = Object.keys({ ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) });
 for (const forbidden of ['@supabase/supabase-js', 'express', 'cookie-parser', 'helmet', 'xlsx']) {
   if (deps.includes(forbidden)) errors.push(`Non-presentation dependency is forbidden: ${forbidden}`);
@@ -317,7 +334,9 @@ if (fs.existsSync(pagesPath)) {
   }
 }
 
-const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
+const gitignorePath = path.join(root, '.gitignore');
+if (!fs.existsSync(gitignorePath)) errors.push('Missing required project item: .gitignore');
+const gitignore = fs.existsSync(gitignorePath) ? fs.readFileSync(gitignorePath, 'utf8') : '';
 for (const requiredIgnore of [
   'node_modules/',
   'dist/',
