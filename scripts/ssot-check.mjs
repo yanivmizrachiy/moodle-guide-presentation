@@ -24,6 +24,7 @@ const required = [
   'scripts/derive-screenshots.mjs',
   'scripts/analytics-report.mjs',
   'כמה-נכנסו.cmd',
+  'הגדרה-ראשונית.cmd',
   'הגדרת-דוח-כניסות.ps1',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
@@ -357,6 +358,35 @@ for (const file of textFiles) {
   const label = code.toString(16).toUpperCase().padStart(4, '0');
   errors.push(
     `${relative} contains a literal control character (U+${label}); an escape was mangled before it was written.`
+  );
+}
+
+// REQ-STABILITY-010. cmd.exe re-reads a batch file byte by byte AS IT RUNS, so a
+// `chcp 65001` line shifts the read position for every multi-byte line after it:
+// the lines below get chopped into fragments and executed as commands. That is
+// not theoretical — כמה-נכנסו.cmd, the one file the owner is told to double-click,
+// carried a Hebrew `title` line and was silently broken this whole time. It never
+// changed directory and never ran the report; the window printed "'run' is not
+// recognized" and closed. Hebrew belongs in the program the .cmd launches.
+const rootEntries = fs.existsSync(root) ? fs.readdirSync(root) : [];
+for (const entry of rootEntries) {
+  if (!entry.toLowerCase().endsWith('.cmd')) continue;
+  const bytes = fs.readFileSync(path.join(root, entry));
+  const offset = bytes.findIndex((byte) => byte > 127);
+  if (offset >= 0) {
+    errors.push(
+      `${entry} contains a non-ASCII byte at offset ${offset}; cmd.exe mis-reads multi-byte lines after chcp and silently chops the commands under them (REQ-STABILITY-010).`
+    );
+  }
+}
+
+// הגדרה-ראשונית.cmd locates the setup script by extension, precisely because a
+// Hebrew filename cannot survive being passed as a cmd argument. That indirection
+// is only correct while exactly one .ps1 sits at the repo root.
+const rootPowerShellScripts = rootEntries.filter((name) => name.toLowerCase().endsWith('.ps1'));
+if (rootPowerShellScripts.length !== 1) {
+  errors.push(
+    `Exactly one .ps1 must sit at the repo root; the setup launcher finds it by extension. Found ${rootPowerShellScripts.length}: ${rootPowerShellScripts.join(', ') || 'none'}.`
   );
 }
 

@@ -38,13 +38,19 @@ function runAuditIn(dir: string): string {
 
 const sandboxes: string[] = [];
 
-function auditWith(file: string, contents: string): string {
+function auditWithFiles(files: Record<string, string>): string {
   const dir = mkdtempSync(join(tmpdir(), 'ssot-guard-'));
   sandboxes.push(dir);
-  const target = join(dir, file);
-  mkdirSync(dirname(target), { recursive: true });
-  writeFileSync(target, contents);
+  for (const [name, contents] of Object.entries(files)) {
+    const target = join(dir, name);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, contents);
+  }
   return runAuditIn(dir);
+}
+
+function auditWith(file: string, contents: string): string {
+  return auditWithFiles({ [file]: contents });
 }
 
 afterAll(() => {
@@ -123,6 +129,15 @@ const GUARDS: { name: string; file: string; break: (source: string) => string; m
     break: (source) => String.fromCharCode(8) + source,
     message: 'contains a literal control character',
   },
+  {
+    // cmd.exe re-reads a batch file byte by byte, so a multi-byte line after
+    // `chcp 65001` shifts the read position and chops the commands under it.
+    // This is how the owner's only double-click tool was silently broken.
+    name: 'a .cmd must stay ASCII or cmd.exe chops the lines under it',
+    file: 'כמה-נכנסו.cmd',
+    break: (source) => source + 'rem שלום',
+    message: 'contains a non-ASCII byte',
+  },
 ];
 
 describe('the SSOT audit guards can actually fail', () => {
@@ -145,6 +160,15 @@ describe('the SSOT audit guards can actually fail', () => {
       );
     });
   }
+
+  it('the setup launcher breaks if a second .ps1 joins it at the root', () => {
+    // הגדרה-ראשונית.cmd finds the setup script by extension, because a Hebrew
+    // filename does not survive being passed as a cmd argument. With two
+    // candidates at the root, which one runs becomes a coin toss.
+    const message = 'Exactly one .ps1 must sit at the repo root';
+    expect(auditWithFiles({ 'setup.ps1': '# one', 'other.ps1': '# two' })).toContain(message);
+    expect(auditWithFiles({ 'setup.ps1': '# one' })).not.toContain(message);
+  });
 
   it('the audit reports a missing file instead of crashing on it', () => {
     // An audit that throws on the first absent file tells you nothing about the
