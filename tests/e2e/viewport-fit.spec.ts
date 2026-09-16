@@ -8,12 +8,15 @@ const LAPTOP_VIEWPORTS = [
   { width: 1280, height: 640 },
   { width: 1280, height: 720 },
   { width: 1366, height: 768 },
+  { width: 1280, height: 800 },
   { width: 1440, height: 900 },
 ];
 
 const CONTENT_VIEWPORTS = [
   { width: 1280, height: 640 },
+  { width: 1280, height: 720 },
   { width: 1366, height: 768 },
+  { width: 1280, height: 800 },
 ];
 
 async function waitForStableSlide(page: Page) {
@@ -94,7 +97,7 @@ test('cover stays completely inside one viewport without scrolling', async ({ pa
 
 test('every published content slide stays inside supported laptop viewports without scrolling', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'Laptop viewport invariant is exercised by the desktop project.');
-  test.setTimeout(300_000);
+  test.setTimeout(480_000);
 
   const failures: string[] = [];
 
@@ -136,4 +139,39 @@ test('every published content slide stays inside supported laptop viewports with
   }
 
   expect(failures, 'Slides that violate REQ-PRESENTATION-002').toEqual([]);
+});
+
+test('short mobile screens never clip the cover start control', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Mobile reachability invariant is exercised by the mobile project.');
+
+  for (const viewport of [
+    { width: 393, height: 851 },
+    { width: 851, height: 393 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('./');
+    await waitForStableSlide(page);
+
+    const cover = page.locator('article[data-cover="true"]');
+    const start = cover.getByRole('button', { name: 'התחל' });
+    await expect(start).toBeVisible();
+
+    const reachable = await cover.evaluate((element) => {
+      const article = element as HTMLElement;
+      const button = article.querySelector('button');
+      if (!(button instanceof HTMLElement)) return false;
+
+      const isInside = () => {
+        const articleRect = article.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+        return buttonRect.top >= articleRect.top - 1 && buttonRect.bottom <= articleRect.bottom + 1;
+      };
+
+      if (isInside()) return true;
+      article.scrollTop = article.scrollHeight;
+      return isInside();
+    });
+
+    expect(reachable, `${viewport.width}x${viewport.height}: start control must remain reachable`).toBe(true);
+  }
 });
