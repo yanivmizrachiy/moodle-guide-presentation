@@ -283,6 +283,82 @@ if (fs.existsSync(analyticsSchemaPath)) {
   }
 }
 
+// The report runs with the OWNER's connection string, which can write anything.
+// It is documented as read-only (REQ-ANALYTICS-013/014) and nothing enforced that,
+// so a future "just add a cleanup query" would have been a one-line accident with
+// no way back. The patterns below are SQL-shaped on purpose: a bare word like
+// "update" appears in ordinary English comments, "UPDATE x SET" does not.
+const reportPath = path.join(root, 'scripts/analytics-report.mjs');
+if (fs.existsSync(reportPath)) {
+  const report = fs.readFileSync(reportPath, 'utf8');
+  const writes = [
+    /\binsert\s+into\b/i,
+    /\bdelete\s+from\b/i,
+    /\bupdate\s+[\w.]+\s+set\b/i,
+    /\btruncate\b/i,
+    /\b(drop|alter)\s+(table|view|function|index|schema)\b/i,
+    /\bcreate\s+(table|view|function|index|schema|or\s+replace)\b/i,
+    /\b(grant|revoke)\s+\w+/i,
+  ];
+  const found = writes.find((pattern) => pattern.test(report));
+  if (found) {
+    errors.push(
+      `Analytics report must stay read-only; it contains a write statement matching ${found}.`
+    );
+  }
+  // The visit-length half of REQ-ANALYTICS-014 is only answerable from the
+  // per-session view. Reading it from the daily totals would silently turn
+  // "how long did a teacher stay" into "how long did everyone stay together".
+  if (!report.includes('public.analytics_sessions')) {
+    errors.push('Analytics report must read public.analytics_sessions for visit length (REQ-ANALYTICS-014).');
+  }
+}
+
+// Twice in one week a shell heredoc collapsed an escape and wrote a literal 0x08
+// byte into this very file where `\b` was meant. Both times the regex still looked
+// correct in a diff, and the guard it belonged to quietly stopped matching what it
+// was written to catch. Text source has no business holding C0 control characters,
+// so refuse them outright rather than trusting the next escape to survive.
+function textFilesUnder(dir) {
+  const found = [];
+  if (!fs.existsSync(dir)) return found;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...textFilesUnder(full));
+    else if (/[.](tsx?|m?js|css|html|json|md|sql|cmd|ps1|yml)$/.test(entry.name)) found.push(full);
+  }
+  return found;
+}
+
+// Expressed as code points rather than as a regex character class: writing this
+// check with unicode escapes is exactly how the corruption it looks for gets
+// introduced, because every layer between here and the file may eat an escape.
+function firstControlCharacter(text) {
+  for (const character of text) {
+    const code = character.codePointAt(0);
+    if (code < 0x20 && code !== 9 && code !== 10 && code !== 13) return code;
+  }
+  return null;
+}
+const textFiles = [
+  ...['src', 'scripts', 'db', 'docs', 'tests', '.github'].flatMap((dir) =>
+    textFilesUnder(path.join(root, dir))
+  ),
+  ...['SSOT.md', 'CLAUDE.md', 'README.md', 'index.html', 'package.json']
+    .map((name) => path.join(root, name))
+    .filter((file) => fs.existsSync(file)),
+];
+for (const file of textFiles) {
+  const code = firstControlCharacter(fs.readFileSync(file, 'utf8'));
+  if (code === null) continue;
+  const relative = path.relative(root, file).split(path.sep).join('/');
+  const label = code.toString(16).toUpperCase().padStart(4, '0');
+  errors.push(
+    `${relative} contains a literal control character (U+${label}); an escape was mangled before it was written.`
+  );
+}
+
 // Report, never crash: an audit that throws on a missing file tells you nothing
 // about the other 30 guards behind it.
 const pkgPath = path.join(root, 'package.json');

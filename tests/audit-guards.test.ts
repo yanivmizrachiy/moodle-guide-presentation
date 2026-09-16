@@ -92,6 +92,37 @@ const GUARDS: { name: string; file: string; break: (source: string) => string; m
     break: (source) => source.split('"display": "fullscreen"').join('"display": "browser"'),
     message: 'must declare display "fullscreen"',
   },
+  {
+    // The report runs with the owner's own connection string, which can write
+    // anything. "Read-only" was a promise in a comment until this guard existed.
+    name: 'the analytics report must stay read-only',
+    file: 'scripts/analytics-report.mjs',
+    break: (source) =>
+      source
+        .split('const liveVisits = await readOrWarn(')
+        .join(
+          "await runSql(credential.value, 'DELETE FROM public.analytics_events'); const liveVisits = await readOrWarn("
+        ),
+    message: 'Analytics report must stay read-only',
+  },
+  {
+    // Visit length is only answerable per session. Read from the daily rollup it
+    // silently becomes "how long did everyone stay together", which is not the
+    // question the owner asked.
+    name: 'visit length must come from the per-session view',
+    file: 'scripts/analytics-report.mjs',
+    break: (source) => source.split('public.analytics_sessions').join('public.analytics_daily'),
+    message: 'must read public.analytics_sessions for visit length',
+  },
+  {
+    // Twice this week a mangled escape wrote a raw 0x08 byte into a source file in
+    // place of a word boundary, and the regex around it went on looking correct in
+    // the diff while matching nothing.
+    name: 'a mangled escape cannot land as a literal control character',
+    file: 'src/lib/fullscreen.ts',
+    break: (source) => String.fromCharCode(8) + source,
+    message: 'contains a literal control character',
+  },
 ];
 
 describe('the SSOT audit guards can actually fail', () => {

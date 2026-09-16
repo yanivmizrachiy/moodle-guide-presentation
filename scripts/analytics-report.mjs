@@ -1,14 +1,21 @@
-// Prints how many BROWSERS used the live guide: right now, over a free hour
-// window, today, the last two weeks, and in total since measurement began
-// (plus a visit count). Never people — the same teacher on a phone and a
-// laptop counts twice, and the printed output says so (REQ-ANALYTICS-012).
+// Prints how many BROWSERS used the live guide and how long they stayed: who is
+// reading right now and for how long, a free hour window, today, the last two
+// weeks, and the totals since measurement began. Never people — the same teacher
+// on a phone and a laptop counts twice, and the printed output says so
+// (REQ-ANALYTICS-012).
 //
 // Read-only: SELECTs only, never a write of any kind.
 //
-// It reads public.analytics_events directly and joins public.analytics_daily for
-// the session count. The raw table is needed because analytics_daily cannot tell a
-// reader from a crawler — that split (REQ-ANALYTICS-012) is computed per visitor
-// here. analytics_sessions is not used by this report.
+// Three sources, each for what only it can answer:
+//   analytics_events   — the raw table. Needed because analytics_daily cannot tell
+//                        a reader from a crawler; that split (REQ-ANALYTICS-012)
+//                        is computed per visitor here.
+//   analytics_sessions — one row per visit, with its start, its last sign of life
+//                        and its active time. This is the only thing that can say
+//                        how long a single teacher stayed (REQ-ANALYTICS-014); a
+//                        daily total of 42 minutes cannot distinguish one teacher
+//                        for 42 minutes from forty teachers for one.
+//   analytics_daily    — joined for the per-day visit count.
 //
 // The connection string is a password: it is never committed, never printed, and
 // never passed on the command line (where it would land in shell history). It is
@@ -119,6 +126,39 @@ function minutes(activeMs) {
   return String(Math.round(value / 60000));
 }
 
+/**
+ * A duration in Hebrew, counted in whole minutes. Hebrew does not inflect a
+ * number the way "1 minutes" does in English, so one minute gets its own word and
+ * anything under a minute is said plainly rather than printed as "0 דקות".
+ */
+function duration(ms) {
+  const value = Number(ms ?? 0);
+  if (!Number.isFinite(value) || value < 30000) return 'פחות מדקה';
+  const whole = Math.round(value / 60000);
+  if (whole === 1) return 'דקה אחת';
+  if (whole === 2) return 'שתי דקות';
+  return `${whole} דקות`;
+}
+
+/**
+ * Slides, in Hebrew, and always DISTINCT slides — how much of the guide the visit
+ * actually covered. `slide_views` counts navigation events, so a teacher who steps
+ * back to re-read a slide inflates it; that is a useful number for the deck, not
+ * for "what did this person see".
+ */
+function slides(count) {
+  const value = int(count);
+  if (value === 0) return 'עוד לא נפתח שקף';
+  if (value === 1) return 'שקף אחד';
+  if (value === 2) return 'שני שקפים';
+  return `${value} שקפים`;
+}
+
+function oneDecimal(value) {
+  const parsed = Number(value ?? 0);
+  return Number.isFinite(parsed) ? (Math.round(parsed * 10) / 10).toFixed(1) : '0.0';
+}
+
 function int(value) {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -177,6 +217,72 @@ try {
   live = null;
 }
 
+/**
+ * Who is on the guide right now and for how long, plus how long a visit lasts
+ * (REQ-ANALYTICS-014). This is the half of the question that the daily totals
+ * cannot answer: a cumulative "42 minutes today" says nothing about whether that
+ * was one teacher for 42 minutes or forty teachers for one.
+ *
+ * Two different clocks, and the report must not blur them:
+ *   active_ms  — time the page was actually VISIBLE. This is reading time.
+ *   open       — last_seen_at (or now) minus started_at, which also counts a tab
+ *                left open on another desktop.
+ * Both are printed for whoever is here now, so a forgotten tab cannot be mistaken
+ * for a long read.
+ *
+ * The length statistics deliberately cover READERS only — a session with at least
+ * one slide and READER_MS of attention. Including the crawlers and the instant
+ * closes would drag the median to zero and make the typical visit look like no
+ * visit at all. The printed output says which population it counted.
+ *
+ * Every value comes back raw and is formatted in JavaScript. SQL rounding here
+ * would mean round(double precision, int), which does not exist in Postgres and
+ * would fail the whole query.
+ */
+async function readOrWarn(label, query) {
+  try {
+    return await runSql(credential.value, query);
+  } catch (error) {
+    console.error(`אזהרה: לא ניתן היה לקרוא ${label} (${error.message}).
+`);
+    return null;
+  }
+}
+
+const liveVisits = await readOrWarn(
+  'מי נמצא במדריך ברגע זה',
+  `SELECT
+     round(extract(epoch FROM now() - started_at))::int AS open_seconds,
+     active_ms,
+     distinct_slides
+   FROM public.analytics_sessions
+   WHERE last_seen_at > now() - interval '${LIVE_MINUTES} minutes'
+   ORDER BY started_at
+   LIMIT 25`
+);
+
+const visitLength = (
+  await readOrWarn(
+    'את אורכי הביקורים',
+    `WITH window_sessions AS (
+       SELECT * FROM public.analytics_sessions
+       WHERE started_at > now() - interval '${days} days'
+     ),
+     reading_sessions AS (
+       SELECT * FROM window_sessions
+       WHERE slide_views >= 1 AND active_ms >= ${READER_MS}
+     )
+     SELECT
+       (SELECT count(*) FROM window_sessions)::int AS visits,
+       (SELECT count(*) FROM reading_sessions)::int AS reads,
+       (SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY active_ms) FROM reading_sessions) AS median_ms,
+       (SELECT avg(active_ms) FROM reading_sessions) AS avg_ms,
+       (SELECT max(active_ms) FROM reading_sessions) AS longest_ms,
+       (SELECT count(*) FROM reading_sessions WHERE active_ms >= 120000)::int AS over_two_minutes,
+       (SELECT avg(distinct_slides) FROM reading_sessions) AS avg_distinct_slides`
+  )
+)?.[0] ?? null;
+
 let rows;
 try {
   // `analytics_daily` answers "how many browsers sent anything at all", which
@@ -233,6 +339,18 @@ if (live) {
   const windowLabel = windowHours === 24 ? '24 השעות האחרונות' : `${windowHours} השעות האחרונות`;
   console.log('══════════════════════════════════════════════');
   console.log(`  ברגע זה במדריך:       ${int(live.now_visitors)}   (${LIVE_MINUTES} דקות אחרונות)`);
+  if (liveVisits?.length) {
+    // The line above counts browsers; each line below is one open visit, so a
+    // teacher who has the guide open twice appears twice — the same rule the rest
+    // of this report follows (REQ-ANALYTICS-012).
+    for (const visit of liveVisits) {
+      console.log(
+        `     · באתר ${duration(int(visit.open_seconds) * 1000)}` +
+          ` · קרא ${duration(visit.active_ms)}` +
+          ` · ${slides(visit.distinct_slides)}`
+      );
+    }
+  }
   console.log(`  ב${windowLabel}:  ${int(live.window_visitors)}`);
   console.log(`  מאז תחילת המדידה:     ${int(live.all_visitors)} דפדפנים · ${int(live.all_sessions)} ביקורים`);
   if (live.first_event) {
@@ -247,6 +365,18 @@ if (live) {
       );
     }
   }
+  console.log('══════════════════════════════════════════════\n');
+}
+
+if (visitLength && int(visitLength.reads) > 0) {
+  console.log('══════════════════════════════════════════════');
+  console.log(`  כמה זמן נשארו (${days} הימים האחרונים):`);
+  console.log(`  אורך ביקור אופייני:   ${duration(visitLength.median_ms)}`);
+  console.log(`  ממוצע:                ${duration(visitLength.avg_ms)}`);
+  console.log(`  הביקור הארוך ביותר:   ${duration(visitLength.longest_ms)}`);
+  console.log(`  נשארו מעל שתי דקות:   ${int(visitLength.over_two_minutes)} מתוך ${int(visitLength.reads)}`);
+  console.log(`  שקפים שונים בביקור:   ${oneDecimal(visitLength.avg_distinct_slides)}`);
+  console.log(`  נמדד על ${int(visitLength.reads)} ביקורים שנקראו, מתוך ${int(visitLength.visits)} כניסות.`);
   console.log('══════════════════════════════════════════════\n');
 }
 
@@ -286,7 +416,14 @@ console.log(
   '\n„קראו" = פתחו לפחות שקף אחד ושהו לפחות ' +
     `${READER_MS / 1000} שניות. „נכנסו" כולל גם סורקים אוטומטיים\n` +
     'ומי שסגר מיד, ולכן הוא תמיד המספר הגבוה יותר.\n\n' +
-    'שניהם סופרים דפדפנים ולא אנשים: אותו מורה מהטלפון ומהמחשב נספר פעמיים.\n' +
+    'שניהם סופרים דפדפנים ולא אנשים: אותו מורה מהטלפון ומהמחשב נספר פעמיים.\n\n' +
+    // Explained only when those words actually appeared above; a glossary for
+    // terms that were never printed is just noise on a quiet day.
+    (liveVisits?.length || int(visitLength?.reads) > 0
+      ? '„באתר" = מאז שנכנס, כולל לשונית שנשארה פתוחה ברקע. „קרא" = הזמן שהמדריך\n' +
+        'היה באמת על המסך — וזה המספר שמעיד על קריאה. אורך הביקור נמדד רק על מי\n' +
+        'שקרא, אחרת סורקים אוטומטיים היו מורידים את החציון לאפס.\n\n'
+      : '') +
     'כדי שהביקורים שלך עצמך לא ייספרו — פתח את האתר פעם אחת עם ‎?analytics=off‎\n' +
     'בסוף הכתובת, בכל מכשיר שלך. לביטול: ‎?analytics=on‎.\n\n' +
     'לכל טווח זמן אחר:  npm run analytics -- --hours 3   ·   --days 30\n'
