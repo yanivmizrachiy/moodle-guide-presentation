@@ -537,7 +537,13 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   eyebrow: 'פתיחת מרחב למידה',
   title: 'צריך להמתין מול המסך בזמן יצירת המרחב?',
   summary: 'לא. יצירת המרחב יכולה להמשיך ברקע, ואין צורך להישאר מול המסך עד לסיום.',
-  screenshots: [{ src: '39-wizard-background-create.png', caption: 'ההודעה שמתקבלת לאחר שליחת בקשת יצירת המרחב.' }],
+  screenshots: [
+    {
+      src: '39-wizard-background-create.png',
+      caption:
+        'זה המסך שרואים בסיום, אחרי שפתחנו מרחב באופן תקין — „בקשתך לפתיחת מרחב הלמידה התקבלה בהצלחה!” — ומכאן ממתינים.',
+    },
+  ],
   keywords: ['יצירה ברקע', 'אין צורך להמתין', 'מרחב חדש'],
   status: 'ready',
   },

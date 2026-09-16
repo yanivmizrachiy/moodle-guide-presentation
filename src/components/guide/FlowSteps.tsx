@@ -85,7 +85,12 @@ export function FlowSteps({
                   href={step.link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-black text-blue-700 underline decoration-2 underline-offset-2 hover:text-blue-900"
+                  // This link lives INSIDE the step sentence, so it must stay text.
+                  // The glass CTA styling is for standalone action buttons; applied
+                  // here it turned the phrase into a pill that shattered into two
+                  // half-pills as soon as the sentence wrapped on a phone.
+                  data-inline-link="true"
+                  className="whitespace-nowrap font-black text-blue-700 underline decoration-2 underline-offset-2 hover:text-blue-900"
                 >
                   {step.link.label}
                 </a>
