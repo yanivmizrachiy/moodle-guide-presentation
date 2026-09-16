@@ -11,12 +11,15 @@ const required = [
   'docs/EDITING_GUIDE.md',
   'docs/GUIDE_MISSING_CAPTURES.md',
   'docs/GUIDE_SCREENSHOTS_MANIFEST.md',
+  'docs/ANALYTICS.md',
+  'db/analytics-schema.sql',
   '.github/workflows/pages.yml',
   'scripts/clean-generated.mjs',
   'scripts/derive-screenshots.mjs',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/data/hotspotPolicy.ts',
+  'src/lib/analytics.ts',
   'src/pages/Guide.tsx',
   'src/index.css',
   'src/guide-visual-isolation.css',
@@ -60,6 +63,42 @@ if (fs.existsSync(guidePath)) {
   const guide = fs.readFileSync(guidePath, 'utf8');
   if (!guide.includes('import.meta.env.BASE_URL')) errors.push('Guide asset URLs must use import.meta.env.BASE_URL.');
   if (guide.includes('return `/guide/screenshots/${src}`;')) errors.push('Root-only screenshot URL remains in Guide.tsx.');
+}
+
+const analyticsPath = path.join(root, 'src/lib/analytics.ts');
+if (fs.existsSync(analyticsPath)) {
+  const analytics = fs.readFileSync(analyticsPath, 'utf8');
+  if (!analytics.includes("const PRODUCTION_HOST = 'yanivmizrachiy.github.io';")) {
+    errors.push('Analytics must remain explicitly gated to the production GitHub Pages host.');
+  }
+  if (!analytics.includes('window.location.hostname !== PRODUCTION_HOST')) {
+    errors.push('Analytics must refuse to run outside the production host.');
+  }
+  if (!analytics.includes('/rest/v1/rpc/track_analytics_events')) {
+    errors.push('Analytics ingestion must use the canonical RPC endpoint.');
+  }
+  if (analytics.includes('/rest/v1/analytics_events')) {
+    errors.push('Browser analytics must not write directly to the analytics_events table endpoint.');
+  }
+  for (const eventType of ['session_start', 'heartbeat', 'slide_view', 'session_end']) {
+    if (!analytics.includes(`'${eventType}'`)) errors.push(`Missing canonical analytics event type: ${eventType}`);
+  }
+}
+
+const analyticsSchemaPath = path.join(root, 'db/analytics-schema.sql');
+if (fs.existsSync(analyticsSchemaPath)) {
+  const schema = fs.readFileSync(analyticsSchemaPath, 'utf8');
+  for (const requiredSql of [
+    'CREATE OR REPLACE FUNCTION public.track_analytics_events(events jsonb)',
+    'CREATE OR REPLACE VIEW public.analytics_sessions AS',
+    'CREATE OR REPLACE VIEW public.analytics_daily AS',
+    'REVOKE ALL ON TABLE public.analytics_events FROM PUBLIC;',
+    'REVOKE ALL ON TABLE public.analytics_events FROM analytics_ingest;',
+    'REVOKE ALL ON FUNCTION public.track_analytics_events(jsonb) FROM PUBLIC;',
+    'GRANT EXECUTE ON FUNCTION public.track_analytics_events(jsonb) TO analytics_ingest;',
+  ]) {
+    if (!schema.includes(requiredSql)) errors.push(`Analytics schema invariant missing: ${requiredSql}`);
+  }
 }
 
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -170,4 +209,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements, one canonical deck, real assets, clean tracked tree, and standalone presentation boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements, one canonical deck, protected analytics boundaries, real assets, clean tracked tree, and standalone presentation boundaries preserved.`);
