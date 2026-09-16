@@ -84,6 +84,9 @@ describe('slide identity', () => {
   it('the cover attribution text stays intact', () => {
     expect(GUIDE_ATTRIBUTION.district.trim()).not.toBe('');
     expect(GUIDE_ATTRIBUTION.site.trim()).not.toBe('');
+    // The owner's page lives in one source and is reachable (REQ-CONTENT-010).
+    expect(GUIDE_ATTRIBUTION.follow.label.trim()).not.toBe('');
+    expect(GUIDE_ATTRIBUTION.follow.href).toMatch(/^https:\/\/www\.facebook\.com\//);
   });
 
   it('every slide has a non-empty title and no blank text fields', () => {

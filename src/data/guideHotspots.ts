@@ -204,10 +204,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '30-student-mycourses-selflearning': [
     { id: 'self-learning', label: 'למידה עצמית', x: 71.5, y: 50.5, width: 14, height: 5 },
   ],
-  // Concept-highlight audit: the one key term that answers each slide's question.
-  '20-wizard-step1-selected': [
-    { id: 'no-group', label: 'ללא קבוצת לימוד', x: 31.3, y: 66.2, width: 18.4, height: 6.3 },
-  ],
   '46-open-space-form': [
     { id: 'next', label: 'הבא', x: 4.2, y: 90.7, width: 3.9, height: 5.2 },
   ],

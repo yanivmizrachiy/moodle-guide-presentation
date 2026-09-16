@@ -8,6 +8,7 @@ import {
   ChevronsDown,
   Copy,
   ExternalLink,
+  Facebook,
   Home,
   List,
   Maximize2,
@@ -102,6 +103,16 @@ function SlideContent({
           <p className="mt-1.5 text-[clamp(.95rem,1.5vw,1.25rem)] font-bold leading-relaxed text-white">
             {GUIDE_ATTRIBUTION.site}
           </p>
+          {/* The owner's page, in one source (REQ-CONTENT-010). */}
+          <a
+            href={GUIDE_ATTRIBUTION.follow.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-3.5 inline-flex items-center gap-2.5 rounded-full border border-sky-300/80 bg-gradient-to-b from-sky-400 to-sky-700 px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_26px_rgba(2,132,199,0.55),0_2px_0_rgba(255,255,255,0.35)_inset,0_-3px_10px_rgba(3,49,89,0.55)_inset] ring-2 ring-sky-200/40 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(56,189,248,0.75),0_2px_0_rgba(255,255,255,0.45)_inset] hover:brightness-110 active:translate-y-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 sm:text-base"
+          >
+            <Facebook aria-hidden="true" className="h-5 w-5 drop-shadow-[0_1px_2px_rgba(2,44,80,0.6)]" />
+            {GUIDE_ATTRIBUTION.follow.label}
+          </a>
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-5 text-center sm:px-10 sm:py-7 lg:px-16">
@@ -776,6 +787,7 @@ export default function Guide() {
                 </header>
 
                 {panel === 'menu' ? (
+                  <>
                   <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="grid gap-3">
                       {GUIDE_SECTIONS.map((section) => {
@@ -861,6 +873,28 @@ export default function Guide() {
                       })}
                     </div>
                   </div>
+                  {/* Way back to the cover, and the owner's page — one source for
+                      the follow link (REQ-CONTENT-010). */}
+                  <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-5 py-4 sm:px-7">
+                    <Button
+                      size="lg"
+                      onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
+                      className="h-12 gap-2 rounded-2xl bg-amber-400 px-5 font-black text-slate-950 hover:bg-amber-300"
+                    >
+                      <Home className="h-5 w-5" />
+                      חזרה לעמוד השער
+                    </Button>
+                    <a
+                      href={GUIDE_ATTRIBUTION.follow.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2.5 rounded-2xl border border-sky-300/80 bg-gradient-to-b from-sky-400 to-sky-700 px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(2,132,199,0.45),0_2px_0_rgba(255,255,255,0.35)_inset,0_-3px_10px_rgba(3,49,89,0.5)_inset] ring-2 ring-sky-200/40 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(56,189,248,0.6),0_2px_0_rgba(255,255,255,0.45)_inset] hover:brightness-110 active:translate-y-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-300 sm:text-base"
+                    >
+                      <Facebook aria-hidden="true" className="h-5 w-5 drop-shadow-[0_1px_2px_rgba(2,44,80,0.6)]" />
+                      {GUIDE_ATTRIBUTION.follow.label}
+                    </a>
+                  </footer>
+                  </>
                 ) : (
                   <div className="flex min-h-0 flex-1 flex-col">
                     <div className="border-b border-slate-200 p-5 sm:px-7">

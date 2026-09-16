@@ -167,6 +167,14 @@ const MOODLE_WIZARD = 'https://moodlemoe.lms.education.gov.il/local/auto_course_
 export const GUIDE_ATTRIBUTION = {
   district: 'הדרכה במחוז ירושלים והעיר ירושלים - מנח״י, בהובלת איילת קריספין',
   site: 'האתר מנוהל ע״י יניב רז · מדריך מחוזי חט״ב בעיר ירושלים',
+  /**
+   * The owner's public page. One source for every place the guide invites the
+   * teacher to follow it — the cover and the table of contents (REQ-CONTENT-010).
+   */
+  follow: {
+    label: 'עקבו אחר „הדפים של יניב” בפייסבוק',
+    href: 'https://www.facebook.com/p/%D7%94%D7%93%D7%A4%D7%99%D7%9D-%D7%A9%D7%9C-%D7%99%D7%A0%D7%99%D7%91-61562668603240/',
+  },
 } as const;
 
 /** Slide 1: the presentation cover. */
@@ -214,7 +222,6 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   cover: 'opening',
   'open-space-start': 'opening',
   'open-space-two-paths': 'opening',
-  'open-space-group-choice': 'opening',
   'open-space-background-create': 'opening',
   'open-space-created-notification': 'opening',
   'wizard-ready-content-catalog': 'wizard',
@@ -495,24 +502,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     ],
   },
   keywords: ['עם קבוצת לימוד', 'ללא קבוצת לימוד', 'עם תלמידים', 'ללא תלמידים', 'שתי דרכים'],
-  status: 'ready',
-  },
-  {
-  id: 'open-space-group-choice',
-  eyebrow: 'פתיחת מרחב למידה',
-  title: 'איך פותחים מרחב בלי קבוצת לימוד?',
-  summary: 'אם בוחרים „ללא קבוצת לימוד”, המרחב ייפתח לרישום עצמאי של תלמידים באופן אוטומטי. לאחר יצירתו שולחים לתלמידים את קישור המרחב.',
-  flow: [
-    {
-      text: 'לוחצים על הכפתור „ללא קבוצת לימוד”.',
-      screenshot: {
-        src: '20-wizard-step1-selected.png',
-        caption: '„ללא קבוצת לימוד” מסומן, ומתחת נפתח הטופס „מרחב למידה חדש”.',
-        hotspotIds: ['no-group'],
-      },
-    },
-  ],
-  keywords: ['קבוצת לימוד', 'ללא קבוצת לימוד', 'רישום עצמי', 'בלי תלמידים'],
   status: 'ready',
   },
   {
