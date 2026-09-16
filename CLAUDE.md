@@ -1,7 +1,7 @@
 # Claude Code
 
 1. `SSOT.md` is the sole normative authority for this project.
-2. This repository is presentation-only. Do not add Teacher Hub, LTI, Supabase, grades, account systems, identifiable user-data systems, or unrelated infrastructure. The anonymous usage analytics explicitly defined in `SSOT.md` is an approved project subsystem; its client code, schema reference and operational documentation belong here.
+2. This repository is the presentation plus the supporting services `SSOT.md` approves. **A database is permitted** (owner decision, 2026-09-16) — today Neon, holding the anonymous usage analytics of REQ-ANALYTICS-001..012; its client code, schema reference, reporting script and operational documentation belong here. What stays out: Teacher Hub, LTI, grades, student data, account systems, identifiable user-data systems, any backend that serves the guide itself, and unrelated infrastructure. The site is still built and published only from this repo through GitHub Pages, and the visitor's browser never receives a database client or a database credential.
 3. Content/order stay canonical in `src/data/guideDeck.ts`; do not create another deck/content source.
 4. Never invent screenshots or hotspots. Missing real evidence stays `needs-capture`. Reuse verified existing evidence before capturing anything new.
 5. Never add, delete, or rewrite owner-authored slide/TOC wording without explicit owner instruction.

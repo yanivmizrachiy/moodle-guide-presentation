@@ -71,27 +71,38 @@ export function installFirstInteractionFullscreen(): () => void {
   if (typeof document === 'undefined' || typeof navigator === 'undefined') return () => {};
   if (!isFullscreenSupported() || navigator.webdriver) return () => {};
 
-  let armed = true;
-  // The first gesture may land on any of these, and whichever fires first must
-  // disarm the others. `pointerdown` is deliberately absent: a drag or a swipe
-  // starts with one, and fullscreen should follow a completed interaction.
+  let pending = false;
+  // `pointerdown` is deliberately absent: a drag or a swipe starts with one, and
+  // fullscreen should follow a completed interaction.
   const events = ['pointerup', 'touchend', 'keydown'] as const;
 
-  const askOnce = () => {
-    if (!armed) return;
-    armed = false;
-    cleanup();
-    if (fullscreenElement()) return;
-    void requestFullscreenNow().catch(() => {
-      // Fullscreen can still be denied by an embedding or enterprise policy.
-      // The header control stays available and the shell still fills the screen.
-    });
+  const ask = () => {
+    if (pending || fullscreenElement()) return;
+    pending = true;
+    void requestFullscreenNow()
+      .then(stop)
+      .catch(() => {
+        // A rejected request must NOT end the attempt. Not every gesture carries
+        // a usable activation, and a policy can refuse one and allow the next —
+        // giving up after a single failure meant the guide silently never went
+        // fullscreen at all. Stay armed and take the next gesture.
+        pending = false;
+      });
   };
 
-  function cleanup() {
-    for (const type of events) window.removeEventListener(type, askOnce, { capture: true });
+  // Once fullscreen is reached the asking is over for this visit — so a teacher
+  // who then leaves it is never pulled back in by their next tap.
+  const onChange = () => {
+    if (fullscreenElement()) stop();
+  };
+
+  function stop() {
+    pending = false;
+    for (const type of events) window.removeEventListener(type, ask, { capture: true });
+    for (const type of FULLSCREEN_CHANGE_EVENTS) document.removeEventListener(type, onChange);
   }
 
-  for (const type of events) window.addEventListener(type, askOnce, { capture: true });
-  return cleanup;
+  for (const type of events) window.addEventListener(type, ask, { capture: true });
+  for (const type of FULLSCREEN_CHANGE_EVENTS) document.addEventListener(type, onChange);
+  return stop;
 }
