@@ -1041,11 +1041,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '90-course-tabs.png', caption: 'תפריט המרחב: „מרחב־לימוד”, „הגדרות”, „משתתפים”, „ציונים”, „דוחות”.', hotspotIds: ['participants-tab'] },
     },
     {
+      // Marked while the menu is still closed — capture 25, which the next step
+      // carries, is that same menu already open. Pressing a control is taught on
+      // the screen it is pressed from (REQ-GUIDE-002).
       text: 'פותחים את התפריט „משתמשים רשומים”.',
       screenshot: {
-        src: '25-participants-nav.png',
-        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” פתוח.',
-        hotspotIds: ['users-menu'],
+        src: '47-participants-list.png',
+        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” סגור.',
+        hotspotIds: ['users-selector'],
       },
     },
     {
@@ -1196,11 +1199,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
+      // Marked while the menu is still closed — capture 25, which the next step
+      // carries, is that same menu already open. Pressing a control is taught on
+      // the screen it is pressed from (REQ-GUIDE-002).
       text: 'פותחים את התפריט „משתמשים רשומים”.',
       screenshot: {
-        src: '25-participants-nav.png',
-        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” פתוח.',
-        hotspotIds: ['users-menu'],
+        src: '47-participants-list.png',
+        caption: 'עמוד „משתתפים” — התפריט „משתמשים רשומים” סגור.',
+        hotspotIds: ['users-selector'],
       },
     },
     {
@@ -1837,6 +1843,16 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         src: '106-return-to-teacher-role.png',
         caption: 'תפריט המשתמש בתצוגת תלמיד — „חזרה לתפקיד הרגיל שלי”.',
         hotspotIds: ['return-role'],
+      },
+    },
+    {
+      // The same space as capture 105, back in the teacher role: 105's bar carries
+      // the „תלמיד” badge and no edit toggle, this one carries the toggle and no
+      // badge. Verified by cropping both bars.
+      text: 'המרחב חוזר לתצוגת מורה — התג „תלמיד” נעלם מהסרגל העליון.',
+      screenshot: {
+        src: '90-course-tabs.png',
+        caption: 'אותו מרחב לאחר החזרה — הסרגל העליון בתצוגת מורה, עם מתג „עריכה”.',
       },
     },
   ],
@@ -2688,7 +2704,16 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['switch-role'],
       },
     },
-    { text: 'בודקים את הפעילות בתצוגת התלמיד.' },
+    {
+      // The step already existed with no image at all, while the capture of this
+      // very state was already published on two other slides.
+      text: 'בודקים את הפעילות בתצוגת התלמיד.',
+      screenshot: {
+        src: '105-student-view-space.png',
+        caption: 'המרחב בתצוגת תלמיד — בסרגל העליון מופיע התפקיד הנוכחי „תלמיד”.',
+        hotspotIds: ['role-indicator'],
+      },
+    },
     { text: 'אם הבעיה נמשכת — פונים למנהל המודל.' },
   ],
   warning: 'לא מוחקים פעילות עם הגשות לפני בדיקת ההשלכות.',
