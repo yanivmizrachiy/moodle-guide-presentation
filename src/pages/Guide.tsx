@@ -802,7 +802,11 @@ export default function Guide() {
                   <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="grid gap-3">
                       {GUIDE_SECTIONS.map((section) => {
-                        const sectionSlides = PUBLISHED_GUIDE_SLIDES.filter((item) => item.section === section.id);
+                        // The cover is the guide's home page, not a chapter entry
+                        // (REQ-CONTENT-012) — the house button leads there.
+                        const sectionSlides = PUBLISHED_GUIDE_SLIDES.filter(
+                          (item) => item.section === section.id && !item.cover
+                        );
                         if (sectionSlides.length === 0) return null;
                         const sectionTopics = GUIDE_TOPICS.filter((topic) => topic.section === section.id);
                         const isOpen = openSection === section.id;

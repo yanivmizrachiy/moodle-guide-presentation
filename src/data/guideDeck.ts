@@ -199,7 +199,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
 export type GuideTopic = { id: string; section: string; title: string };
 
 export const GUIDE_TOPICS: GuideTopic[] = [
-  { id: 'opening', section: 'opening', title: 'שלב אחר שלב' },
+  { id: 'opening', section: 'opening', title: 'יצירת מרחב חדש' },
   { id: 'wizard', section: 'opening', title: 'תוכן מוכן ושכפול' },
   { id: 'start', section: 'opening', title: 'בדיקה לפני פרסום' },
   { id: 'space', section: 'space-management', title: 'המרחב' },
@@ -367,14 +367,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     {
       text: 'מתחברים באמצעות סיסמת משרד החינוך.',
       screenshot: { src: '01-login.png', caption: 'התחברו באמצעות סיסמת משרד החינוך.' },
-    },
-    {
-      text: 'לוחצים על הכפתור „מרחב חדש”.',
-      screenshot: {
-        src: '61-my-courses-new.png',
-        caption: 'עמוד „מרחבי הלמידה שלי” — הכפתור „מרחב חדש”.',
-        hotspotIds: ['new-space'],
-      },
     },
     {
       text: 'בוחרים „עם קבוצת לימוד” או „ללא קבוצת לימוד”.',
