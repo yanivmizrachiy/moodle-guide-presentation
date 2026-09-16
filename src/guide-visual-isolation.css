@@ -46,7 +46,11 @@
  * Desktop rendering, and therefore the visual baselines, are untouched. */
 @media (pointer: coarse) {
   [data-guide-shell="premium-presentation"] header button,
-  [data-guide-shell="premium-presentation"] footer button {
+  [data-guide-shell="premium-presentation"] header a,
+  [data-guide-shell="premium-presentation"] header [role="button"],
+  [data-guide-shell="premium-presentation"] footer button,
+  [data-guide-shell="premium-presentation"] footer a,
+  [data-guide-shell="premium-presentation"] footer [role="button"] {
     min-height: 44px;
     min-width: 44px;
   }

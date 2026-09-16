@@ -11,9 +11,12 @@
          anything but <video>, so the only true fullscreen is "Add to Home Screen":
          these declarations are what make iOS open the guide with no address bar
          and no browser chrome at all. -->
-    <!-- Relative on purpose: Vite already prefixes the base path onto a manifest
-         link, so writing %BASE_URL% here produced the base twice and served the
-         HTML fallback instead of the manifest. -->
+    <!-- Relative, and deliberately unlike the %BASE_URL% icon links below: the Vite
+         DEV server prefixes the base onto a manifest href, so %BASE_URL% there
+         yields the base twice and serves the HTML fallback. The production build
+         leaves this href untouched, and the page is only ever served from the base
+         path itself (navigation is ?slide=, never a deeper path), so the relative
+         form is the one spelling that resolves correctly in dev and in production. -->
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />

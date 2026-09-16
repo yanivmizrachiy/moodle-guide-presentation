@@ -1,7 +1,11 @@
 // Prints how many people used the live guide — today, and the last two weeks.
 //
-// Read-only. It runs SELECTs against the two reporting views that
-// db/analytics-schema.sql already defines, and writes nothing, ever.
+// Read-only: SELECTs only, never a write of any kind.
+//
+// It reads public.analytics_events directly and joins public.analytics_daily for
+// the session count. The raw table is needed because analytics_daily cannot tell a
+// reader from a crawler — that split (REQ-ANALYTICS-012) is computed per visitor
+// here. analytics_sessions is not used by this report.
 //
 // The connection string is a password: it is never committed, never printed, and
 // never passed on the command line (where it would land in shell history). It is
@@ -158,7 +162,10 @@ try {
          WHERE received_at > now() - interval '${hours || 24} hours')::int AS window_visitors,
        (SELECT count(DISTINCT visitor_id) FROM public.analytics_events)::int AS all_visitors,
        (SELECT count(DISTINCT session_id) FROM public.analytics_events)::int AS all_sessions,
-       (SELECT min(received_at) FROM public.analytics_events)::text AS first_event`
+       (SELECT min(received_at) FROM public.analytics_events)::text AS first_event,
+       -- The database's own idea of today, so a wrong clock on this machine
+       -- cannot shift which day the report calls "today" (REQ-ANALYTICS-013).
+       (now() AT TIME ZONE 'Asia/Jerusalem')::date::text AS today`
   );
   live = rows[0] ?? null;
 } catch (error) {
@@ -211,7 +218,10 @@ try {
   process.exit(1);
 }
 
-const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
+// The database clock decides which day is "today"; this machine's clock only
+// fills in if the live query could not be read at all.
+const today =
+  live?.today ?? new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
 const todayRow = rows.find((row) => String(row.day).startsWith(today));
 
 if (live) {

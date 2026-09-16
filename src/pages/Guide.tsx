@@ -606,7 +606,11 @@ export default function Guide() {
       <div
         dir="rtl"
         data-guide-shell="premium-presentation"
-        className="fixed inset-0 z-[100] grid h-dvh grid-rows-[auto_1fr_auto] overflow-hidden bg-[radial-gradient(circle_at_50%_-20%,#1d4ed8_0%,#0f172a_46%,#020617_100%)] text-slate-900"
+        // grid-cols-[minmax(0,1fr)] is load-bearing, not decoration: a grid column
+        // defaults to min-content, so the header's intrinsic width stretched the
+        // whole shell to 413px inside a 375px phone and pushed 38px of every row —
+        // including the „לשקף הבא" control — off the left edge (REQ-PRESENTATION-006).
+        className="fixed inset-0 z-[100] grid h-dvh grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] overflow-hidden bg-[radial-gradient(circle_at_50%_-20%,#1d4ed8_0%,#0f172a_46%,#020617_100%)] text-slate-900"
       >
         <header className="flex min-h-16 items-center justify-between gap-3 border-b border-white/10 bg-slate-950/30 px-3 text-white backdrop-blur-xl sm:px-5 lg:px-8">
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">

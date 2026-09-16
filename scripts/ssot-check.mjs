@@ -95,12 +95,37 @@ if (fs.existsSync(fullscreenPath)) {
   errors.push('Missing required project item: src/lib/fullscreen.ts');
 }
 
-for (const duplicate of ['src/pages/Guide.tsx', 'src/main.tsx']) {
-  const source = path.join(root, duplicate);
-  if (!fs.existsSync(source)) continue;
-  const text = fs.readFileSync(source, 'utf8');
-  if (/requestFullscreen\s*\(/.test(text) || /webkitExitFullscreen/.test(text)) {
-    errors.push(`Fullscreen API must be called only through src/lib/fullscreen.ts; found a direct call in ${duplicate}.`);
+// Every source file, not a hand-picked pair. The previous guard scanned two files
+// with a pattern that could not match `webkitRequestFullscreen` — the very spelling
+// the module exists to provide — so it enforced almost nothing.
+function sourceFilesUnder(dir) {
+  const found = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...sourceFilesUnder(full));
+    else if (/[.]tsx?$/.test(entry.name)) found.push(full);
+  }
+  return found;
+}
+
+const FULLSCREEN_MODULE = path.resolve(root, 'src/lib/fullscreen.ts');
+const DIRECT_FULLSCREEN_CALL = /(?:webkit)?(?:request|exit)Fullscreen\s*\(/i;
+// Anchored on a document receiver on purpose: a bare name would false-positive on
+// the module's own exported fullscreenElement() helper, which is correct usage.
+const DIRECT_FULLSCREEN_READ = /(?:document|doc)\s*\.\s*(?:webkit)?[Ff]ullscreen(?:Element|Enabled)/;
+
+const srcDir = path.join(root, 'src');
+if (fs.existsSync(srcDir)) {
+  for (const file of sourceFilesUnder(srcDir)) {
+    if (path.resolve(file) === FULLSCREEN_MODULE) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    const relative = path.relative(root, file).split(path.sep).join('/');
+    if (DIRECT_FULLSCREEN_CALL.test(text)) {
+      errors.push(`Fullscreen API must be called only through src/lib/fullscreen.ts; direct call in ${relative}.`);
+    }
+    if (DIRECT_FULLSCREEN_READ.test(text)) {
+      errors.push(`Fullscreen state must be read through src/lib/fullscreen.ts; direct read in ${relative}.`);
+    }
   }
 }
 

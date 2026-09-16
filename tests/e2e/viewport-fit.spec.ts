@@ -158,6 +158,8 @@ test('the cover carries no navigation controls', async ({ page }) => {
   // would be a second door to the same room.
   await expect(page.getByRole('button', { name: 'חיפוש במצגת' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'התחל' })).toBeVisible();
+  // The way in and out of fullscreen stays on the cover too (REQ-PRESENTATION-004).
+  await expect(page.getByRole('button', { name: /מסך מלא/ })).toBeVisible();
 
   // Every other slide keeps the full navigation.
   await page.goto('./?slide=edit-mode');
@@ -175,7 +177,10 @@ test('every control a thumb reaches is at least 44px on a phone', async ({ page 
   await waitForStableSlide(page);
 
   const tooSmall = await page.evaluate(() => {
-    const chrome = [...document.querySelectorAll('header button, footer button')];
+    // Links and role=button count too: a control is whatever a thumb taps.
+    const chrome = [
+      ...document.querySelectorAll('header button, header a, header [role="button"], footer button, footer a, footer [role="button"]'),
+    ];
     return chrome
       .map((element) => {
         const rect = element.getBoundingClientRect();
@@ -201,16 +206,53 @@ test('every published slide fits a 375px phone without sideways scrolling', asyn
     await page.goto(`./?slide=${encodeURIComponent(slide.id)}`);
     await waitForStableSlide(page);
 
-    const overflow = await page.evaluate(() => ({
-      docWidth: document.documentElement.scrollWidth,
-      viewportWidth: window.innerWidth,
-      docScrollsDown: document.documentElement.scrollHeight > window.innerHeight + 1,
-    }));
+    // Document-level metrics CANNOT see this: the shell is `fixed inset-0
+    // overflow-hidden`, so it pins documentElement.scrollWidth to the viewport
+    // while the slide overflows sideways behind it. An earlier version of this
+    // test checked only those, and passed on a build that pushed the „לשקף הבא"
+    // control 26px off the left edge. Measure the slide and the chrome instead.
+    const overflow = await page.evaluate(() => {
+      const article = document.querySelector('article[data-slide-id], article[data-cover="true"]');
+      const controls = [...document.querySelectorAll('header button, header a, footer button, footer a')];
+      return {
+        rendered: Boolean(article),
+        scrollWidth: article?.scrollWidth ?? 0,
+        clientWidth: article?.clientWidth ?? 0,
+        overflowX: article ? getComputedStyle(article).overflowX : '',
+        viewportWidth: window.innerWidth,
+        offscreen: controls
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              label: element.getAttribute('aria-label') ?? element.textContent?.trim().slice(0, 16) ?? '?',
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+            };
+          })
+          .filter((box) => box.width > 0 && (box.left < -1 || box.right > window.innerWidth + 1)),
+      };
+    });
 
-    if (overflow.docWidth > overflow.viewportWidth + 1) {
-      failures.push(`${slide.id}: horizontal ${overflow.docWidth}>${overflow.viewportWidth}`);
+    if (!overflow.rendered) {
+      failures.push(`${slide.id}: slide did not render`);
+      continue;
     }
-    if (overflow.docScrollsDown) failures.push(`${slide.id}: document scrolls`);
+    if (overflow.scrollWidth > overflow.clientWidth + 1) {
+      failures.push(`${slide.id}: slide overflows sideways ${overflow.scrollWidth}>${overflow.clientWidth}`);
+    }
+    // NOT asserted: computed overflow-x. CSS forces the other axis to `auto` when
+    // one axis is not `visible`, so every slide that legitimately scrolls
+    // vertically reports overflow-x:auto without any sideways overflow existing.
+    // scrollWidth vs clientWidth above is the measurement that actually detects it.
+    if (overflow.overflowX === 'scroll') {
+      failures.push(`${slide.id}: slide has a real sideways scrollbar`);
+    }
+    for (const control of overflow.offscreen) {
+      failures.push(
+        `${slide.id}: control „${control.label}" is off screen (${control.left}..${control.right} of ${overflow.viewportWidth})`
+      );
+    }
   }
 
   expect(failures, 'Slides that violate REQ-PRESENTATION-006').toEqual([]);

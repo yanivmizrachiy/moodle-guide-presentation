@@ -80,7 +80,16 @@ export function installFirstInteractionFullscreen(): () => void {
     if (pending || fullscreenElement()) return;
     pending = true;
     void requestFullscreenNow()
-      .then(stop)
+      .then(() => {
+        // Resolution is NOT proof of success. Safari's webkitRequestFullscreen()
+        // returns undefined and reports refusal later through an event, so
+        // `await` on it always resolves — treating that as success disarmed the
+        // retry on exactly the browsers the webkit branch exists for. Ask the
+        // document what actually happened instead; `onChange` below is what ends
+        // the asking once fullscreen is genuinely entered.
+        if (fullscreenElement()) stop();
+        else pending = false;
+      })
       .catch(() => {
         // A rejected request must NOT end the attempt. Not every gesture carries
         // a usable activation, and a policy can refuse one and allow the next —
