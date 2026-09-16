@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -34,10 +34,11 @@ jobs:
         with:
           path: ./dist
 
-  # Pixel baselines in the repository are win32 snapshots. Run the visual
-  # suite on Windows so production cannot deploy while visual regressions are skipped.
+  # Pixel baselines in the repository are win32 snapshots. Use an explicit
+  # Windows 2025 image so the production visual gate remains real while avoiding
+  # a stalled windows-latest queue.
   visual:
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -53,7 +54,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     needs: [build, visual]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Deploy
         id: deployment
