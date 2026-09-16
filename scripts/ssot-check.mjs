@@ -108,8 +108,22 @@ if (fs.existsSync(viewportTestPath)) {
   if (!viewportTest.includes('1280, height: 640')) {
     errors.push('Viewport regression test must keep the short laptop browser viewport case.');
   }
-  if (!viewportTest.includes('scrollHeight > metrics.clientHeight + 1')) {
-    errors.push('Viewport regression test must detect real hidden vertical overflow, not only visible scrollbars.');
+  // REQ-PRESENTATION-002: a content slide may scroll inside its own article — it
+  // teaches click-after-click with full screenshots and is taller than a phone by
+  // design. Only the cover is one screen (REQ-PRESENTATION-001). What must never
+  // regress is the page scrolling or anything scrolling sideways.
+  if (!viewportTest.includes('scrollWidth > metrics.clientWidth + 1')) {
+    errors.push('Viewport regression test must detect horizontal overflow on every published slide.');
+  }
+  if (!viewportTest.includes('documentScrollHeight > metrics.viewportHeight + 1')) {
+    errors.push('Viewport regression test must detect the document itself becoming scrollable.');
+  }
+  // REQ-PRESENTATION-005 and REQ-PRESENTATION-006.
+  if (!viewportTest.includes('the cover carries no navigation controls')) {
+    errors.push('Viewport regression test must prove the cover offers no navigation controls.');
+  }
+  if (!viewportTest.includes('width: 375')) {
+    errors.push('Viewport regression test must keep the 375px phone case.');
   }
 }
 

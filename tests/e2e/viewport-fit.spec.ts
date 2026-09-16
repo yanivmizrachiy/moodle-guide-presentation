@@ -95,7 +95,7 @@ test('cover stays completely inside one viewport without scrolling', async ({ pa
   }
 });
 
-test('every published content slide stays inside supported laptop viewports without scrolling', async ({ page }, testInfo) => {
+test('no published slide ever scrolls the page or scrolls sideways', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'Laptop viewport invariant is exercised by the desktop project.');
   test.setTimeout(480_000);
 
@@ -127,9 +127,11 @@ test('every published content slide stays inside supported laptop viewports with
         };
       });
 
+      // REQ-PRESENTATION-002: a content slide teaches click-after-click with full
+      // screenshots, so on a small screen it is taller than the viewport BY
+      // DESIGN and scrolls inside its own article. What must never happen is the
+      // page itself scrolling, or anything scrolling sideways.
       const reasons: string[] = [];
-      if (metrics.overflowY !== 'hidden') reasons.push(`overflow-y=${metrics.overflowY}`);
-      if (metrics.scrollHeight > metrics.clientHeight + 1) reasons.push(`vertical ${metrics.scrollHeight}>${metrics.clientHeight}`);
       if (metrics.scrollWidth > metrics.clientWidth + 1) reasons.push(`horizontal ${metrics.scrollWidth}>${metrics.clientWidth}`);
       if (metrics.documentScrollHeight > metrics.viewportHeight + 1) reasons.push('document scrolls');
       if (metrics.bodyScrollHeight > metrics.viewportHeight + 1) reasons.push('body scrolls');
@@ -139,6 +141,57 @@ test('every published content slide stays inside supported laptop viewports with
   }
 
   expect(failures, 'Slides that violate REQ-PRESENTATION-002').toEqual([]);
+});
+
+test('the cover carries no navigation controls', async ({ page }) => {
+  // REQ-PRESENTATION-005: the cover IS the home page, so a house pointing at it,
+  // a „back" with nothing behind it, a contents button beside „התחל" and a slide
+  // counter are all noise. Search and the fullscreen control stay.
+  await page.goto('./');
+  await expect(page.locator('article[data-cover="true"]')).toBeVisible();
+
+  for (const label of ['עמוד הבית', 'תוכן העניינים', 'חזרה שלב אחד אחורה', 'לשקף הקודם', 'לשקף הבא']) {
+    await expect(page.getByRole('button', { name: label }), `the cover must not offer „${label}”`).toHaveCount(0);
+  }
+
+  // „התחל" opens the table of contents, which is why a contents button beside it
+  // would be a second door to the same room.
+  await expect(page.getByRole('button', { name: 'חיפוש במצגת' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'התחל' })).toBeVisible();
+
+  // Every other slide keeps the full navigation.
+  await page.goto('./?slide=edit-mode');
+  await expect(page.getByRole('button', { name: 'עמוד הבית' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'תוכן העניינים' })).toBeVisible();
+});
+
+test('every published slide fits a 375px phone without sideways scrolling', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Phone-width invariant is exercised by the mobile project.');
+  test.setTimeout(480_000);
+
+  // REQ-PRESENTATION-006: iPhone SE width is the narrowest real device the guide
+  // must serve. Vertical scrolling inside the slide is fine; a sideways scrollbar
+  // never is, and neither is content wider than the screen.
+  await page.setViewportSize({ width: 375, height: 667 });
+  const failures: string[] = [];
+
+  for (const slide of PUBLISHED_GUIDE_SLIDES) {
+    await page.goto(`./?slide=${encodeURIComponent(slide.id)}`);
+    await waitForStableSlide(page);
+
+    const overflow = await page.evaluate(() => ({
+      docWidth: document.documentElement.scrollWidth,
+      viewportWidth: window.innerWidth,
+      docScrollsDown: document.documentElement.scrollHeight > window.innerHeight + 1,
+    }));
+
+    if (overflow.docWidth > overflow.viewportWidth + 1) {
+      failures.push(`${slide.id}: horizontal ${overflow.docWidth}>${overflow.viewportWidth}`);
+    }
+    if (overflow.docScrollsDown) failures.push(`${slide.id}: document scrolls`);
+  }
+
+  expect(failures, 'Slides that violate REQ-PRESENTATION-006').toEqual([]);
 });
 
 test('short mobile screens never clip the cover start control', async ({ page }, testInfo) => {

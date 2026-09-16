@@ -43,6 +43,52 @@ import {
 
 type Panel = 'menu' | 'search' | null;
 
+/**
+ * The Fullscreen API with its vendor spelling, in one place.
+ *
+ * Safari still exposes only the `webkit*` names, so a guide that called the
+ * standard ones alone had no fullscreen at all on a Mac or an iPad. iPhone is
+ * the real exception: iOS Safari grants fullscreen to <video> and to nothing
+ * else, so `isFullscreenSupported()` is false there and the control hides
+ * itself — the fixed 100dvh shell is what fills the phone screen, and the
+ * browser's own UI collapses as the teacher scrolls.
+ */
+type WebkitFullscreenDocument = Document & {
+  webkitFullscreenElement?: Element | null;
+  webkitFullscreenEnabled?: boolean;
+  webkitExitFullscreen?: () => Promise<void> | void;
+};
+type WebkitFullscreenElement = HTMLElement & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+};
+
+function fullscreenElement(): Element | null {
+  const doc = document as WebkitFullscreenDocument;
+  return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+}
+
+function isFullscreenSupported(): boolean {
+  if (typeof document === 'undefined') return false;
+  const doc = document as WebkitFullscreenDocument;
+  const root = document.documentElement as WebkitFullscreenElement;
+  return Boolean(
+    (doc.fullscreenEnabled && root.requestFullscreen) ||
+      (doc.webkitFullscreenEnabled && root.webkitRequestFullscreen)
+  );
+}
+
+async function requestFullscreenNow(): Promise<void> {
+  const root = document.documentElement as WebkitFullscreenElement;
+  if (root.requestFullscreen) await root.requestFullscreen();
+  else if (root.webkitRequestFullscreen) await root.webkitRequestFullscreen();
+}
+
+async function exitFullscreenNow(): Promise<void> {
+  const doc = document as WebkitFullscreenDocument;
+  if (doc.exitFullscreen) await doc.exitFullscreen();
+  else if (doc.webkitExitFullscreen) await doc.webkitExitFullscreen();
+}
+
 function getSlideIndexFromUrl(): number {
   if (typeof window === 'undefined') return 0;
   const slideId = new URLSearchParams(window.location.search).get('slide');
@@ -94,9 +140,16 @@ function SlideContent({
   if (slide.cover) {
     return (
       <div className="relative flex min-h-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white">
-        <div className="pointer-events-none absolute -right-32 -top-36 h-96 w-96 rounded-full bg-blue-500/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-amber-400/15 blur-3xl" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-blue-800/25 to-transparent" />
+        {/* The glows hang past the cover's edges on purpose. Left loose they are
+            clipped from sight but still counted in the cover's scrollHeight — 128px
+            of phantom height that made the cover read as overflowing on a short
+            laptop screen (REQ-PRESENTATION-001). Their own clipped layer keeps the
+            look and gives the cover back its true height. */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -right-32 -top-36 h-96 w-96 rounded-full bg-blue-500/25 blur-3xl" />
+          <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-amber-400/15 blur-3xl" />
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-blue-800/25 to-transparent" />
+        </div>
 
         <div className="relative z-10 w-full border-b border-amber-300/50 bg-slate-950/88 px-4 py-4 text-center shadow-[0_12px_36px_rgba(0,0,0,0.24)] sm:px-8 sm:py-5">
           <p className="text-[clamp(1.05rem,2vw,1.65rem)] font-black leading-tight text-amber-200">
@@ -373,6 +426,11 @@ export default function Guide() {
   const [panel, setPanel] = useState<Panel>(null);
   const [query, setQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const autoFullscreenTried = useRef(false);
+  // Read once on mount: it never changes for a given browser, and reading it
+  // during render would differ between the server pass and the client.
+  const [fullscreenSupported, setFullscreenSupported] = useState(false);
+  useEffect(() => setFullscreenSupported(isFullscreenSupported()), []);
   const [direction, setDirection] = useState(1);
   const [lightbox, setLightbox] = useState<LightboxState>(null);
   // Which chapter is expanded in the table of contents. The menu lists only the
@@ -434,10 +492,39 @@ export default function Guide() {
   }
 
   async function toggleFullscreen() {
-    if (!document.fullscreenEnabled) return;
-    if (document.fullscreenElement) await document.exitFullscreen();
-    else await document.documentElement.requestFullscreen();
+    if (!isFullscreenSupported()) return;
+    if (fullscreenElement()) await exitFullscreenNow();
+    else await requestFullscreenNow();
   }
+
+  /**
+   * Real fullscreen the moment the browser allows it (REQ-PRESENTATION-004).
+   * requestFullscreen() is refused without user activation, so the guide asks on
+   * the first real gesture — a tap, a click, a key — and then stops asking. It
+   * asks ONCE per visit on purpose: a teacher who leaves fullscreen must not be
+   * dragged back into it by their next tap. The manual control stays the way in
+   * and the way out.
+   */
+  useEffect(() => {
+    if (!isFullscreenSupported() || autoFullscreenTried.current) return;
+
+    const askOnce = () => {
+      if (autoFullscreenTried.current) return;
+      autoFullscreenTried.current = true;
+      detach();
+      if (!fullscreenElement()) void requestFullscreenNow().catch(() => undefined);
+    };
+
+    // `once` is not enough on its own: the first gesture may arrive on any of
+    // these, and whichever fires first must cancel the others.
+    const events: (keyof DocumentEventMap)[] = ['pointerdown', 'touchend', 'keydown'];
+    function detach() {
+      for (const type of events) document.removeEventListener(type, askOnce);
+    }
+    for (const type of events) document.addEventListener(type, askOnce, { passive: true });
+
+    return detach;
+  }, []);
 
   useEffect(() => {
     const onPopState = () => {
@@ -447,13 +534,15 @@ export default function Guide() {
       setPanel(null);
       setLightbox(null);
     };
-    const onFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    const onFullscreenChange = () => setIsFullscreen(Boolean(fullscreenElement()));
 
     window.addEventListener('popstate', onPopState);
     document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
     return () => {
       window.removeEventListener('popstate', onPopState);
       document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
     };
   }, [currentIndex]);
 
@@ -540,7 +629,7 @@ export default function Guide() {
       if (event.key === 'Escape') {
         if (lightbox) setLightbox(null);
         else if (panel) setPanel(null);
-        else if (document.fullscreenElement) void document.exitFullscreen();
+        else if (fullscreenElement()) void exitFullscreenNow();
         return;
       }
       if (isTyping || panel || lightbox) return;
@@ -591,34 +680,41 @@ export default function Guide() {
       >
         <header className="flex min-h-16 items-center justify-between gap-3 border-b border-white/10 bg-slate-950/30 px-3 text-white backdrop-blur-xl sm:px-5 lg:px-8">
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-            {/* The house leads home, and home is the cover — the guide's main
-                page (REQ-CONTENT-012). The table of contents has its own
-                controls: „התחל" on the cover and „תוכן" in the bottom bar. */}
-            <Button
-              size="icon"
-              aria-label="עמוד הבית"
-              onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
-              className="rounded-xl bg-pink-500 text-white shadow-md ring-1 ring-pink-300/50 hover:bg-pink-600 hover:text-white focus-visible:ring-2 focus-visible:ring-pink-300"
-            >
-              <Home className="h-6 w-6" />
-            </Button>
-            <Button
-              size="icon"
-              aria-label="תוכן העניינים"
-              onClick={() => setPanel('menu')}
-              className="rounded-xl bg-white/10 text-white shadow-md ring-1 ring-white/25 hover:bg-white/20 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50"
-            >
-              <List className="h-6 w-6" />
-            </Button>
-            <Button
-              size="icon"
-              aria-label="חזרה שלב אחד אחורה"
-              onClick={() => goBy(-1)}
-              disabled={!canGoPrevious}
-              className="rounded-xl bg-amber-400 text-slate-950 shadow-md hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-300 disabled:opacity-40"
-            >
-              <ArrowRight className="h-6 w-6" />
-            </Button>
+            {/* The cover IS the guide's home page (REQ-CONTENT-012), so it carries
+                no navigation: a house pointing at the page you are already on, a
+                „back" with nothing behind it and a contents button beside „התחל"
+                are all noise on the one screen that should read as a cover
+                (REQ-PRESENTATION-005). Search and the fullscreen control stay
+                everywhere. */}
+            {!isCover && (
+              <>
+                <Button
+                  size="icon"
+                  aria-label="עמוד הבית"
+                  onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
+                  className="rounded-xl bg-pink-500 text-white shadow-md ring-1 ring-pink-300/50 hover:bg-pink-600 hover:text-white focus-visible:ring-2 focus-visible:ring-pink-300"
+                >
+                  <Home className="h-6 w-6" />
+                </Button>
+                <Button
+                  size="icon"
+                  aria-label="תוכן העניינים"
+                  onClick={() => setPanel('menu')}
+                  className="rounded-xl bg-white/10 text-white shadow-md ring-1 ring-white/25 hover:bg-white/20 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50"
+                >
+                  <List className="h-6 w-6" />
+                </Button>
+                <Button
+                  size="icon"
+                  aria-label="חזרה שלב אחד אחורה"
+                  onClick={() => goBy(-1)}
+                  disabled={!canGoPrevious}
+                  className="rounded-xl bg-amber-400 text-slate-950 shadow-md hover:bg-amber-300 focus-visible:ring-2 focus-visible:ring-amber-300 disabled:opacity-40"
+                >
+                  <ArrowRight className="h-6 w-6" />
+                </Button>
+              </>
+            )}
             <Button variant="ghost" size="sm" aria-label="חיפוש במצגת" onClick={() => setPanel('search')} className="gap-2 text-white hover:bg-white/10 hover:text-white">
               <Search className="h-5 w-5" />
               <span className="hidden sm:inline">חיפוש</span>
@@ -637,16 +733,21 @@ export default function Guide() {
           )}
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => void toggleFullscreen()}
-              disabled={!document.fullscreenEnabled}
-              aria-label={isFullscreen ? 'יציאה ממסך מלא' : 'מעבר למסך מלא'}
-              className="text-white hover:bg-white/10 hover:text-white"
-            >
-              {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
-            </Button>
+            {/* The way out of fullscreen is always on screen while fullscreen is
+                possible at all. Where the browser grants it to no element —
+                iOS Safari on iPhone — a permanently dead button would be worse
+                than none, and the fixed 100dvh shell already fills the screen. */}
+            {fullscreenSupported && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => void toggleFullscreen()}
+                aria-label={isFullscreen ? 'יציאה ממסך מלא' : 'מעבר למסך מלא'}
+                className="text-white hover:bg-white/10 hover:text-white"
+              >
+                {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+              </Button>
+            )}
           </div>
         </header>
 
