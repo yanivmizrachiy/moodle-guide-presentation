@@ -1907,7 +1907,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       text: 'בוחרים „כלי או שירות LTI חיצוני”.',
       screenshot: { src: '08-more-options.jpg', caption: 'תפריט „אפשרויות נוספות” כולל ניהול כלי LTI.', hotspotIds: ['lti'] },
     },
-    { text: 'נפתח עמוד הכלים והשירותים החיצוניים.' },
+    {
+      text: 'נפתח עמוד הכלים והשירותים החיצוניים.',
+      screenshot: {
+        src: '109-lti-page.png',
+        caption: 'עמוד „מופעי רכיב/תוכן חיצוני (LTI)” — במרחב שאין בו כלי חיצוני מחובר מופיעה ההודעה „לא נמצאו מופעי רכיב חיצוני (LTI)”.',
+        hotspotIds: ['lti-page-title'],
+      },
+    },
   ],
   warning: 'לא משנים הגדרות חיבור ללא הרשאה.',
   keywords: ['LTI', 'כלי חיצוני', 'חיבור'],

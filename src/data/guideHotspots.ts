@@ -434,6 +434,11 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800, the same item moments later: the „מוסתר בפני תלמידים” tag is gone
   // from the spot it occupied on the capture above.
+  // 3200x1800, captured live 2026-09-16: the external-tools page as it really
+  // opens in this space — titled and empty, because no LTI tool is connected here.
+  '109-lti-page': [
+    { id: 'lti-page-title', label: 'מופעי רכיב/תוכן חיצוני (LTI)', x: 74.5, y: 22.8, width: 21.5, height: 9.0 },
+  ],
   '108-unhidden-item': [
     { id: 'tag-gone', label: 'המקום שבו היה התג „מוסתר בפני תלמידים”', x: 66.5, y: 41.5, width: 10.0, height: 3.5 },
   ],
