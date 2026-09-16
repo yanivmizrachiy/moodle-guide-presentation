@@ -1,20 +1,33 @@
 -- Canonical reference schema for the Moodle Guide anonymous analytics system.
 -- The live database is Neon/PostgreSQL. Verify the live schema before applying changes.
 -- Do not add public SELECT access and do not grant analytics_ingest direct table access.
+-- Constraint set below was verified against the live database on 2026-09-16.
 
 CREATE TABLE IF NOT EXISTS public.analytics_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   received_at timestamptz NOT NULL DEFAULT now(),
   session_id uuid NOT NULL,
   visitor_id uuid NOT NULL,
-  event_type text NOT NULL,
+  event_type text NOT NULL
+    CONSTRAINT analytics_events_event_type_check
+    CHECK (event_type IN ('session_start', 'heartbeat', 'slide_view', 'session_end')),
   slide_id text,
-  active_ms integer NOT NULL DEFAULT 0,
+  active_ms integer NOT NULL DEFAULT 0
+    CONSTRAINT analytics_events_active_ms_check
+    CHECK (active_ms >= 0 AND active_ms <= 30000),
   client_ts timestamptz NOT NULL,
-  path text NOT NULL,
-  referrer text,
-  viewport_width integer,
+  path text NOT NULL
+    CONSTRAINT analytics_events_path_check
+    CHECK (char_length(path) <= 500),
+  referrer text
+    CONSTRAINT analytics_events_referrer_check
+    CHECK (referrer IS NULL OR char_length(referrer) <= 1000),
+  viewport_width integer
+    CONSTRAINT analytics_events_viewport_width_check
+    CHECK (viewport_width IS NULL OR (viewport_width >= 1 AND viewport_width <= 10000)),
   viewport_height integer
+    CONSTRAINT analytics_events_viewport_height_check
+    CHECK (viewport_height IS NULL OR (viewport_height >= 1 AND viewport_height <= 10000))
 );
 
 CREATE INDEX IF NOT EXISTS analytics_events_received_at_idx
