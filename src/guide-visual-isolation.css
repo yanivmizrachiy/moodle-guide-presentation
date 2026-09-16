@@ -24,6 +24,71 @@
   opacity: 1;
 }
 
+/* REQ-PRESENTATION-001: the cover is one presentation screen, never a scroll page.
+ * Give it the complete main-stage height instead of constraining it to a 16:9 box
+ * that can become shorter than its own content on common laptop viewports. */
+[data-guide-shell="premium-presentation"] article[data-cover="true"] {
+  width: min(96vw, 1660px) !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  aspect-ratio: auto !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+}
+
+[data-guide-shell="premium-presentation"] article[data-cover="true"]::-webkit-scrollbar {
+  display: none;
+}
+
+[data-guide-shell="premium-presentation"] article[data-cover="true"] > div {
+  height: 100%;
+  min-height: 0 !important;
+}
+
+/* Laptop-height compaction keeps every owner-approved cover element visible
+ * without changing its text or removing content. */
+@media (min-width: 641px) and (max-height: 820px) {
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] > div > div[class*="border-amber-300"] {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] > div > div:last-child {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] img[alt^="יחידת מתמטיקה"] {
+    width: clamp(4.75rem, 12dvh, 6.5rem) !important;
+    height: clamp(4.75rem, 12dvh, 6.5rem) !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] h1.font-display {
+    font-size: clamp(2rem, 6dvh, 3.5rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] h1.font-display + p {
+    margin-top: 0.5rem !important;
+    font-size: clamp(0.9rem, 2.2dvh, 1.1rem) !important;
+    line-height: 1.35 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] a[target="_blank"] {
+    margin-top: 0.55rem !important;
+    padding-top: 0.45rem !important;
+    padding-bottom: 0.45rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] button {
+    height: 3.25rem !important;
+    min-height: 3.25rem !important;
+    padding-inline: 2rem !important;
+    font-size: 1.05rem !important;
+  }
+}
+
 /* Content slides sit on a light background, so pin the heading to ink. The cover
  * slide has a dark gradient and its heading is intentionally white — exclude it,
  * or the title turns near-black on near-black and disappears. */
