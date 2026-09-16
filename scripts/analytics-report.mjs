@@ -339,6 +339,30 @@ if (visitLength && int(visitLength.reads) > 0) {
   console.log('══════════════════════════════════════════════\n');
 }
 
+/**
+ * An empty table is not a quiet day — it is a fault, and saying nothing here
+ * would let the owner conclude that nobody reads his guide.
+ *
+ * Verified on 2026-09-17: the browser posts every event to Neon's Data API, which
+ * answers `400 missing authentication credentials: required authorization bearer
+ * token in JWT format`. The client sends no token by design (REQ-ANALYTICS-007
+ * keeps credentials out of the visitor's browser), so not one event has ever been
+ * stored. The reporting side below is correct and proven; it simply has nothing to
+ * read yet.
+ */
+if (live && int(live.all_sessions) === 0 && int(live.all_visitors) === 0) {
+  console.log('══════════════════════════════════════════════');
+  console.log('  ⚠  המדידה מעולם לא קלטה אף אירוע.');
+  console.log('');
+  console.log('  זו תקלה ולא יום שקט. הדפדפן שולח כל אירוע ל-Data API');
+  console.log('  של Neon, וזה דורש אסימון JWT שהלקוח אינו שולח — בכוונה,');
+  console.log('  כדי שלא תהיה סיסמה בדפדפן של המורים. כל שליחה נדחית ב-400.');
+  console.log('');
+  console.log('  המספרים שלמטה נכונים; פשוט אין עדיין מה לספור.');
+  console.log('  ההסבר המלא והאפשרויות: docs/ANALYTICS.md → „הקליטה אינה פעילה".');
+  console.log('══════════════════════════════════════════════\n');
+}
+
 console.log('══════════════════════════════════════════════');
 if (todayRow) {
   console.log(`  היום קראו את המדריך:  ${int(todayRow.readers)}`);
