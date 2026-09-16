@@ -638,10 +638,12 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך יודעים שהמרחב נוצר?',
   flow: [
     {
+      // The bell is pressed while it is still closed; capture 40, on the next
+      // step, is that same bell with its panel open.
       text: 'לוחצים על פעמון ההתראות בסרגל העליון.',
       screenshot: {
-        src: '40-wizard-notification-update.png',
-        caption: 'פעמון ההתראות במודל עם ההתראה „המערכת הצליחה ליצור את המרחב הלמידה שלך…”.',
+        src: '10-course-page.png',
+        caption: 'הסרגל העליון — פעמון ההתראות עם התראות שלא נפתחו.',
         hotspotIds: ['bell'],
       },
     },
@@ -839,18 +841,29 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'שכפול מרחב משנה קודמת נעשה באופן עצמאי, ללא הגשת טופס בקשה למשרד החינוך.',
   flow: [
     {
+      // The row is picked while it is still unpicked: on capture 37 it sits on
+      // white and „הבא” is pale, on capture 38 it is highlighted and „הבא” is
+      // solid. The old order marked the already-picked row and then jumped back
+      // to capture 36 — a third list, sorted differently and with nothing chosen.
       text: 'בוחרים ברשימה את המרחב משנת הלימודים הקודמת.',
+      screenshot: {
+        src: '37-wizard-clone-sort.png',
+        caption: 'רשימת המרחבים ממוינת לפי שנת לימודים — לפני הבחירה.',
+        hotspotIds: ['previous-year'],
+      },
+    },
+    {
+      text: 'השורה שנבחרה מסומנת, וכפתור „הבא” נעשה פעיל.',
       screenshot: {
         src: '38-wizard-clone-previous-year.png',
         caption: 'מרחב משנת תשפ"ה מסומן ברשימה — מוכן לשכפול.',
-        hotspotIds: ['previous-year'],
       },
     },
     {
       text: 'לוחצים על הכפתור „הבא”.',
       screenshot: {
-        src: '36-wizard-clone-my-content.png',
-        caption: 'רשימת המרחבים לשכפול — „שם מרחב הלמידה”, „בית ספר” ו„שנת לימודים”.',
+        src: '38-wizard-clone-previous-year.png',
+        caption: 'מרחב משנת תשפ"ה מסומן ברשימה — מוכן לשכפול.',
         hotspotIds: ['next'],
       },
     },

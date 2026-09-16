@@ -106,6 +106,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   // slides, so each is marked only on steps that opt in via hotspotIds.
   '10-course-page': [
     { id: 'edit-toggle', label: 'עריכה', x: 1.3, y: 1.9, width: 6, height: 2.9 },
+    // The bell still closed, carrying its unread badge. Measured on this file at
+    // 14.55% across and 1.16% down — the same box capture 40 marks once it is open.
+    { id: 'bell', label: 'סמל הפעמון — התראות', x: 14.4, y: 1.4, width: 2.5, height: 3.6 },
     { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
     { id: 'participants-tab', label: 'משתתפים', x: 51.6, y: 20.4, width: 5, height: 4.6 },
   ],
@@ -149,10 +152,16 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '37-wizard-clone-sort': [
     { id: 'search', label: 'חיפוש', x: 87.3, y: 26.0, width: 8.7, height: 4.1 },
     { id: 'year-sort', label: 'מיון לפי שנת לימודים', x: 5.3, y: 32.9, width: 7.5, height: 2.8 },
+    // The תשפ"ה row before it is picked — white here, highlighted blue on
+    // capture 38. Same box that capture 38 marks.
+    { id: 'previous-year', label: 'מרחב משנה קודמת', x: 6.2, y: 68.1, width: 3.7, height: 3.1 },
   ],
   // 3200x1800 clone list: the selected previous-year row's year cell.
   '38-wizard-clone-previous-year': [
     { id: 'previous-year', label: 'מרחב משנה קודמת', x: 6.2, y: 68.1, width: 3.7, height: 3.1 },
+    // „הבא” is solid here because a row is selected; on capture 37, one state
+    // earlier, the same button is pale. Same box as capture 36 uses.
+    { id: 'next', label: 'הבא', x: 3.5, y: 85.3, width: 5.3, height: 6.2 },
   ],
   // 3200x1800 grader report: the "ציונים" tab in the space navigation.
   '65-gradebook-grader': [
