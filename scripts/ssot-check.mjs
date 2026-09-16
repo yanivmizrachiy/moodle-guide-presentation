@@ -23,6 +23,7 @@ const required = [
   'src/pages/Guide.tsx',
   'src/index.css',
   'src/guide-visual-isolation.css',
+  'tests/e2e/viewport-fit.spec.ts',
   'public/guide/jerusalem-math-logo.png',
   'public/guide/jerusalem-math-logo.webp',
   'public/guide/screenshots',
