@@ -74,11 +74,33 @@ if (fs.existsSync(mainPath)) {
   if (!main.includes('installFirstInteractionFullscreen')) {
     errors.push('Guide must request native fullscreen from the first eligible real user interaction.');
   }
-  if (!main.includes('document.documentElement.requestFullscreen()')) {
+}
+
+// REQ-PRESENTATION-004 + REQ-STABILITY-003: the Fullscreen API is touched in one
+// module only. Two copies once drifted apart — the second fired first and skipped
+// the automated-run exclusion the first one promised.
+const fullscreenPath = path.join(root, 'src/lib/fullscreen.ts');
+if (fs.existsSync(fullscreenPath)) {
+  const fullscreen = fs.readFileSync(fullscreenPath, 'utf8');
+  if (!fullscreen.includes('requestFullscreen')) {
     errors.push('First-interaction fullscreen must use the browser Fullscreen API.');
   }
-  if (!main.includes('navigator.webdriver')) {
+  if (!fullscreen.includes('webkitRequestFullscreen')) {
+    errors.push('Fullscreen must support the webkit spelling, or Safari and iPad get no fullscreen at all.');
+  }
+  if (!fullscreen.includes('navigator.webdriver')) {
     errors.push('Automated browser runs must remain excluded from first-interaction fullscreen side effects.');
+  }
+} else {
+  errors.push('Missing required project item: src/lib/fullscreen.ts');
+}
+
+for (const duplicate of ['src/pages/Guide.tsx', 'src/main.tsx']) {
+  const source = path.join(root, duplicate);
+  if (!fs.existsSync(source)) continue;
+  const text = fs.readFileSync(source, 'utf8');
+  if (/requestFullscreen\s*\(/.test(text) || /webkitExitFullscreen/.test(text)) {
+    errors.push(`Fullscreen API must be called only through src/lib/fullscreen.ts; found a direct call in ${duplicate}.`);
   }
 }
 
@@ -88,11 +110,13 @@ if (fs.existsSync(visualIsolationPath)) {
   if (!css.includes('article[data-cover="true"]')) {
     errors.push('Cover viewport-fit rule is missing from guide visual isolation.');
   }
-  if (!css.includes('article[data-slide-id]:not([data-cover])')) {
-    errors.push('Published content slides must keep the canonical no-scroll desktop/laptop viewport rule.');
+  // REQ-PRESENTATION-001 vs 002: ONLY the cover may be clipped shut. Clipping
+  // content slides too put text and controls out of reach on every desktop width.
+  if (!css.includes('/* REQ-PRESENTATION-001 cover no-scroll')) {
+    errors.push('The cover must keep its single-viewport no-scroll rule (REQ-PRESENTATION-001).');
   }
-  if (!css.includes('overflow: hidden !important;')) {
-    errors.push('Presentation article viewport rules must keep scrollbars disabled.');
+  if (/article\[data-slide-id\](?![^{]*:not\(\[data-cover\]\))[^{]*\{[^}]*overflow:\s*hidden/.test(css)) {
+    errors.push('Content slides must not be clipped shut: they scroll inside the article (REQ-PRESENTATION-002).');
   }
 }
 

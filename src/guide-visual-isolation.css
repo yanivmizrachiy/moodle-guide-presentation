@@ -24,17 +24,32 @@
   opacity: 1;
 }
 
-/* REQ-PRESENTATION-001/002: on real desktop/laptop widths, a slide is a
- * presentation surface, never an internal scroll area. Keep this geometry-neutral
- * at normal desktop heights so established visual baselines stay unchanged. */
+/* REQ-PRESENTATION-006: a control you hit with a thumb is at least 44px square.
+ * The header icons are 40px, which is fine under a mouse and too small on a
+ * phone, so the floor is raised only where the pointer is coarse — touch devices.
+ * Desktop rendering, and therefore the visual baselines, are untouched. */
+@media (pointer: coarse) {
+  [data-guide-shell="premium-presentation"] header button,
+  [data-guide-shell="premium-presentation"] footer button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* REQ-PRESENTATION-001 cover no-scroll: only the COVER is one screen, so only the
+ * cover may be clipped shut. A content slide teaches click-after-click with full
+ * screenshots and is taller than the viewport by design; it keeps the
+ * `overflow-y-auto` the renderer gives it (REQ-PRESENTATION-002). Clipping those
+ * too — which this rule used to do — put text and controls permanently out of
+ * reach on every desktop width. */
 @media (min-width: 1024px) {
-  [data-guide-shell="premium-presentation"] article[data-slide-id] {
+  [data-guide-shell="premium-presentation"] article[data-cover="true"] {
     overflow: hidden !important;
     overscroll-behavior: none;
     scrollbar-width: none;
   }
 
-  [data-guide-shell="premium-presentation"] article[data-slide-id]::-webkit-scrollbar {
+  [data-guide-shell="premium-presentation"] article[data-cover="true"]::-webkit-scrollbar {
     display: none;
   }
 }

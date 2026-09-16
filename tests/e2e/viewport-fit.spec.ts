@@ -165,6 +165,28 @@ test('the cover carries no navigation controls', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'תוכן העניינים' })).toBeVisible();
 });
 
+test('every control a thumb reaches is at least 44px on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Touch-target invariant is exercised by the mobile project.');
+
+  // REQ-PRESENTATION-006. Checked on a content slide, which carries the full
+  // header and the bottom bar; the cover is a strict subset of these controls.
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('./?slide=edit-mode');
+  await waitForStableSlide(page);
+
+  const tooSmall = await page.evaluate(() => {
+    const chrome = [...document.querySelectorAll('header button, footer button')];
+    return chrome
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { label: element.getAttribute('aria-label') ?? element.textContent?.trim() ?? '?', w: Math.round(rect.width), h: Math.round(rect.height) };
+      })
+      .filter((box) => box.w > 0 && (box.w < 44 || box.h < 44));
+  });
+
+  expect(tooSmall, 'controls below the 44px touch target').toEqual([]);
+});
+
 test('every published slide fits a 375px phone without sideways scrolling', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Phone-width invariant is exercised by the mobile project.');
   test.setTimeout(480_000);

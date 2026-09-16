@@ -31,6 +31,13 @@ import {
 } from '@/components/guide/screenshots';
 import { cn } from '@/lib/utils';
 import {
+  exitFullscreenNow,
+  fullscreenElement,
+  FULLSCREEN_CHANGE_EVENTS,
+  isFullscreenSupported,
+  requestFullscreenNow,
+} from '@/lib/fullscreen';
+import {
   FIRST_GUIDE_SLIDE_ID,
   EDIT_MODE_DEPENDENCY_LABEL,
   GUIDE_ATTRIBUTION,
@@ -42,52 +49,6 @@ import {
 } from '@/data/guideDeck';
 
 type Panel = 'menu' | 'search' | null;
-
-/**
- * The Fullscreen API with its vendor spelling, in one place.
- *
- * Safari still exposes only the `webkit*` names, so a guide that called the
- * standard ones alone had no fullscreen at all on a Mac or an iPad. iPhone is
- * the real exception: iOS Safari grants fullscreen to <video> and to nothing
- * else, so `isFullscreenSupported()` is false there and the control hides
- * itself — the fixed 100dvh shell is what fills the phone screen, and the
- * browser's own UI collapses as the teacher scrolls.
- */
-type WebkitFullscreenDocument = Document & {
-  webkitFullscreenElement?: Element | null;
-  webkitFullscreenEnabled?: boolean;
-  webkitExitFullscreen?: () => Promise<void> | void;
-};
-type WebkitFullscreenElement = HTMLElement & {
-  webkitRequestFullscreen?: () => Promise<void> | void;
-};
-
-function fullscreenElement(): Element | null {
-  const doc = document as WebkitFullscreenDocument;
-  return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
-}
-
-function isFullscreenSupported(): boolean {
-  if (typeof document === 'undefined') return false;
-  const doc = document as WebkitFullscreenDocument;
-  const root = document.documentElement as WebkitFullscreenElement;
-  return Boolean(
-    (doc.fullscreenEnabled && root.requestFullscreen) ||
-      (doc.webkitFullscreenEnabled && root.webkitRequestFullscreen)
-  );
-}
-
-async function requestFullscreenNow(): Promise<void> {
-  const root = document.documentElement as WebkitFullscreenElement;
-  if (root.requestFullscreen) await root.requestFullscreen();
-  else if (root.webkitRequestFullscreen) await root.webkitRequestFullscreen();
-}
-
-async function exitFullscreenNow(): Promise<void> {
-  const doc = document as WebkitFullscreenDocument;
-  if (doc.exitFullscreen) await doc.exitFullscreen();
-  else if (doc.webkitExitFullscreen) await doc.webkitExitFullscreen();
-}
 
 function getSlideIndexFromUrl(): number {
   if (typeof window === 'undefined') return 0;
@@ -426,7 +387,6 @@ export default function Guide() {
   const [panel, setPanel] = useState<Panel>(null);
   const [query, setQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const autoFullscreenTried = useRef(false);
   // Read once on mount: it never changes for a given browser, and reading it
   // during render would differ between the server pass and the client.
   const [fullscreenSupported, setFullscreenSupported] = useState(false);
@@ -497,34 +457,6 @@ export default function Guide() {
     else await requestFullscreenNow();
   }
 
-  /**
-   * Real fullscreen the moment the browser allows it (REQ-PRESENTATION-004).
-   * requestFullscreen() is refused without user activation, so the guide asks on
-   * the first real gesture — a tap, a click, a key — and then stops asking. It
-   * asks ONCE per visit on purpose: a teacher who leaves fullscreen must not be
-   * dragged back into it by their next tap. The manual control stays the way in
-   * and the way out.
-   */
-  useEffect(() => {
-    if (!isFullscreenSupported() || autoFullscreenTried.current) return;
-
-    const askOnce = () => {
-      if (autoFullscreenTried.current) return;
-      autoFullscreenTried.current = true;
-      detach();
-      if (!fullscreenElement()) void requestFullscreenNow().catch(() => undefined);
-    };
-
-    // `once` is not enough on its own: the first gesture may arrive on any of
-    // these, and whichever fires first must cancel the others.
-    const events: (keyof DocumentEventMap)[] = ['pointerdown', 'touchend', 'keydown'];
-    function detach() {
-      for (const type of events) document.removeEventListener(type, askOnce);
-    }
-    for (const type of events) document.addEventListener(type, askOnce, { passive: true });
-
-    return detach;
-  }, []);
 
   useEffect(() => {
     const onPopState = () => {
@@ -537,12 +469,10 @@ export default function Guide() {
     const onFullscreenChange = () => setIsFullscreen(Boolean(fullscreenElement()));
 
     window.addEventListener('popstate', onPopState);
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    for (const type of FULLSCREEN_CHANGE_EVENTS) document.addEventListener(type, onFullscreenChange);
     return () => {
       window.removeEventListener('popstate', onPopState);
-      document.removeEventListener('fullscreenchange', onFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+      for (const type of FULLSCREEN_CHANGE_EVENTS) document.removeEventListener(type, onFullscreenChange);
     };
   }, [currentIndex]);
 

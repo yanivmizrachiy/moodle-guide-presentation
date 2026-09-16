@@ -164,7 +164,8 @@ const MOODLE_WIZARD = 'https://moodlemoe.lms.education.gov.il/local/auto_course_
 const MOODLE_HOME_LINK: GuideLink = { href: MOODLE_HOME, label: 'פתיחת Moodle' };
 
 /**
- * Fixed presentation attribution, shown on the cover and the opening slide.
+ * Fixed presentation attribution, shown on the cover and in the table-of-contents
+ * footer — the only two places REQ-CONTENT-010 allows.
  * Content source of truth — do not hard-code these lines in the renderer.
  */
 export const GUIDE_ATTRIBUTION = {
