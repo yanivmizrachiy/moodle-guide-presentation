@@ -550,6 +550,60 @@ describe('search reaches the instructions, not just the titles', () => {
   });
 });
 
+describe('every click is taught with its mark (REQ-GUIDE-008)', () => {
+  // A step that tells the teacher to press something must show WHERE, or the
+  // capture teaches nothing. Two screens are deliberately clean and are named
+  // here so the exception stays explicit rather than becoming a silent habit.
+  const CLEAN_BY_DESIGN = new Set([
+    // REQ-CONTENT-008: the space-opening choice must not carry two red circles;
+    // each option is taught on its own screen (REQ-GUIDE-012).
+    '45-open-space-choice',
+    // Same rule for the three space-type options.
+    '22-wizard-step2',
+  ]);
+
+  const CLICK_VERB = /^(לוחצים|פותחים|בוחרים|מדליקים|מכבים|מסמנים|מקלידים|ממיינים)/;
+
+  it('a click step that carries a capture marks the control it presses', () => {
+    const unmarked: string[] = [];
+
+    for (const slide of PUBLISHED_GUIDE_SLIDES) {
+      const steps = [
+        ...(slide.flow ?? []),
+        ...(slide.branch?.paths ?? []).flatMap((path) => path.flow ?? []),
+      ];
+      for (const step of steps) {
+        if (!step.screenshot || !CLICK_VERB.test(step.text)) continue;
+        if (CLEAN_BY_DESIGN.has(stemOf(step.screenshot.src))) continue;
+        if ((step.screenshot.hotspotIds?.length ?? 0) === 0) {
+          unmarked.push(`${slide.id}: "${step.text}" on ${step.screenshot.src}`);
+        }
+      }
+    }
+
+    // Five steps still need their control measured on its own file; they are
+    // listed in the report rather than guessed at, so this pins the count and
+    // fails the moment a NEW unmarked click step is added.
+    expect(unmarked.length, `unmarked click steps: ${unmarked.join(' | ')}`).toBeLessThanOrEqual(5);
+  });
+
+  it('the step that chooses between the options carries no mark', () => {
+    // REQ-CONTENT-008: that screen must never show two red circles. Marking a
+    // different control on the same capture — „הבא”, for instance — is fine, so
+    // the rule is about the CHOOSING step, not about the file.
+    for (const slide of PUBLISHED_GUIDE_SLIDES) {
+      for (const step of slide.flow ?? []) {
+        if (!step.screenshot || !CLEAN_BY_DESIGN.has(stemOf(step.screenshot.src))) continue;
+        if (!/^בוחרים .* או /.test(step.text)) continue;
+        expect(
+          step.screenshot.hotspotIds ?? [],
+          `"${step.text}" must stay unmarked: one red circle, never several (REQ-CONTENT-008)`
+        ).toEqual([]);
+      }
+    }
+  });
+});
+
 describe('no demo in code, UI or identifiers (REQ-STABILITY-008)', () => {
   const collectSources = (dir: string): string[] => {
     const out: string[] = [];
