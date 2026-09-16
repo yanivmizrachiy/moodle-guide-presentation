@@ -88,6 +88,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 hidden-item kebab menu: the "זמינות" entry.
   '49-hidden-item-menu': [
+    // The ⋮ that opened this menu. Measured on the file: it spans 480..555px
+    // across and 863..939px down of 3200x1800.
+    { id: 'item-kebab', label: '⋮ — תפריט הפריט', x: 14.6, y: 47.4, width: 3.1, height: 5.2 },
     { id: 'availability', label: 'זמינות', x: 4.5, y: 59, width: 13, height: 6 },
   ],
   // 3200x1800 student quiz page after enrol: the "התחלת ניסיון מענה" button.

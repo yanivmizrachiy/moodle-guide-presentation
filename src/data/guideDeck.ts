@@ -1729,8 +1729,13 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
+      // Every click step carries its mark (REQ-GUIDE-008); this one had none.
       text: 'פותחים את תפריט ⋮ של הפריט המוסתר.',
-      screenshot: { src: '49-hidden-item-menu.png', caption: 'תפריט ⋮ של פריט „מוסתר בפני תלמידים” — האפשרות „זמינות”.' },
+      screenshot: {
+        src: '49-hidden-item-menu.png',
+        caption: 'תפריט ⋮ של פריט „מוסתר בפני תלמידים” — האפשרות „זמינות”.',
+        hotspotIds: ['item-kebab'],
+      },
     },
     {
       text: 'בוחרים „זמינות”.',
@@ -2019,12 +2024,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: {
         src: '83-import-source.png',
         caption: 'מסך הייבוא — בחירת מרחב־הלימוד שממנו מייבאים מתוך רשימת המרחבים.',
+        hotspotIds: ['source-row'],
       },
     },
     { text: 'עוברים לשלב „הגדרות התחלתיות”.' },
     {
       text: 'מסמנים את הפריטים לייבוא בשלב „הגדרות בחירה”.',
-      screenshot: { src: '84-import-select.png', caption: '„הגדרות בחירה” — סימון הפריטים לייבוא מהמרחב שנבחר.' },
+      screenshot: { src: '84-import-select.png', caption: '„הגדרות בחירה” — סימון הפריטים לייבוא מהמרחב שנבחר.', hotspotIds: ['select-all'],
+      },
     },
     {
       text: 'בודקים את שלב „אישור ותצוגה”.',
@@ -2066,7 +2073,8 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     { text: 'פותחים את פאנל העדכונים של המרחב.' },
     {
       text: 'לוחצים על הכפתור „נוספו 24 עדכונים ברכיבים”.',
-      screenshot: { src: '31-updates-drawer.jpg', caption: 'פאנל העדכונים.' },
+      screenshot: { src: '31-updates-drawer.jpg', caption: 'פאנל העדכונים.', hotspotIds: ['updates-row'],
+      },
     },
     {
       text: 'תופסים את ידית הגרירה שליד העדכון.',
