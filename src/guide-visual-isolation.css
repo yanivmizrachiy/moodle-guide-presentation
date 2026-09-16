@@ -24,11 +24,10 @@
   opacity: 1;
 }
 
-/* REQ-PRESENTATION-001/002: on desktop/laptop, a slide is a presentation
- * surface, never an internal scroll area. Keep this rule geometry-neutral at
- * normal desktop heights so established visual baselines do not change merely
- * because scrolling is disabled. */
-@media (min-width: 641px) {
+/* REQ-PRESENTATION-001/002: on real desktop/laptop widths, a slide is a
+ * presentation surface, never an internal scroll area. Keep this geometry-neutral
+ * at normal desktop heights so established visual baselines stay unchanged. */
+@media (min-width: 1024px) {
   [data-guide-shell="premium-presentation"] article[data-slide-id] {
     overflow: hidden !important;
     overscroll-behavior: none;
