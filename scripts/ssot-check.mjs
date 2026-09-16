@@ -16,6 +16,8 @@ const required = [
   '.github/workflows/pages.yml',
   'scripts/clean-generated.mjs',
   'scripts/derive-screenshots.mjs',
+  'scripts/analytics-report.mjs',
+  'כמה-נכנסו.cmd',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/data/hotspotPolicy.ts',
@@ -64,8 +66,17 @@ const guidePath = path.join(root, 'src/pages/Guide.tsx');
 if (fs.existsSync(guidePath)) {
   const guide = fs.readFileSync(guidePath, 'utf8');
   if (!guide.includes('import.meta.env.BASE_URL')) errors.push('Guide asset URLs must use import.meta.env.BASE_URL.');
-  if (guide.includes('return `/guide/screenshots/${src}`;')) errors.push('Root-only screenshot URL remains in Guide.tsx.');
   if (!guide.includes('toggleFullscreen')) errors.push('Guide must keep the visible fullscreen fallback control.');
+}
+
+const screenshotsModulePath = path.join(root, 'src/components/guide/screenshots.tsx');
+if (fs.existsSync(screenshotsModulePath)) {
+  const shots = fs.readFileSync(screenshotsModulePath, 'utf8');
+  if (!shots.includes('${import.meta.env.BASE_URL}guide/screenshots/')) {
+    errors.push('Screenshot URLs must be built from import.meta.env.BASE_URL in src/components/guide/screenshots.tsx.');
+  }
+} else {
+  errors.push('Missing required project item: src/components/guide/screenshots.tsx');
 }
 
 const mainPath = path.join(root, 'src/main.tsx');
@@ -275,6 +286,7 @@ for (const forbidden of ['@supabase/supabase-js', 'express', 'cookie-parser', 'h
 const expectedScripts = {
   'audit:ssot': 'node scripts/ssot-check.mjs',
   clean: 'node scripts/clean-generated.mjs',
+  analytics: 'node scripts/analytics-report.mjs',
   check: 'npm run typecheck && npm run audit:ssot && npm run test && npm run build',
   'check:full': 'npm run check && npm run test:e2e',
 };
@@ -339,6 +351,9 @@ const forbiddenTracked = [
   /^playwright-report\//,
   /^raw\//,
   /^\.claude\/settings\.local\.json$/,
+  /^\.claude\/TASK_CONTEXT\.md$/,
+  /^\.claude\/TASK_BASELINE\.json$/,
+  /^\.claude\/CHECK_RECEIPT\.json$/,
   /(?:^|\/)\.DS_Store$/,
   /(?:^|\/)Thumbs\.db$/,
   /(?:^|\/)Desktop\.ini$/,

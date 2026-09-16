@@ -403,7 +403,7 @@ export default function Guide() {
   const [query, setQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   // Read once on mount: it never changes for a given browser, and reading it
-  // during render would differ between the server pass and the client.
+  // during render would read the DOM from inside a render pass.
   const [fullscreenSupported, setFullscreenSupported] = useState(false);
   useEffect(() => setFullscreenSupported(isFullscreenSupported()), []);
   const [direction, setDirection] = useState(1);

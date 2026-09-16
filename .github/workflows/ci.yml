@@ -24,8 +24,8 @@ jobs:
       - run: npm ci
       - run: npm run check
 
-  # The broad browser gate: navigation, two-path branches, flows/hotspots,
-  # the edit-mode teaching control, accessibility scans and visual regression.
+  # The broad browser gate: the full Playwright suite described in
+  # playwright.config.ts.
   # This job intentionally runs on Windows because the committed visual
   # baselines are win32 snapshots; on Ubuntu those tests are deliberately skipped.
   browser:

@@ -1,4 +1,7 @@
-// Prints how many people used the live guide — today, and the last two weeks.
+// Prints how many BROWSERS used the live guide: right now, over a free hour
+// window, today, the last two weeks, and in total since measurement began
+// (plus a visit count). Never people — the same teacher on a phone and a
+// laptop counts twice, and the printed output says so (REQ-ANALYTICS-012).
 //
 // Read-only: SELECTs only, never a write of any kind.
 //
@@ -12,7 +15,8 @@
 // read from the environment, or from .env.local — which .gitignore already covers.
 //
 // Usage:
-//   npm run analytics            today + the last 14 days
+//   npm run analytics                today + the last 14 days
+//   npm run analytics -- --hours 3   the last N hours, for any moment
 //   npm run analytics -- --days 30
 import fs from 'node:fs';
 import path from 'node:path';

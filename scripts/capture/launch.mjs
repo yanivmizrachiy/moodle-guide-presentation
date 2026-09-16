@@ -2,12 +2,16 @@
 // themselves (credentials are never typed by automation); the browser then
 // stays alive and is driven over CDP by steps.mjs.
 //
-// Requires playwright, which is deliberately NOT a dependency of this repo
-// (heavy, not needed for build/CI). Run from any folder that has it:
-//   npm i playwright && npx playwright install chromium
-//   node <repo>/scripts/capture/launch.mjs [start-url]
+// playwright resolves here already: it is a transitive dependency of the
+// @playwright/test devDependency (pinned in package-lock.json), so run this
+// from the repo root. Only the browser binary needs installing once:
+//   npx playwright install chromium        # same step CI already runs
+//   node scripts/capture/launch.mjs [start-url]
+// From a folder outside the repo, install playwright there first.
 //
-// Screenshots are captured at deviceScaleFactor 2 for crisp derivatives.
+// The launch-time deviceScaleFactor below is ignored by the persistent context's
+// first tab — the tab steps.mjs drives. A real 2x capture must go through
+// steps.mjs: {"dsf":2} then {"cdpshot":file}, then {"dsf":0} (SSOT.md rule 13).
 import { chromium } from 'playwright';
 import os from 'node:os';
 import path from 'node:path';

@@ -13,7 +13,9 @@ export type GuideScreenshot = {
    * default, so the teacher sees where on the page the control sits. A use may
    * opt into a close-up with `zoom: true` — and only for a control that stands
    * alone on an otherwise empty part of the screen (REQ-GUIDE-008). `false` is
-   * identical to omitting the field.
+   * identical to omitting the field. No use sets it today; the field is kept as
+   * the REQ-GUIDE-008 escape hatch, so the close-up path in
+   * src/components/guide/screenshots.tsx is dormant, not dead.
    */
   zoom?: boolean;
 };
@@ -23,7 +25,7 @@ export type GuideLink = {
   label: string;
 };
 
-export type GuideSlideStatus = 'ready' | 'needs-capture' | 'needs-fact';
+type GuideSlideStatus = 'ready' | 'needs-capture' | 'needs-fact';
 
 /**
  * One numbered action in a vertical top-to-bottom sequence: text, its real
@@ -131,7 +133,7 @@ export type GuideSlide = {
  * here: a slide's chapter has exactly one editable source — SLIDE_TOPICS ->
  * GUIDE_TOPICS — and cannot be set (or drift) on the slide itself.
  */
-export type AuthoredGuideSlide = Omit<GuideSlide, 'section' | 'topic'>;
+type AuthoredGuideSlide = Omit<GuideSlide, 'section' | 'topic'>;
 
 /**
  * REQ-CONTENT-004 — owner-locked captions of the guide-side teaching toggle.
@@ -147,7 +149,7 @@ export const EDIT_MODE_TOGGLE_COPY = {
  *  of the dependent-operations group must never drift apart. */
 export const EDIT_MODE_DEPENDENCY_LABEL = 'רק כשמצב העריכה דולק';
 
-export type GuideSection = {
+type GuideSection = {
   id: string;
   title: string;
   description: string;
@@ -305,7 +307,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
 ];
 
 /** Smaller heading inside a chapter; the TOC groups questions under these. */
-export type GuideTopic = { id: string; section: string; title: string };
+type GuideTopic = { id: string; section: string; title: string };
 
 export const GUIDE_TOPICS: GuideTopic[] = [
   { id: 'opening', section: 'opening', title: 'יצירת מרחב חדש' },

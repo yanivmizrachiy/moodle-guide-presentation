@@ -1,6 +1,6 @@
 /* Standalone Moodle Guide visual isolation.
- * Scope every rule to the Guide shell so Teacher Hub CSS cannot leak in and
- * Guide presentation styles cannot leak out. */
+ * Every rule is scoped to [data-guide-shell="premium-presentation"] so the
+ * presentation's styling stays contained and cannot reach anything else. */
 
 [data-guide-shell="premium-presentation"] {
   --guide-ink: #020617;
@@ -331,5 +331,47 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* The red mark draws itself when a slide appears, so it reads as something being
+ * pointed out right now rather than a stamp that was always there. The outline is
+ * normalised with pathLength=100, so one keyframe covers every shape the hotspot
+ * box stretches the ellipse into. The arrow follows the circle, and its head fades
+ * in only once the shaft has arrived — circle first, then the pointer.
+ *
+ * At rest every mark is fully drawn: the animation fills forwards, and Playwright
+ * captures with animations disabled, which jumps straight to that end state. */
+@keyframes guide-mark-draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes guide-mark-head-in {
+  from { opacity: 0; }
+}
+
+[data-guide-shell="premium-presentation"] .guide-mark-draw {
+  stroke-dasharray: 100;
+  animation: guide-mark-draw 0.78s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+[data-guide-shell="premium-presentation"] .guide-mark-draw--arrow {
+  animation-duration: 0.34s;
+  animation-delay: 0.58s;
+}
+
+[data-guide-shell="premium-presentation"] .guide-mark-head {
+  animation: guide-mark-head-in 0.18s ease-out 0.88s both;
+}
+
+/* A teacher who asked for less motion gets the finished mark immediately. */
+@media (prefers-reduced-motion: reduce) {
+  [data-guide-shell="premium-presentation"] .guide-mark-draw,
+  [data-guide-shell="premium-presentation"] .guide-mark-draw--arrow,
+  [data-guide-shell="premium-presentation"] .guide-mark-head {
+    animation: none;
+    stroke-dasharray: none;
+    opacity: 1;
   }
 }

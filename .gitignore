@@ -19,3 +19,6 @@ Desktop.ini
 /test-results/
 /playwright-report/
 .claude/settings.local.json
+.claude/TASK_CONTEXT.md
+.claude/TASK_BASELINE.json
+.claude/CHECK_RECEIPT.json

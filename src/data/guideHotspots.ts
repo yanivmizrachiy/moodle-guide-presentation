@@ -86,12 +86,12 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '50-delete-confirm': [
     { id: 'confirm-delete', label: 'מחיקה', x: 34.5, y: 22, width: 6, height: 4.8 },
   ],
-  // 3200x1800 hidden-item kebab menu: the "זמינות" entry.
   // 3200x1800 participants row in edit mode: the pencil that opens the role
   // editor. Measured on this file: 1252..1283px across, 1404..1433px down.
   '48-role-edit-pencil': [
     { id: 'role-pencil', label: 'סמל העיפרון בעמודת התפקידים', x: 38.6, y: 77.4, width: 2.0, height: 2.8 },
   ],
+  // 3200x1800 hidden-item kebab menu: the "זמינות" entry.
   '49-hidden-item-menu': [
     // The ⋮ that opened this menu. Measured on the file: it spans 480..555px
     // across and 863..939px down of 3200x1800.
@@ -319,14 +319,14 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '23-task-address-bar': [
     { id: 'task-url', label: 'כתובת המשימה בשורת הכתובת', x: 9.3, y: 28, width: 26.6, height: 30 },
   ],
-  // 3200x1420 participants page (cropped above the table for privacy): the menu
-  // that leads to the enrolment methods.
   // 3200x1800 group members screen: the two lists it moves users between.
   '73-group-add-members': [
     { id: 'available-user', label: 'משתמשים זמינים — המשתמש שבוחרים', x: 31.4, y: 38, width: 18.7, height: 4.4 },
     { id: 'group-member', label: 'חברי הקבוצה — המשתמש שנוסף', x: 66.6, y: 38, width: 28, height: 4.4 },
     { id: 'add-member', label: 'הוספה', x: 52.9, y: 39.2, width: 9.2, height: 4.6 },
   ],
+  // 3200x1420 participants page (cropped above the table for privacy): the menu
+  // that leads to the enrolment methods.
   '25-participants-nav': [
     { id: 'groups-entry', label: 'קבוצות', x: 86.5, y: 62.1, width: 9.7, height: 5.2 },
     { id: 'users-menu', label: 'תפריט „משתמשים רשומים”', x: 82.6, y: 30.2, width: 13, height: 6.8 },
@@ -451,13 +451,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800, the same item moments later: the „מוסתר בפני תלמידים” tag is gone
   // from the spot it occupied on the capture above.
+  '108-unhidden-item': [
+    { id: 'tag-gone', label: 'המקום שבו היה התג „מוסתר בפני תלמידים”', x: 66.5, y: 41.5, width: 10.0, height: 3.5 },
+  ],
   // 3200x1800, captured live 2026-09-16: the external-tools page as it really
   // opens in this space — titled and empty, because no LTI tool is connected here.
   '109-lti-page': [
     { id: 'lti-page-title', label: 'מופעי רכיב/תוכן חיצוני (LTI)', x: 74.5, y: 22.8, width: 21.5, height: 9.0 },
-  ],
-  '108-unhidden-item': [
-    { id: 'tag-gone', label: 'המקום שבו היה התג „מוסתר בפני תלמידים”', x: 66.5, y: 41.5, width: 10.0, height: 3.5 },
   ],
 });
 

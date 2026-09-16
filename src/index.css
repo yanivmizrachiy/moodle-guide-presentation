@@ -5,7 +5,11 @@
 @tailwind utilities;
 
 /* Moodle Guide Presentation — Hebrew RTL design tokens.
-   All colors MUST be HSL. No raw hex in components.
+   Token values are bare HSL channels because tailwind.config.cjs wraps each in
+   hsl(). Raw hex stays where these tokens cannot reach: the SVG hotspot mark
+   (screenshots.tsx), the error-boundary fallback (main.tsx, which must not
+   depend on the styling pipeline), the presentation-chrome gradient (Guide.tsx)
+   and the scoped --guide-* variables in guide-visual-isolation.css.
    Only tokens that the presentation actually uses live here. */
 
 @layer base {

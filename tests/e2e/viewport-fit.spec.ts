@@ -241,10 +241,12 @@ test('every published slide fits a 375px phone without sideways scrolling', asyn
     if (overflow.scrollWidth > overflow.clientWidth + 1) {
       failures.push(`${slide.id}: slide overflows sideways ${overflow.scrollWidth}>${overflow.clientWidth}`);
     }
-    // NOT asserted: computed overflow-x. CSS forces the other axis to `auto` when
-    // one axis is not `visible`, so every slide that legitimately scrolls
-    // vertically reports overflow-x:auto without any sideways overflow existing.
-    // scrollWidth vs clientWidth above is the measurement that actually detects it.
+    // Computed overflow-x is checked only for the explicit `scroll` value. CSS forces
+    // the other axis to `auto` when one axis is not `visible`, so every slide that
+    // legitimately scrolls vertically reports overflow-x:auto without any sideways
+    // overflow existing — `auto` is never a failure. No rule in src/ sets overflow-x
+    // today, so this branch is a guard against a future deliberate sideways scrollbar;
+    // scrollWidth vs clientWidth above is what actually detects real overflow.
     if (overflow.overflowX === 'scroll') {
       failures.push(`${slide.id}: slide has a real sideways scrollbar`);
     }

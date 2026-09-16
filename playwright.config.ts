@@ -2,8 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Real-browser gate for the guide: navigation, two-path branches,
- * flows/hotspots, the edit-mode teaching control, accessibility scans and
- * visual regression, on representative desktop and mobile viewports.
+ * flows/hotspots, the edit-mode teaching control, runtime-error and viewport
+ * regression (every published slide), accessibility scans and visual
+ * regression, on representative desktop and mobile viewports.
  * Runs against the real production build served by vite preview.
  */
 export default defineConfig({
@@ -15,7 +16,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4173/moodle-guide-presentation/',
     trace: 'retain-on-failure',
-    // Framer-motion honors reduced motion, which keeps interactions and
+    // Motion (motion/react) honors reduced motion, which keeps interactions and
     // screenshots deterministic without changing what users can do.
     contextOptions: { reducedMotion: 'reduce' },
   },

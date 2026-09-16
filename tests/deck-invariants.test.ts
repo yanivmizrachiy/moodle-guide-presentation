@@ -206,12 +206,12 @@ describe('links', () => {
 describe('display quality (SSOT rule 14)', () => {
   it('screenshots never sit on a permanently promoted or stretched layer', () => {
     const isolationCss = readFileSync(join(root, 'src/guide-visual-isolation.css'), 'utf8');
-    const guideTsx = readFileSync(join(root, 'src/pages/Guide.tsx'), 'utf8');
+    const shotsTsx = readFileSync(join(root, 'src/components/guide/screenshots.tsx'), 'utf8');
     // A standing will-change keeps the card rasterized once and rescaled.
     expect(isolationCss).not.toMatch(/will-change\s*:/);
     // A resting positive translateZ stretches the raster through the perspective.
     // Negative Z (the decorative shadow behind the card) is fine.
-    expect(guideTsx).not.toMatch(/translateZ\((?!-)/);
+    expect(shotsTsx).not.toMatch(/translateZ\((?!-)/);
   });
 });
 

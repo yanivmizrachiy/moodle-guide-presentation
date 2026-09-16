@@ -213,6 +213,9 @@ export function startAnalytics() {
   };
   window.addEventListener('pagehide', onPageHide);
 
+  // Deliberately unused today: the guide starts analytics once per page load and
+  // never stops it. The closure exists so the history.pushState/replaceState patch
+  // above stays reversible and the heartbeat interval stays stoppable.
   return () => {
     window.clearInterval(heartbeat);
     window.removeEventListener('analytics:navigation', onNavigation);

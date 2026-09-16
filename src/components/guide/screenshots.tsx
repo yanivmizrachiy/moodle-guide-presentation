@@ -44,9 +44,6 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
   ];
 }
 
-/* Red focus is deliberate, not automatic: no hotspotIds means a clean screenshot.
- * A use can request one verified target; the policy helper caps the visible result
- * at one so a page never gets covered in competing red circles. */
 /**
  * A capture is shown WHOLE by default, with the red circle and the arrow on the
  * control: the teacher has to see where on the page that control sits, which a
@@ -116,14 +113,17 @@ function HotspotArrow({
       viewBox="0 0 132 132"
     >
       {/* White under-stroke so the arrow stays readable over dark UI too. */}
-      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#ffffff" strokeWidth="11" strokeLinecap="round" opacity="0.85" />
-      <polygon points={head} fill="#ffffff" opacity="0.85" transform="scale(1.18)" transform-origin={`${tip.x} ${tip.y}`} />
-      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#dc2626" strokeWidth="6.5" strokeLinecap="round" />
-      <polygon points={head} fill="#dc2626" />
+      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#ffffff" strokeWidth="11" strokeLinecap="round" opacity="0.85" pathLength={100} className="guide-mark-draw guide-mark-draw--arrow" />
+      <polygon points={head} fill="#ffffff" opacity="0.85" transform="scale(1.18)" transform-origin={`${tip.x} ${tip.y}`} className="guide-mark-head" />
+      <line x1={tail.x} y1={tail.y} x2={base.x} y2={base.y} stroke="#dc2626" strokeWidth="6.5" strokeLinecap="round" pathLength={100} className="guide-mark-draw guide-mark-draw--arrow" />
+      <polygon points={head} fill="#dc2626" className="guide-mark-head" />
     </svg>
   );
 }
 
+/* Red focus is deliberate, not automatic: no hotspotIds means a clean screenshot.
+ * A use can request one verified target; the policy helper caps the visible result
+ * at one so a page never gets covered in competing red circles. */
 function HotspotLayer({
   src,
   only,
@@ -176,6 +176,10 @@ function HotspotLayer({
             fill="none"
             stroke="#dc2626"
             strokeWidth={strokeWidth}
+            // pathLength normalises the outline to 100 units, so the draw-on works
+            // the same whatever shape the hotspot box stretches this ellipse into.
+            pathLength={100}
+            className="guide-mark-draw"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
             opacity="0.9"
