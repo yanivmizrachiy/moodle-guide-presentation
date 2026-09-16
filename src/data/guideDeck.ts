@@ -1740,6 +1740,22 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['availability'],
       },
     },
+    {
+      text: 'לוחצים על „מוצג בעמוד הקורס”.',
+      screenshot: {
+        src: '107-availability-flyout.png',
+        caption: 'תפריט „זמינות” פתוח — „מוצג בעמוד הקורס”, „מוסתר בעמוד הקורס” ו„זמין לסטודנטים, אך אינו מוצג בעמוד הראשי של הקורס”.',
+        hotspotIds: ['show-on-course'],
+      },
+    },
+    {
+      text: 'התג „מוסתר בפני תלמידים” נעלם מהפריט.',
+      screenshot: {
+        src: '108-unhidden-item.png',
+        caption: 'אותו פריט לאחר הלחיצה — במקום שבו היה התג „מוסתר בפני תלמידים” אין עוד תג.',
+        hotspotIds: ['tag-gone'],
+      },
+    },
   ],
   keywords: ['הצגה מחדש', 'מוסתר', 'זמינות', 'הצג'],
   requiresEditMode: true,
@@ -1932,7 +1948,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'נפתח תפריט יחידת ההוראה.',
-      screenshot: { src: '07-unit-menu.jpg', caption: 'אותו מסך לאחר הלחיצה — תפריט יחידת הוראה פתוח.' },
+      screenshot: { src: '07-unit-menu.jpg', caption: 'אותו מסך לאחר הלחיצה — תפריט יחידת הוראה פתוח.', hotspotIds: ['unit-kebab'] },
     },
   ],
   requiresEditMode: true,
@@ -2639,8 +2655,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
+      // A result marks WHAT OPENED, so the teacher knows where to look
+      // (REQ-GUIDE-013).
       text: 'נפתח פאנל ההתראות.',
-      screenshot: { src: '11-notifications.jpg', caption: 'פאנל ההתראות.' },
+      screenshot: { src: '11-notifications.jpg', caption: 'פאנל ההתראות.', hotspotIds: ['notifications-panel'] },
     },
     {
       text: 'לוחצים על סמל בועת המסרים בסרגל העליון.',
@@ -2652,7 +2670,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'נפתח פאנל המסרים.',
-      screenshot: { src: '12-messages.jpg', caption: 'פאנל המסרים.' },
+      screenshot: { src: '12-messages.jpg', caption: 'פאנל המסרים.', hotspotIds: ['messages-panel'] },
     },
   ],
   keywords: ['התראות', 'מסרים', 'פעמון'],

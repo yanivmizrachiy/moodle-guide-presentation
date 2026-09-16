@@ -388,10 +388,15 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'bell', label: 'סמל הפעמון — התראות', x: 14.4, y: 1.4, width: 2.5, height: 3.6 },
     { id: 'created-notice', label: 'המערכת הצליחה ליצור את המרחב הלמידה שלך: מתמטיקה ח\'2 - יניב רז - (מתמטיקה לחט"ב', x: 15.2, y: 9.8, width: 23.3, height: 4.9 },
   ],
+  // A result step marks WHAT OPENED, so the teacher knows where to look
+  // (REQ-GUIDE-013). Measured on the file: the panel runs from 18.2% across
+  // and 7.2% down; the box covers its title and both notifications.
   '11-notifications': [
+    { id: 'notifications-panel', label: 'פאנל ההתראות שנפתח', x: 18.2, y: 7.2, width: 27.5, height: 24.0 },
     { id: 'bell', label: 'סמל הפעמון — התראות', x: 18.6, y: 1.7, width: 2.7, height: 4.3 },
   ],
   '12-messages': [
+    { id: 'messages-panel', label: 'פאנל המסרים שנפתח', x: 0.8, y: 7.5, width: 21.0, height: 26.0 },
     { id: 'messages-icon', label: 'סמל בועת ההודעות — הודעות', x: 16, y: 1.7, width: 2.5, height: 4.5 },
   ],
   '57-student-space-home': [
@@ -421,6 +426,16 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   '85-import-confirm': [
     { id: 'import-table', label: 'טבלת „יבוא הגדרות" — סימוני ✓/✗ לכל הגדרה', x: 21.6, y: 52.8, width: 73.5, height: 45.2 },
+  ],
+  // 3200x1800, captured live 2026-09-16 in „מתמטיקה כיתה ז' - המורה יניב”: the
+  // „זמינות” flyout open on a hidden item, showing its three options.
+  '107-availability-flyout': [
+    { id: 'show-on-course', label: 'מוצג בעמוד הקורס', x: 29.0, y: 55.9, width: 13.1, height: 3.3 },
+  ],
+  // 3200x1800, the same item moments later: the „מוסתר בפני תלמידים” tag is gone
+  // from the spot it occupied on the capture above.
+  '108-unhidden-item': [
+    { id: 'tag-gone', label: 'המקום שבו היה התג „מוסתר בפני תלמידים”', x: 66.5, y: 41.5, width: 10.0, height: 3.5 },
   ],
 });
 
