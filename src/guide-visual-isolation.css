@@ -18,7 +18,11 @@
 [data-guide-shell="premium-presentation"] h2,
 [data-guide-shell="premium-presentation"] h3,
 [data-guide-shell="premium-presentation"] p,
-[data-guide-shell="premium-presentation"] span,
+/* Anti-leak reset. It must NOT reach a span that sets its own opacity: the
+ * screenshot card's hover sheen is authored as opacity-0 -> group-hover:opacity-100,
+ * and this rule outranked it, so a white diagonal wash sat permanently over every
+ * capture in the guide — the one thing a teacher is here to read. */
+[data-guide-shell="premium-presentation"] span:not([class*="opacity-"]),
 [data-guide-shell="premium-presentation"] li,
 [data-guide-shell="premium-presentation"] figcaption {
   opacity: 1;
@@ -187,6 +191,11 @@
   color: #ffffff !important;
 }
 
+/* The amber controls declare text-slate-950 in the component, but the white-text
+ * rule above covers header AND footer while this exception named only the footer
+ * — so the identical back arrow rendered white on amber at 1.67:1 while its twin
+ * in the bottom bar sat at 12.08:1. Both are covered now. */
+[data-guide-shell="premium-presentation"] > header button[class*="bg-amber-400"],
 [data-guide-shell="premium-presentation"] > footer button[class*="bg-amber-400"] {
   background-color: var(--guide-gold) !important;
   color: var(--guide-ink) !important;

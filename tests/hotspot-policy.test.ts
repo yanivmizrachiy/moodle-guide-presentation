@@ -1,19 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { GUIDE_SLIDES } from '@/data/guideDeck';
+import { GUIDE_SLIDES, collectSlideScreenshots } from '@/data/guideDeck';
 import { GUIDE_SCREENSHOT_HOTSPOTS } from '@/data/guideHotspots';
 import { getVisibleGuideHotspots } from '@/data/hotspotPolicy';
 
 const stemOf = (src: string) => src.replace(/\.[^.]+$/, '');
-
-const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
-  ...(slide.screenshots ?? []),
-  ...(slide.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-  ...(slide.branch?.paths ?? []).flatMap((path) => [
-    ...(path.screenshots ?? []),
-    ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-  ]),
-  ...(slide.choice?.options ?? []).map((option) => option.screenshot),
-];
 
 describe('red focus policy', () => {
   it('shows no red focus unless the screenshot use explicitly selects one target', () => {
@@ -37,7 +27,7 @@ describe('red focus policy', () => {
 
   it('every authored screenshot use requests at most one real hotspot', () => {
     for (const slide of GUIDE_SLIDES) {
-      for (const screenshot of shotsOf(slide)) {
+      for (const screenshot of collectSlideScreenshots(slide)) {
         const ids = screenshot.hotspotIds;
         if (ids === undefined || ids.length === 0) continue;
 

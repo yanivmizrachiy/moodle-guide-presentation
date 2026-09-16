@@ -28,21 +28,12 @@ function screenshotSources(src: string) {
 }
 
 /**
- * Every screenshot a slide can show, whatever shape carries it: the classic
- * array, flow steps, and both paths of a two-path branch. The canonical
- * enumerator for app-side work such as neighbour preloading.
+ * Every screenshot a slide can show, in one place. The deck owns it because the
+ * deck owns the shapes that can carry a screenshot; this module and both test
+ * files re-use that single definition instead of each keeping its own copy,
+ * which is how the three drifted apart in the first place.
  */
-export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
-  return [
-    ...(slide.screenshots ?? []),
-    ...(slide.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-    ...(slide.branch?.paths ?? []).flatMap((path) => [
-      ...(path.screenshots ?? []),
-      ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-    ]),
-    ...(slide.choice?.options ?? []).map((option) => option.screenshot),
-  ];
-}
+export { collectSlideScreenshots } from '@/data/guideDeck';
 
 /**
  * A capture is shown WHOLE by default, with the red circle and the arrow on the

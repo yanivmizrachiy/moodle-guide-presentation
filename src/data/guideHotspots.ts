@@ -212,7 +212,6 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '72-group-create-form': [
     { id: 'group-name', label: 'שם הקבוצה', x: 43.4, y: 27.8, width: 28.8, height: 5.5 },
   ],
-  // 3200x1800 add/remove members: the add button.
   // 3200x1800 grader: the visible-groups selector open with its options.
   '75-grader-group-selector-open': [
     { id: 'group-option', label: 'קבוצה 1', x: 65.6, y: 49.5, width: 7.2, height: 6.0 },
@@ -320,6 +319,7 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'task-url', label: 'כתובת המשימה בשורת הכתובת', x: 9.3, y: 28, width: 26.6, height: 30 },
   ],
   // 3200x1800 group members screen: the two lists it moves users between.
+  // 3200x1800 add/remove members: the add button.
   '73-group-add-members': [
     { id: 'available-user', label: 'משתמשים זמינים — המשתמש שבוחרים', x: 31.4, y: 38, width: 18.7, height: 4.4 },
     { id: 'group-member', label: 'חברי הקבוצה — המשתמש שנוסף', x: 66.6, y: 38, width: 28, height: 4.4 },

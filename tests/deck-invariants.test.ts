@@ -11,6 +11,7 @@ import {
   GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
   SLIDE_TOPICS,
+  collectSlideScreenshots,
   EDIT_MODE_TOGGLE_COPY,
   EDIT_MODE_DEPENDENT_ACTIONS,
   isActionLabelValid,
@@ -33,16 +34,6 @@ const screenshotStems = new Set(screenshotFiles.map((name) => name.replace(/\.[^
 const missingCapturesDoc = readFileSync(join(root, 'docs/GUIDE_MISSING_CAPTURES.md'), 'utf8');
 
 const allIds = GUIDE_SLIDES.map((slide) => slide.id);
-// Every screenshot a slide can show: the classic array plus flow-step screens.
-const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
-  ...(slide.screenshots ?? []),
-  ...(slide.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-  ...(slide.branch?.paths ?? []).flatMap((path) => [
-    ...(path.screenshots ?? []),
-    ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
-  ]),
-  ...(slide.choice?.options ?? []).map((option) => option.screenshot),
-];
 const publishedIds = new Set(PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id));
 const sectionIds = new Set(GUIDE_SECTIONS.map((section) => section.id));
 const stemOf = (src: string) => src.replace(/\.[^.]+$/, '');
@@ -133,7 +124,7 @@ describe('screenshots', () => {
     // So after normalization every referenced src must be .avif and both the
     // .avif and .webp files must exist on disk.
     for (const slide of PUBLISHED_GUIDE_SLIDES) {
-      for (const screenshot of shotsOf(slide)) {
+      for (const screenshot of collectSlideScreenshots(slide)) {
         expect(screenshot.src, `slide "${slide.id}" renders a non-avif src "${screenshot.src}"`).toMatch(/\.avif$/);
         const stem = stemOf(screenshot.src);
         expect(screenshotFiles, `rendered avif "${stem}.avif" missing (slide "${slide.id}")`).toContain(`${stem}.avif`);
@@ -146,7 +137,7 @@ describe('screenshots', () => {
 
   it('screenshot captions and flow texts are non-empty', () => {
     for (const slide of GUIDE_SLIDES) {
-      for (const screenshot of shotsOf(slide)) {
+      for (const screenshot of collectSlideScreenshots(slide)) {
         expect(screenshot.caption.trim(), `empty caption on "${screenshot.src}" (slide "${slide.id}")`).not.toBe('');
       }
       for (const step of slide.flow ?? []) {
@@ -157,7 +148,7 @@ describe('screenshots', () => {
 
   it('no orphan screenshot files exist on disk', () => {
     const referencedStems = new Set(
-      GUIDE_SLIDES.flatMap((slide) => shotsOf(slide).map((screenshot) => stemOf(screenshot.src)))
+      GUIDE_SLIDES.flatMap((slide) => collectSlideScreenshots(slide).map((screenshot) => stemOf(screenshot.src)))
     );
     for (const stem of screenshotStems) {
       expect(referencedStems, `screenshot "${stem}" is not referenced by any slide`).toContain(stem);

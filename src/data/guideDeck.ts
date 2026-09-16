@@ -294,6 +294,27 @@ export function slideSearchText(slide: GuideSlide): string {
     .join(' ');
 }
 
+/**
+ * Every screenshot a slide can show, whatever shape carries it: the classic
+ * array, flow steps, both paths of a two-path branch, and the options of a
+ * choice. This is the canonical enumerator — the app reads the deck through it
+ * (neighbour preloading), and so do the deck and hotspot invariants, so a new
+ * screenshot-bearing field can never be rendered by the guide while the tests
+ * quietly skip it. It lives here, in the pure data module, because the tests
+ * run in a node environment and must not pull React in to walk the deck.
+ */
+export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
+  return [
+    ...(slide.screenshots ?? []),
+    ...(slide.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
+    ...(slide.branch?.paths ?? []).flatMap((path) => [
+      ...(path.screenshots ?? []),
+      ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
+    ]),
+    ...(slide.choice?.options ?? []).map((option) => option.screenshot),
+  ];
+}
+
 // Chapter structure per the owner's master spec (2026-09-14): main topics
 // with question sub-topics; the opening flow keeps its own chapter.
 export const GUIDE_SECTIONS: GuideSection[] = [
