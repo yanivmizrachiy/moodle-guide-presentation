@@ -749,7 +749,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   },
   {
   id: 'interface',
-  title: 'מהם הכפתורים הראשיים במרחב הלמידה?',
+  title: 'מה מופיע בעמוד הראשי של המרחב?',
   indexCards: [
     { label: 'מצב עריכה', slideId: 'edit-mode' },
     { label: 'משתתפים', slideId: 'participants' },
