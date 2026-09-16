@@ -616,11 +616,20 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   summary: 'אפשר לשנות את תצוגת התוכן מתמונות לרשימה פשוטה כדי לסרוק את האפשרויות בדרך שנוחה לכם.',
   flow: [
     {
+      // The control is pressed on the screen the teacher is looking at — the
+      // images view — so that is the capture that carries the mark.
       text: 'לוחצים על הכפתור „שינוי תצוגה”.',
       screenshot: {
-        src: '35-wizard-ready-content-list-toggle.png',
-        caption: 'תוכן מוכן בתצוגת רשימה.',
+        src: '34-wizard-ready-content-search.png',
+        caption: 'תוכן מוכן בתצוגת תמונות — הכפתור „שינוי תצוגה” מעל רשימת הפריטים.',
         hotspotIds: ['view-toggle'],
+      },
+    },
+    {
+      text: 'מופיעה רשימת התכנים במקום תצוגת התמונות.',
+      screenshot: {
+        src: '35-wizard-ready-content-list-toggle.png',
+        caption: 'אותו מסך לאחר הלחיצה — תוכן מוכן בתצוגת רשימה.',
       },
     },
   ],

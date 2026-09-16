@@ -125,6 +125,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'content-card', label: 'מתמטיקה לחט"ב ז\' – 2027', x: 72.5, y: 54.3, width: 23.3, height: 31.1 },
     { id: 'next', label: 'הבא', x: 3.5, y: 86.5, width: 5.3, height: 6.3 },
     { id: 'search', label: 'חיפוש', x: 87.3, y: 26.0, width: 8.7, height: 4.1 },
+    // Measured on the image itself: the toggle pair spans 142..278px across and
+    // 914..977px down, of 3200x1800. Same control as on capture 35, one state earlier.
+    { id: 'view-toggle', label: 'שינוי תצוגה', x: 4.0, y: 50.2, width: 5.0, height: 4.2 },
   ],
   // 3200x1800 ready-content list view: the view-toggle buttons.
   '35-wizard-ready-content-list-toggle': [
