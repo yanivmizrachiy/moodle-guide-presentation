@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Guide from './pages/Guide';
+import { startAnalytics } from './lib/analytics';
 import './index.css';
 import './guide-visual-isolation.css';
 
@@ -64,6 +65,8 @@ class GuideErrorBoundary extends React.Component<React.PropsWithChildren, GuideE
     );
   }
 }
+
+startAnalytics();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
