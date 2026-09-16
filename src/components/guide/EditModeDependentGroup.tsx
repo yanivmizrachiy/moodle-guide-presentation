@@ -1,5 +1,5 @@
 import { ChevronLeft, ToggleRight } from 'lucide-react';
-import { PUBLISHED_GUIDE_SLIDES } from '@/data/guideDeck';
+import { EDIT_MODE_DEPENDENCY_LABEL, PUBLISHED_GUIDE_SLIDES } from '@/data/guideDeck';
 
 /**
  * The emphasized visual group of operations that work only while edit mode
@@ -16,12 +16,12 @@ export function EditModeDependentGroup({ onSelect }: { onSelect: (slideId: strin
 
   return (
     <section
-      aria-label="פעולות שאפשר לבצע רק כשמצב העריכה דולק"
+      aria-label={`פעולות שאפשר לבצע ${EDIT_MODE_DEPENDENCY_LABEL}`}
       className="rounded-3xl border-2 border-blue-300 bg-blue-50/70 p-4 shadow-[0_16px_44px_rgba(30,64,175,0.10)] sm:p-5"
     >
       <p className="flex items-center gap-2 text-base font-black text-blue-950 sm:text-lg">
         <ToggleRight aria-hidden="true" className="h-6 w-6 shrink-0 text-blue-700" />
-        רק כשמצב העריכה דולק
+        {EDIT_MODE_DEPENDENCY_LABEL}
       </p>
       <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
         {dependent.map((slide) => (

@@ -32,6 +32,7 @@ import {
 import { cn } from '@/lib/utils';
 import {
   FIRST_GUIDE_SLIDE_ID,
+  EDIT_MODE_DEPENDENCY_LABEL,
   GUIDE_ATTRIBUTION,
   GUIDE_SECTIONS,
   GUIDE_TOPICS,
@@ -231,7 +232,7 @@ function SlideContent({
               {slide.requiresEditMode && (
                 <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-black text-amber-900 shadow-sm">
                   <ToggleRight aria-hidden="true" className="h-4 w-4" />
-                  רק כשמצב העריכה דולק
+                  {EDIT_MODE_DEPENDENCY_LABEL}
                 </div>
               )}
             </div>

@@ -87,9 +87,6 @@ for (const requiredIgnore of [
   '/test-results/',
   '/playwright-report/',
   '*.tsbuildinfo',
-  '.claude/TASK_CONTEXT.md',
-  '.claude/TASK_BASELINE.json',
-  '.claude/CHECK_RECEIPT.json',
 ]) {
   if (!gitignore.includes(requiredIgnore)) errors.push(`.gitignore must contain ${requiredIgnore}`);
 }
@@ -113,7 +110,7 @@ const forbiddenTracked = [
   /^test-results\//,
   /^playwright-report\//,
   /^raw\//,
-  /^\.claude\/(?:TASK_CONTEXT\.md|TASK_BASELINE\.json|CHECK_RECEIPT\.json)$/,
+  /^\.claude\/settings\.local\.json$/,
   /(?:^|\/)\.DS_Store$/,
   /(?:^|\/)Thumbs\.db$/,
   /(?:^|\/)Desktop\.ini$/,

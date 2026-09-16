@@ -115,6 +115,10 @@ export const EDIT_MODE_TOGGLE_COPY = {
   on: 'כך מדליקים את מצב העריכה',
 } as const;
 
+/** The one label for „edit mode required" — the badge on a slide and the heading
+ *  of the dependent-operations group must never drift apart. */
+export const EDIT_MODE_DEPENDENCY_LABEL = 'רק כשמצב העריכה דולק';
+
 export type GuideSection = {
   id: string;
   title: string;
