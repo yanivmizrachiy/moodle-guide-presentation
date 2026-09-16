@@ -186,6 +186,40 @@ export const FIRST_GUIDE_SLIDE_ID = 'cover';
 /** Slide 2: where the training itself begins, and where Quick Start starts. */
 export const FIRST_TRAINING_SLIDE_ID = 'open-space-start';
 
+/**
+ * Everything on a slide that the search box may match. Almost every procedure in
+ * the guide is taught through `flow` (and two through `branch`), so a haystack
+ * built only from title/summary/keywords could not see the actual instructions —
+ * a teacher searching for a button name found nothing even though the step that
+ * names it exists. One function decides what search can reach, so the deck and
+ * the search box can never drift apart.
+ *
+ * Screenshot captions stay out on purpose: they describe the evidence, and the
+ * control they name is already written in the step that carries them.
+ */
+export function slideSearchText(slide: GuideSlide): string {
+  const branchText = (slide.branch?.paths ?? []).flatMap((path) => [
+    path.label,
+    ...(path.steps ?? []),
+    ...(path.flow ?? []).map((step) => step.text),
+  ]);
+
+  return [
+    slide.title,
+    slide.summary,
+    slide.eyebrow,
+    ...(slide.steps ?? []),
+    ...(slide.flow ?? []).map((step) => step.text),
+    ...(slide.points ?? []),
+    ...branchText,
+    slide.tip,
+    slide.warning,
+    ...(slide.keywords ?? []),
+  ]
+    .filter((part): part is string => typeof part === 'string' && part.length > 0)
+    .join(' ');
+}
+
 // Chapter structure per the owner's master spec (2026-09-14): main topics
 // with question sub-topics; the opening flow keeps its own chapter.
 export const GUIDE_SECTIONS: GuideSection[] = [

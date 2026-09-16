@@ -37,6 +37,7 @@ import {
   GUIDE_SECTIONS,
   GUIDE_TOPICS,
   PUBLISHED_GUIDE_SLIDES,
+  slideSearchText,
   type GuideSlide,
 } from '@/data/guideDeck';
 
@@ -402,19 +403,9 @@ export default function Guide() {
     const normalized = query.trim().toLocaleLowerCase('he');
     if (!normalized) return PUBLISHED_GUIDE_SLIDES.slice(0, 18);
 
-    return PUBLISHED_GUIDE_SLIDES.filter((item) => {
-      const searchable = [
-        item.title,
-        item.summary,
-        item.eyebrow,
-        ...(item.steps ?? []),
-        ...(item.points ?? []),
-        ...(item.keywords ?? []),
-      ]
-        .join(' ')
-        .toLocaleLowerCase('he');
-      return searchable.includes(normalized);
-    });
+    return PUBLISHED_GUIDE_SLIDES.filter((item) =>
+      slideSearchText(item).toLocaleLowerCase('he').includes(normalized)
+    );
   }, [query]);
 
   function writeUrl(slideId: string) {

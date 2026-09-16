@@ -16,6 +16,7 @@ import {
   isValidBranchPath,
   isEditModeMetadataConsistent,
   normalizeSlide,
+  slideSearchText,
   type GuideBranch,
   type GuideBranchPath,
   type GuideSlide,
@@ -399,6 +400,51 @@ describe('add-students guidance has a single source (REQ-CONTENT-009)', () => {
     expect(count('המורה שולח לתלמיד את הקישור שהועתק.'), 'send-link step duplicated').toBe(1);
     expect(count('התלמיד לוחץ על הכפתור „רשום אותי”.'), 'enrol step duplicated').toBe(1);
     expect(count('לתלמיד מופיעה הודעת ההצלחה והוא נכנס למרחב.'), 'success step duplicated').toBe(1);
+  });
+});
+
+describe('search reaches the instructions, not just the titles', () => {
+  // Almost every procedure is taught through `flow`, so a haystack that skipped
+  // flow text left the real instructions unsearchable: a teacher looking for a
+  // button by name found nothing even though the step naming it exists.
+  it('a phrase that appears only inside a flow step finds its slide', () => {
+    const withFlow = PUBLISHED_GUIDE_SLIDES.filter((slide) => (slide.flow?.length ?? 0) > 0);
+    expect(withFlow.length, 'the deck should teach through flows').toBeGreaterThan(20);
+
+    for (const slide of withFlow) {
+      const haystack = slideSearchText(slide);
+      for (const step of slide.flow ?? []) {
+        expect(haystack, `step text unsearchable on "${slide.id}"`).toContain(step.text);
+      }
+    }
+  });
+
+  it('branch path labels and their steps are searchable', () => {
+    for (const slide of PUBLISHED_GUIDE_SLIDES) {
+      if (!slide.branch) continue;
+      const haystack = slideSearchText(slide);
+      for (const path of slide.branch.paths) {
+        expect(haystack, `path label unsearchable on "${slide.id}"`).toContain(path.label);
+        for (const step of path.flow ?? []) {
+          expect(haystack, `branch step unsearchable on "${slide.id}"`).toContain(step.text);
+        }
+        for (const step of path.steps ?? []) {
+          expect(haystack, `branch step unsearchable on "${slide.id}"`).toContain(step);
+        }
+      }
+    }
+  });
+
+  it('searching a real button name reaches the slide that teaches it', () => {
+    const find = (needle: string) =>
+      PUBLISHED_GUIDE_SLIDES.filter((slide) =>
+        slideSearchText(slide).toLocaleLowerCase('he').includes(needle.toLocaleLowerCase('he'))
+      ).map((slide) => slide.id);
+
+    expect(find('רשום אותי'), '„רשום אותי” must be findable').toContain('open-space-two-paths');
+    expect(find('העתקת כתובת מרחב הלמידה ללוח'), 'the copy-link button must be findable').toContain(
+      'open-space-two-paths'
+    );
   });
 });
 
