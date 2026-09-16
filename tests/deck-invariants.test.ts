@@ -581,10 +581,12 @@ describe('every click is taught with its mark (REQ-GUIDE-008)', () => {
       }
     }
 
-    // Five steps still need their control measured on its own file; they are
-    // listed in the report rather than guessed at, so this pins the count and
-    // fails the moment a NEW unmarked click step is added.
-    expect(unmarked.length, `unmarked click steps: ${unmarked.join(' | ')}`).toBeLessThanOrEqual(5);
+    // One step remains, and it is not a missing mark but a mismatch: send-task
+    // says „פותחים את המשימה במרחב” beside a capture that is already INSIDE the
+    // activity, so there is no control on it to circle. It needs a different
+    // capture or the owner's wording, not a mark invented to satisfy a test.
+    // The ceiling pins it: this number may only go down.
+    expect(unmarked.length, `unmarked click steps: ${unmarked.join(' | ')}`).toBeLessThanOrEqual(1);
   });
 
   it('the step that chooses between the options carries no mark', () => {

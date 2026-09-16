@@ -87,6 +87,11 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'confirm-delete', label: 'מחיקה', x: 34.5, y: 22, width: 6, height: 4.8 },
   ],
   // 3200x1800 hidden-item kebab menu: the "זמינות" entry.
+  // 3200x1800 participants row in edit mode: the pencil that opens the role
+  // editor. Measured on this file: 1252..1283px across, 1404..1433px down.
+  '48-role-edit-pencil': [
+    { id: 'role-pencil', label: 'סמל העיפרון בעמודת התפקידים', x: 38.6, y: 77.4, width: 2.0, height: 2.8 },
+  ],
   '49-hidden-item-menu': [
     // The ⋮ that opened this menu. Measured on the file: it spans 480..555px
     // across and 863..939px down of 3200x1800.
@@ -239,6 +244,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     { id: 'enrolled-ok', label: 'נרשמתם לקורס בהצלחה', x: 58.5, y: 28.5, width: 12, height: 4.5 },
   ],
   '74-groups-two-groups': [
+    // The selected row „קבוצה 2 (0)” in the groups list. Measured: 2281..2444px
+    // across, 837..870px down.
+    { id: 'group-row', label: 'הקבוצה שנבחרה ברשימה', x: 70.8, y: 45.9, width: 6.1, height: 3.0 },
     { id: 'add-members', label: 'הוספת/הסרת משתתפים מקבוצה', x: 33, y: 85.3, width: 16, height: 5.5 },
   ],
   '09-user-menu': [
@@ -254,6 +262,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 activity edit menu: the move entry.
   '80-activity-menu-move': [
+    // The ⋮ that opened this menu, focus ring and all. Measured: 732..808px
+    // across, 880..954px down.
+    { id: 'activity-kebab', label: '⋮ — תפריט המשימה', x: 22.5, y: 48.4, width: 3.2, height: 5.1 },
     { id: 'move-entry', label: 'העברה', x: 17.7, y: 57.6, width: 6.3, height: 4.2 },
   ],
   // 3200x1800 move-activity dialog: the chosen destination.
@@ -291,6 +302,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   ],
   // 3200x1800 user menu while the role is switched: the way back.
   '106-return-to-teacher-role': [
+    // The user button in the top bar, still closed. Measured on this file:
+    // „יניב ⌄” spans 73..138px across and 42..74px down of 3200x1800.
+    { id: 'user-button', label: 'שם המשתמש בסרגל העליון', x: 2.1, y: 2.0, width: 2.6, height: 2.5 },
     { id: 'return-role', label: 'חזרה לתפקיד הרגיל שלי', x: 0.8, y: 21, width: 15.5, height: 4.2 },
   ],
   // 3200x1800 space home page: the real button that copies the space address.

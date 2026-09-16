@@ -1258,7 +1258,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       // The step had no image at all, while the capture of exactly this state —
       // the groups list with one of them selected — is already on two steps below.
       text: 'בוחרים את הקבוצה ברשימת הקבוצות.',
-      screenshot: { src: '74-groups-two-groups.png', caption: 'רשימת הקבוצות עם מספר החברים בכל אחת.' },
+      screenshot: { src: '74-groups-two-groups.png', caption: 'רשימת הקבוצות עם מספר החברים בכל אחת.', hotspotIds: ['group-row'] },
     },
     {
       text: 'לוחצים על הכפתור „הוספת/הסרת משתתפים מקבוצה”.',
@@ -1381,7 +1381,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'לוחצים על סמל העיפרון בעמודת התפקידים.',
-      screenshot: { src: '48-role-edit-pencil.png', caption: 'עריכת התפקיד בשורה — בורר התפקיד עם שמירה וביטול.' },
+      screenshot: { src: '48-role-edit-pencil.png', caption: 'עריכת התפקיד בשורה — בורר התפקיד עם שמירה וביטול.', hotspotIds: ['role-pencil'] },
     },
     {
       text: 'בוחרים „מורה” מרשימת התפקידים.',
@@ -1793,7 +1793,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'פותחים את תפריט ⋮ של המשימה.',
-      screenshot: { src: '80-activity-menu-move.png', caption: 'תפריט המשימה במצב עריכה — „העברה” בין הפעולות.' },
+      screenshot: { src: '80-activity-menu-move.png', caption: 'תפריט המשימה במצב עריכה — „העברה” בין הפעולות.', hotspotIds: ['activity-kebab'] },
     },
     {
       text: 'לוחצים על הכפתור „העברה”.',
@@ -1874,6 +1874,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: {
         src: '106-return-to-teacher-role.png',
         caption: 'תפריט המשתמש בתצוגת תלמיד — „חזרה לתפקיד הרגיל שלי”.',
+  hotspotIds: ['user-button'],
       },
     },
     {
