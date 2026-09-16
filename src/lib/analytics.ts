@@ -4,7 +4,30 @@ const VISITOR_KEY = 'moodle_guide_visitor_id';
 const SESSION_KEY = 'moodle_guide_session_id';
 const SESSION_STARTED_KEY = 'moodle_guide_session_started';
 const QUEUE_KEY = 'moodle_guide_analytics_queue';
+const OPT_OUT_KEY = 'moodle_guide_analytics_opt_out';
 const HEARTBEAT_MS = 5000;
+
+/**
+ * A browser that opted out is never measured again (REQ-ANALYTICS-011).
+ *
+ * This exists for accuracy, not for consent theatre: on a guide with a few dozen
+ * daily readers, the owner opening his own site to check a slide is a visitor in
+ * every report, and he opens it more than anyone. Visiting once with
+ * `?analytics=off` marks that browser permanently; `?analytics=on` undoes it.
+ * The flag is a single string in localStorage — no identity, nothing sent.
+ */
+function readOptOutFlag(): boolean {
+  try {
+    const wanted = new URLSearchParams(window.location.search).get('analytics');
+    if (wanted === 'off') localStorage.setItem(OPT_OUT_KEY, 'true');
+    if (wanted === 'on') localStorage.removeItem(OPT_OUT_KEY);
+    return localStorage.getItem(OPT_OUT_KEY) === 'true';
+  } catch {
+    // Storage can be unavailable (private window, blocked cookies). Measuring is
+    // never worth throwing on a page load, so treat it as "not opted out".
+    return false;
+  }
+}
 
 type AnalyticsEvent = {
   id: string;
@@ -84,6 +107,8 @@ export function startAnalytics() {
   ) {
     return () => undefined;
   }
+
+  if (readOptOutFlag()) return () => undefined;
 
   const visitorId = getOrCreate(localStorage, VISITOR_KEY);
   const sessionId = getOrCreate(sessionStorage, SESSION_KEY);
