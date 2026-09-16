@@ -27,6 +27,7 @@
 //   npm run analytics -- --days 30
 import fs from 'node:fs';
 import path from 'node:path';
+import { runSql } from './lib/neon.mjs';
 
 const ENV_KEYS = ['ANALYTICS_DATABASE_URL', 'DATABASE_URL', 'NEON_DATABASE_URL'];
 const ENV_FILE = '.env.local';
@@ -71,48 +72,6 @@ function explainMissingCredential() {
 `);
 }
 
-/**
- * Neon speaks SQL over plain HTTPS, so this needs no database driver and the repo
- * gains no dependency. The endpoint is the connection string's own host + /sql.
- */
-async function runSql(connectionString, query) {
-  let host;
-  try {
-    host = new URL(connectionString).hostname;
-  } catch {
-    throw new Error('מחרוזת החיבור אינה כתובת תקינה. ודא שהיא מתחילה ב-postgresql://');
-  }
-
-  const response = await fetch(`https://${host}/sql`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Neon-Connection-String': connectionString,
-      'Neon-Raw-Text-Output': 'true',
-      'Neon-Array-Mode': 'false',
-    },
-    body: JSON.stringify({ query, params: [] }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text().catch(() => '');
-    // Postgres returns a JSON error object; show its message only. Never echo the
-    // whole body back — the connection string can appear inside one.
-    let reason = '';
-    try {
-      reason = JSON.parse(body).message ?? '';
-    } catch {
-      reason = body.slice(0, 200);
-    }
-    const hint = /password authentication|role .* does not exist/i.test(reason)
-      ? '\nהמחרוזת שגויה או פגה. העתק אותה מחדש מ-Neon תחת "Connect".'
-      : '';
-    throw new Error(`המסד החזיר שגיאה ${response.status}: ${reason}${hint}`);
-  }
-
-  const payload = await response.json();
-  return payload.rows ?? [];
-}
 
 const HE_DATE = new Intl.DateTimeFormat('he-IL', {
   timeZone: 'Asia/Jerusalem',

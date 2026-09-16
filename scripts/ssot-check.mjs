@@ -23,6 +23,8 @@ const required = [
   'scripts/clean-generated.mjs',
   'scripts/derive-screenshots.mjs',
   'scripts/analytics-report.mjs',
+  'scripts/check-credential.mjs',
+  'scripts/lib/neon.mjs',
   'כמה-נכנסו.cmd',
   'הגדרה-ראשונית.cmd',
   'הגדרת-דוח-כניסות.ps1',
@@ -290,9 +292,15 @@ if (fs.existsSync(analyticsSchemaPath)) {
 // so a future "just add a cleanup query" would have been a one-line accident with
 // no way back. The patterns below are SQL-shaped on purpose: a bare word like
 // "update" appears in ordinary English comments, "UPDATE x SET" does not.
-const reportPath = path.join(root, 'scripts/analytics-report.mjs');
-if (fs.existsSync(reportPath)) {
-  const report = fs.readFileSync(reportPath, 'utf8');
+const readOnlyScripts = [
+  'scripts/analytics-report.mjs',
+  'scripts/check-credential.mjs',
+  'scripts/lib/neon.mjs',
+];
+for (const relative of readOnlyScripts) {
+  const scriptPath = path.join(root, relative);
+  if (!fs.existsSync(scriptPath)) continue;
+  const report = fs.readFileSync(scriptPath, 'utf8');
   const writes = [
     /\binsert\s+into\b/i,
     /\bdelete\s+from\b/i,
@@ -305,15 +313,18 @@ if (fs.existsSync(reportPath)) {
   const found = writes.find((pattern) => pattern.test(report));
   if (found) {
     errors.push(
-      `Analytics report must stay read-only; it contains a write statement matching ${found}.`
+      `Analytics report must stay read-only; ${relative} contains a write statement matching ${found}.`
     );
   }
-  // The visit-length half of REQ-ANALYTICS-014 is only answerable from the
-  // per-session view. Reading it from the daily totals would silently turn
-  // "how long did a teacher stay" into "how long did everyone stay together".
-  if (!report.includes('public.analytics_sessions')) {
-    errors.push('Analytics report must read public.analytics_sessions for visit length (REQ-ANALYTICS-014).');
-  }
+}
+
+// The visit-length half of REQ-ANALYTICS-014 is only answerable from the
+// per-session view. Reading it from the daily totals would silently turn
+// "how long did a teacher stay" into "how long did everyone stay together".
+// This one applies to the report alone; the shared client has no queries of its own.
+const reportPath = path.join(root, 'scripts/analytics-report.mjs');
+if (fs.existsSync(reportPath) && !fs.readFileSync(reportPath, 'utf8').includes('public.analytics_sessions')) {
+  errors.push('Analytics report must read public.analytics_sessions for visit length (REQ-ANALYTICS-014).');
 }
 
 // Twice in one week a shell heredoc collapsed an escape and wrote a literal 0x08
@@ -411,6 +422,7 @@ const expectedScripts = {
   'audit:ssot': 'node scripts/ssot-check.mjs',
   clean: 'node scripts/clean-generated.mjs',
   analytics: 'node scripts/analytics-report.mjs',
+  'analytics:check': 'node scripts/check-credential.mjs',
   check: 'npm run typecheck && npm run audit:ssot && npm run test && npm run build',
   'check:full': 'npm run check && npm run test:e2e',
 };
