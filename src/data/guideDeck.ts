@@ -874,7 +874,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     { text: 'שולח את הקישור לתלמידים.' },
   ],
-  link: MOODLE_HOME_LINK,
   keywords: ['צירוף תלמידים מאוחר', 'קישור למרחב', 'הצטרפות מאוחרת', 'ללא תלמידים'],
   status: 'ready',
   },
@@ -929,7 +928,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '95-selfenrol-settings.png', caption: 'טופס „שיוך עצמי”: „מנגנון רישום עצמי פעיל?” ו„האם לאפשר רישום למשתמשים חדשים”.', hotspotIds: ['allow-new-users'] },
     },
   ],
-  link: MOODLE_HOME_LINK,
   keywords: ['שיוך עצמי', 'פתרון תקלה', 'עין פתוחה', 'רישום משתמשים חדשים'],
   status: 'ready',
   },
@@ -1246,7 +1244,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך נכנסים למצב עריכה?',
   flow: [
     {
-      text: 'מאתרים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מאתרים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '10-course-page.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, במצב כבוי.',
@@ -1254,7 +1252,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'לוחצים על מתג „מצב עריכה” כדי להדליק אותו.',
+      text: 'לוחצים על מתג „עריכה” כדי להדליק אותו.',
       screenshot: {
         src: '05-home-edit-on.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
@@ -1262,7 +1260,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       },
     },
     {
-      text: 'לוחצים שוב על מתג „מצב עריכה” כדי לכבות אותו.',
+      text: 'לוחצים שוב על מתג „עריכה” כדי לכבות אותו.',
       screenshot: {
         src: '10-course-page.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, במצב כבוי.',
@@ -1284,8 +1282,8 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   editModeGroup: true,
   screenshots: [
     {
-      src: '06-course-edit-on.jpg',
-      caption: 'מרחב הלמידה במצב עריכה — המתג „מצב עריכה” דלוק בסרגל העליון.',
+      src: '05-home-edit-on.png',
+      caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
       hotspotIds: ['edit-toggle'],
     },
   ],
@@ -1412,7 +1410,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מוסיפים משאב או פעילות?',
   flow: [
     {
-      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '05-home-edit-on.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
@@ -1506,7 +1504,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     'ההבדל בין הסתרה למחיקה: בהסתרה הפריט נשאר במרחב והתלמידים אינם רואים אותו, ואפשר להציג אותו שוב בכל רגע. במחיקה הפריט יוצא מהמרחב יחד עם מה שנעשה בו — כולל הגשות וציונים של תלמידים — ואי אפשר להחזיר אותו.',
   flow: [
     {
-      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '05-home-edit-on.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
@@ -1581,7 +1579,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך גוררים משימה ממקום למקום?',
   flow: [
     {
-      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '05-home-edit-on.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
@@ -1627,7 +1625,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך בודקים את המרחב כתלמיד?',
   flow: [
     {
-      text: 'מכבים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מכבים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '10-course-page.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, במצב כבוי.',
@@ -1711,7 +1709,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איפה רואים את פעולות העריכה בעמוד הבית של המרחב?',
   summary: 'במצב עריכה מופיעות פעולות הוספה ועריכה ישירות בעמוד.',
   screenshots: [{ src: '05-home-edit-on.png', caption: 'עמוד הבית של המרחב במצב עריכה, עם פעולות ההוספה והעריכה.' }],
-  link: MOODLE_HOME_LINK,
   keywords: ['עמוד הבית', 'מצב עריכה', 'הוספת משבצת'],
   status: 'ready',
   },
@@ -1721,10 +1718,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איפה פותחים את תפריט יחידת ההוראה?',
   flow: [
     {
-      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
-        src: '06-course-edit-on.jpg',
-        caption: 'מרחב הלמידה במצב עריכה — המתג „מצב עריכה” דלוק בסרגל העליון.',
+        src: '05-home-edit-on.png',
+        caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',
         hotspotIds: ['edit-toggle'],
       },
     },
@@ -1733,7 +1730,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       screenshot: { src: '07-unit-menu.jpg', caption: 'תפריט יחידת הוראה במצב עריכה.', hotspotIds: ['unit-kebab'] },
     },
   ],
-  link: MOODLE_HOME_LINK,
   requiresEditMode: true,
   keywords: ['יחידת הוראה', 'שלוש נקודות', 'תפריט'],
   status: 'ready',
@@ -1744,7 +1740,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'אילו פעולות מופיעות בתפריט יחידת הוראה?',
   summary: 'בתפריט מופיעות פעולות עריכה, הסתרה, הזזה ומחיקה לפי ההרשאות.',
   screenshots: [{ src: '13-section-menu-full.jpg', caption: 'תפריט יחידת הוראה מלא עם פעולות העריכה.' }],
-  link: MOODLE_HOME_LINK,
   keywords: ['תפריט יחידה', 'הסתרה', 'הזזה', 'מחיקה'],
   status: 'ready',
   },
@@ -1756,7 +1751,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   screenshots: [
     { src: '99-hidden-item.png', caption: 'תגית „מוסתר בפני תלמידים” על פריט במרחב, לצד תגית „זמין לסטודנטים, אך אינו מוצג בעמוד הראשי של הקורס”.', hotspotIds: ['hidden-badge'] },
   ],
-  link: MOODLE_HOME_LINK,
   keywords: ['מוסתר בפני תלמידים', 'זמין', 'הסתרה'],
   status: 'ready',
   },
@@ -1768,7 +1762,6 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   screenshots: [
     { src: '97-activity-chooser-more.png', caption: 'סוף רשימת הבורר: „תוכן אינטראקטיבי H5P”, „Google Meet™ for Moodle” ו„תקנים - חבילת לומדה SCORM”.' },
   ],
-  link: MOODLE_HOME_LINK,
   keywords: ['H5P', 'SCORM', 'Meet', 'פעילויות נוספות'],
   status: 'ready',
   },
@@ -1834,7 +1827,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איך מכניסים עדכון למרחב?',
   flow: [
     {
-      text: 'מדליקים את מתג „מצב עריכה” בסרגל העליון.',
+      text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
       screenshot: {
         src: '05-home-edit-on.png',
         caption: 'עמוד המרחב עם מתג העריכה בסרגל העליון, לאחר ההדלקה.',

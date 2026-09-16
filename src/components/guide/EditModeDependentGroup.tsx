@@ -31,9 +31,12 @@ export function EditModeDependentGroup({ onSelect }: { onSelect: (slideId: strin
               onClick={() => onSelect(slide.id)}
               className="flex w-full items-center justify-between gap-3 rounded-2xl border border-blue-200 bg-white/90 px-3.5 py-3 text-right text-sm font-black leading-relaxed text-slate-800 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-300/70 sm:text-base"
             >
-              {/* Show the action, not the question: the dependent slides are titled
-                  „איך …?"; here we list what the action IS, derived from that title. */}
-              <span>{slide.title.replace(/^איך\s+/, '').replace(/\s*\?$/, '')}</span>
+              {/* Show the action, not the question: a dependent slide is titled
+                  „איך …?" or „איפה …?"; here we list what the action IS, derived
+                  from that title. Both openers are stripped, so a slide titled
+                  „איפה פותחים…?" lists as „פותחים…" beside the other verbs
+                  instead of standing out as a question fragment. */}
+              <span>{slide.title.replace(/^(?:איך|איפה)\s+/, '').replace(/\s*\?$/, '')}</span>
               <ChevronLeft aria-hidden="true" className="h-5 w-5 shrink-0 text-blue-600" />
             </button>
           </li>
