@@ -161,11 +161,18 @@ function HotspotLayer({
           preserveAspectRatio="none"
         >
           <title>{hotspot.label}</title>
+          {/* The hotspot box is measured tight around the real control, so an
+              ellipse INSCRIBED in it cuts straight through the ends of the word
+              it is meant to point at — the owner could not read „עריכה” inside
+              its own circle. An ellipse contains a rectangle only when its
+              semi-axes are at least √2 larger than the half-sides, so it is drawn
+              circumscribed at 74 (√2·50 ≈ 70.7, plus a little air).
+              REQ-GUIDE-002: the mark surrounds the target, never covers it. */}
           <ellipse
             cx="50"
             cy="50"
-            rx="48"
-            ry="43"
+            rx="74"
+            ry="74"
             fill="none"
             stroke="#dc2626"
             strokeWidth={strokeWidth}
