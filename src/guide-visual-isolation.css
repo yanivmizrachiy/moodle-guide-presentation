@@ -46,8 +46,33 @@
   min-height: 0 !important;
 }
 
-/* Laptop-height compaction keeps every owner-approved cover element visible
- * without changing its text or removing content. */
+/* REQ-PRESENTATION-002: desktop/laptop guide slides are presentation screens,
+ * not scroll pages. Use the whole stage instead of a height-limited 16:9 card;
+ * the extra width reduces wrapping while preserving readable type sizes. */
+@media (min-width: 641px) {
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) {
+    width: min(96vw, 1660px) !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    aspect-ratio: auto !important;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+    scrollbar-width: none;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover])::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) > div {
+    height: 100%;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+}
+
+/* Laptop-height compaction keeps owner-approved content visible without turning
+ * the presentation into a scroll surface or shrinking typography to tiny sizes. */
 @media (min-width: 641px) and (max-height: 820px) {
   [data-guide-shell="premium-presentation"] article[data-cover="true"] > div > div[class*="border-amber-300"] {
     padding-top: 0.65rem !important;
@@ -86,6 +111,46 @@
     min-height: 3.25rem !important;
     padding-inline: 2rem !important;
     font-size: 1.05rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) > div {
+    padding: clamp(0.75rem, 2dvh, 1.15rem) !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) > div > div.relative.z-10 {
+    gap: 0.8rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) h1.font-display {
+    font-size: clamp(1.85rem, 5dvh, 3.15rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) h1.font-display + p {
+    margin-top: 0.45rem !important;
+    font-size: clamp(0.9rem, 2.1dvh, 1.05rem) !important;
+    line-height: 1.35 !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) header + div {
+    margin-top: 0.7rem !important;
+    gap: 0.6rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) ol[class*="gap-3"],
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) li[class*="gap-3"] {
+    gap: 0.55rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) svg[class*="h-12"][class*="w-12"] {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) li > div[class*="rounded-2xl"][class*="border-slate-200"],
+  [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) section > div[class*="rounded-2xl"][class*="border-slate-200"] {
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
   }
 }
 
