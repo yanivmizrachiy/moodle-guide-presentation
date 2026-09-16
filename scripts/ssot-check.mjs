@@ -11,6 +11,7 @@ const required = [
   'docs/EDITING_GUIDE.md',
   'docs/GUIDE_MISSING_CAPTURES.md',
   'docs/GUIDE_SCREENSHOTS_MANIFEST.md',
+  '.github/workflows/pages.yml',
   'scripts/clean-generated.mjs',
   'scripts/derive-screenshots.mjs',
   'src/data/guideDeck.ts',
@@ -75,6 +76,29 @@ const expectedScripts = {
 };
 for (const [name, expected] of Object.entries(expectedScripts)) {
   if (pkg.scripts?.[name] !== expected) errors.push(`package.json script ${name} must be: ${expected}`);
+}
+
+const pagesPath = path.join(root, '.github/workflows/pages.yml');
+if (fs.existsSync(pagesPath)) {
+  const pages = fs.readFileSync(pagesPath, 'utf8');
+  const checkIndex = pages.indexOf('npm run check');
+  const browserInstallIndex = pages.indexOf('npx playwright install --with-deps chromium');
+  const e2eIndex = pages.indexOf('npm run test:e2e');
+  const uploadIndex = pages.indexOf('actions/upload-pages-artifact@');
+
+  if (checkIndex < 0) errors.push('Pages deploy must run npm run check before publishing.');
+  if (browserInstallIndex < 0) errors.push('Pages deploy must install Chromium for Playwright before publishing.');
+  if (e2eIndex < 0) errors.push('Pages deploy must run npm run test:e2e before publishing.');
+  if (uploadIndex < 0) errors.push('Pages deploy must upload a Pages artifact.');
+  if (browserInstallIndex >= 0 && e2eIndex >= 0 && browserInstallIndex > e2eIndex) {
+    errors.push('Pages deploy must install Chromium before npm run test:e2e.');
+  }
+  if (checkIndex >= 0 && e2eIndex >= 0 && checkIndex > e2eIndex) {
+    errors.push('Pages deploy must run npm run check before npm run test:e2e.');
+  }
+  if (e2eIndex >= 0 && uploadIndex >= 0 && e2eIndex > uploadIndex) {
+    errors.push('Pages artifact must not be uploaded before browser E2E passes.');
+  }
 }
 
 const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
