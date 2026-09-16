@@ -10,6 +10,7 @@
     "test": "vitest run",
     "build": "vite build",
     "audit:ssot": "node scripts/ssot-check.mjs",
+    "analytics": "node scripts/analytics-report.mjs",
     "shots:derive": "node scripts/derive-screenshots.mjs",
     "clean": "node scripts/clean-generated.mjs",
     "check": "npm run typecheck && npm run audit:ssot && npm run test && npm run build",
