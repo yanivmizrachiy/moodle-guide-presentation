@@ -14,3 +14,4 @@
 12. Do not update visual baselines unless the visual change is deliberate and verified.
 13. Keep changes scoped to the requested work; do not perform unrelated refactors.
 14. Final report should be concise: changed, verified, commit, and any real blocker.
+15. Production deploy safety is invariant: `.github/workflows/pages.yml` must run `npm run check`, install real Chromium for Playwright, run `npm run test:e2e`, and only then upload the GitHub Pages artifact. Never weaken, skip, reorder past the upload, or bypass this gate.
