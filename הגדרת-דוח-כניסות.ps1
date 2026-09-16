@@ -77,22 +77,68 @@ else {
 
     if (-not $alreadyConfigured) {
         Write-Step 'מחרוזת החיבור של Neon'
-        Write-Host '   איפה משיגים אותה:' -ForegroundColor Gray
-        Write-Host '     console.neon.tech  ->  הפרויקט של המדריך  ->  Connect  ->  העתק' -ForegroundColor Gray
-        Write-Host '   היא נראית כך:  postgresql://user:password@host/neondb?sslmode=require' -ForegroundColor Gray
-        Write-Host '   ההקלדה מוסתרת. הדבק (Ctrl+V) והקש Enter.' -ForegroundColor Gray
+        Write-Host ''
+        Write-Host '   מה זה בכלל:' -ForegroundColor Gray
+        Write-Host '   הנתונים על הכניסות לאתר שמורים במסד נתונים בשם Neon. כדי לקרוא' -ForegroundColor Gray
+        Write-Host '   אותם צריך את הכתובת הפרטית שלו, שיש בתוכה גם סיסמה — שורה אחת' -ForegroundColor Gray
+        Write-Host '   ארוכה. זו „מחרוזת החיבור". מעתיקים אותה פעם אחת, וזהו.' -ForegroundColor Gray
+        Write-Host ''
+        Write-Host '   איך משיגים אותה, שלב אחרי שלב:' -ForegroundColor Gray
+        Write-Host '     1. נכנסים ל-console.neon.tech (באותו חשבון שבו נפתח המסד).' -ForegroundColor Gray
+        Write-Host '     2. בוחרים את הפרויקט של המדריך — ep-ancient-rice-b163hnr3.' -ForegroundColor Gray
+        Write-Host '     3. לוחצים על הכפתור Connect שבראש העמוד.' -ForegroundColor Gray
+        Write-Host '     4. לוחצים על אייקון ההעתקה ליד השורה הארוכה שמופיעה.' -ForegroundColor Gray
+        Write-Host ''
+        Write-Host '   היא נראית בדיוק כך:' -ForegroundColor Gray
+        Write-Host '     postgresql://neondb_owner:XXXXXXXX@ep-ancient-rice-b163hnr3...neon.tech/neondb?sslmode=require' -ForegroundColor DarkGray
+        Write-Host ''
+
+        $openConsole = Read-Host '   לפתוח לך עכשיו את הדף של Neon בדפדפן? (כ/ל)'
+        if ($openConsole -in @('כ', 'y', 'Y')) {
+            Start-Process 'https://console.neon.tech'
+            Write-Ok 'נפתח. העתק משם את השורה, וחזור לכאן.'
+        }
+
+        Write-Host ''
+        Write-Host '   עכשיו הדבק אותה כאן ב-Ctrl+V והקש Enter.' -ForegroundColor Gray
+        Write-Host '   שים לב: מה שתדביק לא יופיע על המסך. זה בכוונה — זו סיסמה.' -ForegroundColor Gray
+        Write-Host '   המסך יישאר ריק גם אחרי ההדבקה. פשוט הקש Enter.' -ForegroundColor Gray
         Write-Host ''
 
         $secure = Read-Host '   מחרוזת החיבור' -AsSecureString
         $plain = [System.Net.NetworkCredential]::new('', $secure).Password
 
         if ([string]::IsNullOrWhiteSpace($plain)) {
-            Write-Bad 'לא הוזנה מחרוזת. יציאה.'
+            Write-Bad 'לא הודבק כלום. הרץ שוב, והפעם ודא שההעתקה מ-Neon הצליחה.'
             Read-Host "`nהקש Enter לסגירה" | Out-Null
             exit 1
         }
+
+        # Name what was actually pasted. "It does not start with postgresql://"
+        # is true but useless to someone who does not know what he copied.
+        $plain = $plain.Trim()
         if ($plain -notmatch '^postgres(ql)?://') {
-            Write-Bad 'המחרוזת אינה מתחילה ב-postgresql:// — כנראה הועתק הדבר הלא נכון.'
+            Write-Bad 'זו לא מחרוזת החיבור. הנה מה שנראה שהודבק:'
+            if ($plain -match '^psql\s') {
+                Write-Bad '  העתקת את פקודת psql השלמה. ב-Neon יש ללחוץ על סוג החיבור'
+                Write-Bad '  ולבחור "Connection string" ולא "psql", ואז להעתיק.'
+            }
+            elseif ($plain -match '^jdbc:') {
+                Write-Bad '  העתקת את גרסת Java (jdbc:). בחר ב-Neon את האפשרות הרגילה'
+                Write-Bad '  שמתחילה ב-postgresql://.'
+            }
+            elseif ($plain -match '^https?://') {
+                Write-Bad '  העתקת כתובת אתר רגילה, לא את מחרוזת החיבור.'
+                Write-Bad '  מחרוזת החיבור מתחילה ב-postgresql:// ולא ב-http.'
+            }
+            elseif ($plain -match '^ep-[a-z0-9-]+') {
+                Write-Bad '  העתקת רק את שם השרת. צריך את השורה השלמה, שמתחילה'
+                Write-Bad '  ב-postgresql:// וכוללת גם את שם המשתמש והסיסמה.'
+            }
+            else {
+                Write-Bad '  משהו שאינו מתחיל ב-postgresql://.'
+                Write-Bad '  ב-Neon: Connect -> Connection string -> אייקון ההעתקה.'
+            }
             Read-Host "`nהקש Enter לסגירה" | Out-Null
             exit 1
         }

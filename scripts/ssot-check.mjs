@@ -24,6 +24,7 @@ const required = [
   'scripts/derive-screenshots.mjs',
   'scripts/analytics-report.mjs',
   'כמה-נכנסו.cmd',
+  'הגדרת-דוח-כניסות.ps1',
   'src/data/guideDeck.ts',
   'src/data/guideHotspots.ts',
   'src/data/hotspotPolicy.ts',
