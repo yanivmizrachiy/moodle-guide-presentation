@@ -604,13 +604,24 @@ export default function Guide() {
       >
         <header className="flex min-h-16 items-center justify-between gap-3 border-b border-white/10 bg-slate-950/30 px-3 text-white backdrop-blur-xl sm:px-5 lg:px-8">
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+            {/* The house leads home, and home is the cover — the guide's main
+                page (REQ-CONTENT-012). The table of contents has its own
+                controls: „התחל" on the cover and „תוכן" in the bottom bar. */}
+            <Button
+              size="icon"
+              aria-label="עמוד הבית"
+              onClick={() => jumpToSlide(FIRST_GUIDE_SLIDE_ID)}
+              className="rounded-xl bg-pink-500 text-white shadow-md ring-1 ring-pink-300/50 hover:bg-pink-600 hover:text-white focus-visible:ring-2 focus-visible:ring-pink-300"
+            >
+              <Home className="h-6 w-6" />
+            </Button>
             <Button
               size="icon"
               aria-label="תוכן העניינים"
               onClick={() => setPanel('menu')}
-              className="rounded-xl bg-pink-500 text-white shadow-md ring-1 ring-pink-300/50 hover:bg-pink-600 hover:text-white focus-visible:ring-2 focus-visible:ring-pink-300"
+              className="rounded-xl bg-white/10 text-white shadow-md ring-1 ring-white/25 hover:bg-white/20 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50"
             >
-              <Home className="h-6 w-6" />
+              <List className="h-6 w-6" />
             </Button>
             <Button
               size="icon"

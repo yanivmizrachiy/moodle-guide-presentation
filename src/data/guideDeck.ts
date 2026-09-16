@@ -1680,9 +1680,9 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   {
   id: 'home-edit-controls',
   eyebrow: 'עריכה',
-  title: 'איפה רואים את פעולות העריכה בעמוד הבית?',
+  title: 'איפה רואים את פעולות העריכה בעמוד הבית של המרחב?',
   summary: 'במצב עריכה מופיעות פעולות הוספה ועריכה ישירות בעמוד.',
-  screenshots: [{ src: '05-home-edit-on.png', caption: 'עמוד הבית במצב עריכה עם פעולות ההוספה והעריכה.' }],
+  screenshots: [{ src: '05-home-edit-on.png', caption: 'עמוד הבית של המרחב במצב עריכה, עם פעולות ההוספה והעריכה.' }],
   link: { href: MOODLE_HOME, label: 'פתיחת Moodle' },
   keywords: ['עמוד הבית', 'מצב עריכה', 'הוספת משבצת'],
   status: 'ready',
