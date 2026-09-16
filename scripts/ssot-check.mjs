@@ -20,9 +20,11 @@ const required = [
   'src/data/guideHotspots.ts',
   'src/data/hotspotPolicy.ts',
   'src/lib/analytics.ts',
+  'src/main.tsx',
   'src/pages/Guide.tsx',
   'src/index.css',
   'src/guide-visual-isolation.css',
+  'tests/e2e/viewport-fit.spec.ts',
   'public/guide/jerusalem-math-logo.png',
   'public/guide/jerusalem-math-logo.webp',
   'public/guide/screenshots',
@@ -63,6 +65,52 @@ if (fs.existsSync(guidePath)) {
   const guide = fs.readFileSync(guidePath, 'utf8');
   if (!guide.includes('import.meta.env.BASE_URL')) errors.push('Guide asset URLs must use import.meta.env.BASE_URL.');
   if (guide.includes('return `/guide/screenshots/${src}`;')) errors.push('Root-only screenshot URL remains in Guide.tsx.');
+  if (!guide.includes('toggleFullscreen')) errors.push('Guide must keep the visible fullscreen fallback control.');
+}
+
+const mainPath = path.join(root, 'src/main.tsx');
+if (fs.existsSync(mainPath)) {
+  const main = fs.readFileSync(mainPath, 'utf8');
+  if (!main.includes('installFirstInteractionFullscreen')) {
+    errors.push('Guide must request native fullscreen from the first eligible real user interaction.');
+  }
+  if (!main.includes('document.documentElement.requestFullscreen()')) {
+    errors.push('First-interaction fullscreen must use the browser Fullscreen API.');
+  }
+  if (!main.includes('navigator.webdriver')) {
+    errors.push('Automated browser runs must remain excluded from first-interaction fullscreen side effects.');
+  }
+}
+
+const visualIsolationPath = path.join(root, 'src/guide-visual-isolation.css');
+if (fs.existsSync(visualIsolationPath)) {
+  const css = fs.readFileSync(visualIsolationPath, 'utf8');
+  if (!css.includes('article[data-cover="true"]')) {
+    errors.push('Cover viewport-fit rule is missing from guide visual isolation.');
+  }
+  if (!css.includes('article[data-slide-id]:not([data-cover])')) {
+    errors.push('Published content slides must keep the canonical no-scroll desktop/laptop viewport rule.');
+  }
+  if (!css.includes('overflow: hidden !important;')) {
+    errors.push('Presentation article viewport rules must keep scrollbars disabled.');
+  }
+}
+
+const viewportTestPath = path.join(root, 'tests/e2e/viewport-fit.spec.ts');
+if (fs.existsSync(viewportTestPath)) {
+  const viewportTest = fs.readFileSync(viewportTestPath, 'utf8');
+  if (!viewportTest.includes('PUBLISHED_GUIDE_SLIDES')) {
+    errors.push('Viewport regression test must derive its coverage from the canonical published deck.');
+  }
+  if (!viewportTest.includes('filter((item) => !item.cover)')) {
+    errors.push('Viewport regression test must inspect every published non-cover slide.');
+  }
+  if (!viewportTest.includes('1280, height: 640')) {
+    errors.push('Viewport regression test must keep the short laptop browser viewport case.');
+  }
+  if (!viewportTest.includes('scrollHeight > metrics.clientHeight + 1')) {
+    errors.push('Viewport regression test must detect real hidden vertical overflow, not only visible scrollbars.');
+  }
 }
 
 const analyticsPath = path.join(root, 'src/lib/analytics.ts');
@@ -209,4 +257,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements, one canonical deck, protected analytics boundaries, real assets, clean tracked tree, and standalone presentation boundaries preserved.`);
+console.log(`SSOT audit passed: ${requirementIds.length} canonical requirements, one canonical deck, protected analytics and presentation boundaries, real assets, clean tracked tree, and standalone presentation boundaries preserved.`);

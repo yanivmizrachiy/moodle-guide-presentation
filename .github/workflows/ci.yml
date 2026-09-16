@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+# A newer commit makes an older CI result irrelevant. This is especially
+# important when several tools/agents work on the repository at the same time:
+# keep only the newest run for the same PR/ref and free runners for it.
+concurrency:
+  group: presentation-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest

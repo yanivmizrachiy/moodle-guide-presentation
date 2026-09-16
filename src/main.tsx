@@ -66,6 +66,38 @@ class GuideErrorBoundary extends React.Component<React.PropsWithChildren, GuideE
   }
 }
 
+/**
+ * REQ-PRESENTATION-004: browsers intentionally block requestFullscreen() until
+ * a real user activation. The guide already fills the viewport immediately;
+ * on the first eligible interaction we use that activation to enter native
+ * fullscreen. The permanent fullscreen button in Guide remains the fallback.
+ * Automated browsers are excluded so this browser policy does not destabilize
+ * deterministic E2E/visual tests.
+ */
+function installFirstInteractionFullscreen() {
+  if (!document.fullscreenEnabled || navigator.webdriver) return;
+
+  let armed = true;
+  const cleanup = () => {
+    window.removeEventListener('pointerup', requestFullscreen);
+    window.removeEventListener('keydown', requestFullscreen);
+  };
+  const requestFullscreen = () => {
+    if (!armed) return;
+    armed = false;
+    cleanup();
+    if (document.fullscreenElement) return;
+    void document.documentElement.requestFullscreen().catch(() => {
+      // Fullscreen may still be denied by browser/embedding policy. The visible
+      // fullscreen control remains available and the guide stays viewport-filling.
+    });
+  };
+
+  window.addEventListener('pointerup', requestFullscreen, { capture: true });
+  window.addEventListener('keydown', requestFullscreen, { capture: true });
+}
+
+installFirstInteractionFullscreen();
 startAnalytics();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
