@@ -12,6 +12,7 @@ const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
     ...(path.screenshots ?? []),
     ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
   ]),
+  ...(slide.choice?.options ?? []).map((option) => option.screenshot),
 ];
 
 describe('red focus policy', () => {

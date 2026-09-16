@@ -31,6 +31,11 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
   `title`; `eyebrow` is optional; do **not** write `section`), then map it in `SLIDE_TOPICS`
   (`'my-id': 'some-topic'`). Its chapter comes from that topic.
 - **Change order** — move the object within `AUTHORED_GUIDE_SLIDES`.
+- **Flag a slide as edit-mode dependent** — set `requiresEditMode: true` **and**
+  `actionLabel: 'שינוי כותרת'`: the action's name as a noun, never the verb form
+  („משנים כותרת") and never a question. The slide then lists itself in the
+  edit-mode group, and its row opens it (REQ-CONTENT-004). The label is authored,
+  never derived from the title — a flagged slide without one fails `npm run check`.
 - **Add a section or topic** — add to `GUIDE_SECTIONS` / `GUIDE_TOPICS`, then
   point slides at it via `SLIDE_TOPICS`.
 - **Add a screenshot** — drop the real `NN-name.png|jpg` (device-full res) in
@@ -51,6 +56,12 @@ Find a slide: search its `id:` in `guideDeck.ts` (e.g. `id: 'edit-mode'`).
   publishing; the app draws both the circle and an arrow pointing at it, on the
   WHOLE screen (REQ-GUIDE-008). A close-up is opt-in per use (`zoom: true`) and
   only for a control that stands alone on an empty part of the screen.
+- **Teach a screen with three or more options** — put a `choice: { options: [...] }`
+  on the slide. Each option carries `label` (its name exactly as the screen writes
+  it), `meaning` (one focused sentence on what choosing it gives) and its own
+  `screenshot` of the SAME whole screen with `hotspotIds: ['its-own-target']`.
+  One mark per option, never one circle around them all, and no two options may
+  share a target (REQ-GUIDE-012). Two real routes stay a `branch` (REQ-GUIDE-004).
 - **Mark `needs-capture`** — set `status: 'needs-capture'` + `missingCaptureId:
   'Mxx'` and add a `## Mxx` entry in `GUIDE_MISSING_CAPTURES.md`.
 - **Close a missing capture** — add the real masked screenshot + derivatives,

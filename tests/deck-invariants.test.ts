@@ -12,13 +12,17 @@ import {
   PUBLISHED_GUIDE_SLIDES,
   SLIDE_TOPICS,
   EDIT_MODE_TOGGLE_COPY,
+  EDIT_MODE_DEPENDENT_ACTIONS,
+  isActionLabelValid,
   isValidBranch,
   isValidBranchPath,
+  isValidChoice,
   isEditModeMetadataConsistent,
   normalizeSlide,
   slideSearchText,
   type GuideBranch,
   type GuideBranchPath,
+  type GuideChoice,
   type GuideSlide,
 } from '@/data/guideDeck';
 import { GUIDE_SCREENSHOT_HOTSPOTS, isValidHotspot } from '@/data/guideHotspots';
@@ -37,6 +41,7 @@ const shotsOf = (slide: (typeof GUIDE_SLIDES)[number]) => [
     ...(path.screenshots ?? []),
     ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
   ]),
+  ...(slide.choice?.options ?? []).map((option) => option.screenshot),
 ];
 const publishedIds = new Set(PUBLISHED_GUIDE_SLIDES.map((slide) => slide.id));
 const sectionIds = new Set(GUIDE_SECTIONS.map((section) => section.id));
@@ -272,6 +277,57 @@ describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
     expect(isValidBranch({ paths: [good, noRoute] })).toBe(false);
   });
 
+  it('a multi-option choice teaches every option on its own marked screen (REQ-GUIDE-012)', () => {
+    for (const slide of GUIDE_SLIDES) {
+      if (!slide.choice) continue;
+      expect(isValidChoice(slide.choice), `invalid choice on slide "${slide.id}"`).toBe(true);
+
+      const marks = slide.choice.options.map((option) => option.screenshot.hotspotIds?.[0]);
+      expect(new Set(marks).size, `two options share one mark on "${slide.id}"`).toBe(marks.length);
+      for (const option of slide.choice.options) {
+        expect(
+          option.screenshot.hotspotIds?.length,
+          `option "${option.label}" on "${slide.id}" does not mark exactly one target`
+        ).toBe(1);
+      }
+    }
+  });
+
+  it('the choice validator rejects one mark shared by several options', () => {
+    const shot = (id: string) => ({ src: '22-wizard-step2.png', caption: 'c', hotspotIds: [id] });
+    const option = (label: string, id: string) => ({ label, meaning: 'מה זה נותן', screenshot: shot(id) });
+    const good: GuideChoice = {
+      options: [option('א', 'type-ready'), option('ב', 'type-clone'), option('ג', 'type-empty')],
+    };
+    expect(isValidChoice(good)).toBe(true);
+    // one mark around several options — the shape this guide must not express
+    expect(
+      isValidChoice({
+        options: [option('א', 'type-cards'), option('ב', 'type-cards'), option('ג', 'type-cards')],
+      })
+    ).toBe(false);
+    // two real routes are a branch, not a choice (REQ-GUIDE-004)
+    expect(isValidChoice({ options: [option('א', 'type-ready'), option('ב', 'type-clone')] })).toBe(false);
+    expect(
+      isValidChoice({
+        options: [
+          option('א', 'type-ready'),
+          { label: 'ב', meaning: '  ', screenshot: shot('type-clone') },
+          option('ג', 'type-empty'),
+        ],
+      })
+    ).toBe(false);
+    expect(
+      isValidChoice({
+        options: [
+          option('א', 'type-ready'),
+          option('ב', 'type-clone'),
+          { label: 'ג', meaning: 'מה זה נותן', screenshot: { src: '22-wizard-step2.png', caption: 'c' } },
+        ],
+      })
+    ).toBe(false);
+  });
+
   it('the edit-mode validator rejects inconsistent metadata', () => {
     const base = { id: 'x', section: 'x', eyebrow: 'x', title: 'x' } as GuideSlide;
     expect(isEditModeMetadataConsistent({ ...base, requiresEditMode: true })).toBe(false);
@@ -300,6 +356,52 @@ describe('procedure, branch and edit-mode model (REQ-GUIDE)', () => {
     if (groupSlides.length === 0) return;
     const dependent = PUBLISHED_GUIDE_SLIDES.filter((slide) => slide.requiresEditMode);
     expect(dependent.length, 'editModeGroup renders an empty group').toBeGreaterThan(0);
+  });
+
+  it('every operation in the group opens the slide that teaches it (REQ-CONTENT-004)', () => {
+    const flagged = PUBLISHED_GUIDE_SLIDES.filter((slide) => slide.requiresEditMode);
+    expect(
+      EDIT_MODE_DEPENDENT_ACTIONS.map((action) => action.slideId),
+      'a flagged operation is missing from the group instead of failing loudly'
+    ).toEqual(flagged.map((slide) => slide.id));
+    for (const action of EDIT_MODE_DEPENDENT_ACTIONS) {
+      expect(publishedIds, `the group opens "${action.slideId}"`).toContain(action.slideId);
+    }
+  });
+
+  it('every operation is named as an action, authored on its slide (REQ-CONTENT-004)', () => {
+    for (const slide of GUIDE_SLIDES) {
+      expect(
+        isActionLabelValid(slide),
+        `"${slide.id}" depends on edit mode but has no usable actionLabel`
+      ).toBe(true);
+    }
+    for (const action of EDIT_MODE_DEPENDENT_ACTIONS) {
+      const slide = GUIDE_SLIDES.find((item) => item.id === action.slideId);
+      const derivedFromTitle = slide?.title
+        .replace(/^(?:איך|איפה)\s+/, '')
+        .replace(/\s*\?$/, '');
+      expect(
+        action.label,
+        `the group re-derives "${action.slideId}" from its title instead of using its action name`
+      ).not.toBe(derivedFromTitle);
+    }
+  });
+
+  it('the action-label validator rejects a question or an empty label', () => {
+    const base = {
+      id: 'x',
+      section: 'x',
+      eyebrow: 'x',
+      title: 'x',
+      requiresEditMode: true,
+    } as GuideSlide;
+    expect(isActionLabelValid({ ...base, actionLabel: 'שינוי כותרת' })).toBe(true);
+    expect(isActionLabelValid(base)).toBe(false);
+    expect(isActionLabelValid({ ...base, actionLabel: '   ' })).toBe(false);
+    expect(isActionLabelValid({ ...base, actionLabel: 'איך משנים כותרת?' })).toBe(false);
+    expect(isActionLabelValid({ ...base, actionLabel: 'איפה פותחים את התפריט' })).toBe(false);
+    expect(isActionLabelValid({ ...base, requiresEditMode: false })).toBe(true);
   });
 
   it('inside the editing chapter, the edit-mode concept precedes every dependent procedure (REQ-CONTENT-006)', () => {

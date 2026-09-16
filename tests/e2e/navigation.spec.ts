@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { EDIT_MODE_DEPENDENT_ACTIONS, PUBLISHED_GUIDE_SLIDES } from '../../src/data/guideDeck';
 
 test.describe('navigation', () => {
   test('the cover opens and התחל opens the table of contents', async ({ page }) => {
@@ -40,5 +41,22 @@ test.describe('navigation', () => {
       page.getByRole('heading', { name: 'מה ניתן לעשות במצב עריכה?' })
     ).toBeVisible();
     expect(page.url()).toContain('slide=edit-mode-dependent');
+  });
+
+  // REQ-CONTENT-004: the edit-mode group is navigation. Every operation listed
+  // there is a real button, and it opens the slide that teaches that operation.
+  test('every edit-mode operation opens its own slide', async ({ page }) => {
+    expect(EDIT_MODE_DEPENDENT_ACTIONS.length).toBeGreaterThan(0);
+
+    for (const action of EDIT_MODE_DEPENDENT_ACTIONS) {
+      const slide = PUBLISHED_GUIDE_SLIDES.find((item) => item.id === action.slideId);
+      expect(slide, `"${action.slideId}" is listed but not published`).toBeDefined();
+
+      await page.goto('./?slide=edit-mode-dependent');
+      await page.getByRole('button', { name: action.label, exact: true }).click();
+
+      await expect(page).toHaveURL(new RegExp(`slide=${action.slideId}`));
+      await expect(page.getByRole('heading', { name: slide!.title })).toBeVisible();
+    }
   });
 });

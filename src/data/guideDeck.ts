@@ -54,6 +54,27 @@ export type GuideBranch = {
   paths: readonly [GuideBranchPath, GuideBranchPath];
 };
 
+/**
+ * One option of a real multi-option choice on a Moodle screen: the option's
+ * name exactly as the screen writes it, one short sentence on what choosing it
+ * actually gives, and the WHOLE screen marked on that option alone. Several
+ * options are several explanations — never one red mark drawn around them all
+ * (REQ-GUIDE-012).
+ */
+export type GuideChoiceOption = {
+  label: string;
+  meaning: string;
+  screenshot: GuideScreenshot;
+};
+
+/**
+ * A screen that asks the teacher to choose between three or more options.
+ * Exactly two real routes are a branch, not a choice (REQ-GUIDE-004).
+ */
+export type GuideChoice = {
+  options: readonly GuideChoiceOption[];
+};
+
 export type GuideSlide = {
   id: string;
   /** Derived chapter — normalizeSlide sets it from SLIDE_TOPICS -> GUIDE_TOPICS. Not authored. */
@@ -86,8 +107,18 @@ export type GuideSlide = {
   missingCaptureId?: string;
   /** A genuine two-path branch for a procedure with two real routes (REQ-GUIDE-004). */
   branch?: GuideBranch;
+  /** A screen's three-or-more options, taught option by option (REQ-GUIDE-012). */
+  choice?: GuideChoice;
   /** Marks a procedure performable only while Moodle edit mode is on (REQ-GUIDE-005). */
   requiresEditMode?: boolean;
+  /**
+   * The name of the action this slide teaches, as a noun — „שינוי כותרת”, not
+   * „משנים כותרת” — for lists that show what a teacher can DO rather than the
+   * question the slide answers (REQ-CONTENT-004). Owner-authored per slide:
+   * Hebrew does not turn „איך משנים כותרת?” into its noun form by rule, so the
+   * label is written here and never machine-derived from the title.
+   */
+  actionLabel?: string;
   /** Renders the interactive guide-side edit-mode teaching toggle (REQ-CONTENT-004). */
   editModeTeachingToggle?: boolean;
   /** Renders the emphasized group of edit-mode-dependent operations, derived from requiresEditMode (REQ-CONTENT-004). */
@@ -139,6 +170,29 @@ export function isValidBranch(branch: GuideBranch): boolean {
 }
 
 /**
+ * A choice is genuine only when it teaches at least three options — two real
+ * routes are a branch (REQ-GUIDE-004) — and every option carries a name, a
+ * meaning and its own screen marked on exactly ONE target. Two options may
+ * never share a mark, which is what makes „one circle around them all"
+ * impossible to express (REQ-GUIDE-012).
+ */
+export function isValidChoice(choice: GuideChoice): boolean {
+  const options = choice?.options;
+  if (!Array.isArray(options) || options.length < 3) return false;
+
+  const marks = new Set<string>();
+  for (const option of options) {
+    if (typeof option?.label !== 'string' || option.label.trim().length === 0) return false;
+    if (typeof option?.meaning !== 'string' || option.meaning.trim().length === 0) return false;
+    const ids = option.screenshot?.hotspotIds;
+    if (!ids || ids.length !== 1 || ids[0].trim().length === 0) return false;
+    if (marks.has(ids[0])) return false;
+    marks.add(ids[0]);
+  }
+  return true;
+}
+
+/**
  * Edit-mode dependency is a machine flag, not prose (REQ-GUIDE-005). When a
  * slide declares requiresEditMode it must actually teach an action (steps,
  * flow, or branch); flagging a non-procedure slide is an inconsistent state.
@@ -155,6 +209,20 @@ export function isEditModeMetadataConsistent(slide: GuideSlide): boolean {
     slide.branch !== undefined ||
     (slide.screenshots?.length ?? 0) > 0
   );
+}
+
+/**
+ * A slide that declares itself edit-mode dependent is listed as an action
+ * elsewhere in the guide, so it must carry that action's name in noun form:
+ * the present-tense verb („משנים…") and the question mark belong to the
+ * slide's own title, not to the list (REQ-CONTENT-004).
+ */
+export function isActionLabelValid(slide: GuideSlide): boolean {
+  if (!slide.requiresEditMode) return true;
+  const label = slide.actionLabel?.trim() ?? '';
+  if (label.length === 0) return false;
+  const opener = label.split(' ')[0];
+  return opener !== 'איך' && opener !== 'איפה' && !label.endsWith('?');
 }
 
 const MOODLE_HOME = 'https://moodlemoe.lms.education.gov.il/';
@@ -205,6 +273,8 @@ export function slideSearchText(slide: GuideSlide): string {
     ...(path.flow ?? []).map((step) => step.text),
   ]);
 
+  const choiceText = (slide.choice?.options ?? []).flatMap((option) => [option.label, option.meaning]);
+
   return [
     slide.title,
     slide.summary,
@@ -213,6 +283,7 @@ export function slideSearchText(slide: GuideSlide): string {
     ...(slide.flow ?? []).map((step) => step.text),
     ...(slide.points ?? []),
     ...branchText,
+    ...choiceText,
     slide.tip,
     slide.warning,
     ...(slide.keywords ?? []),
@@ -262,6 +333,7 @@ export const SLIDE_TOPICS: Readonly<Record<string, string>> = {
   'open-space-two-paths': 'opening',
   'open-space-background-create': 'opening',
   'open-space-created-notification': 'opening',
+  'wizard-space-type': 'wizard',
   'wizard-ready-content-catalog': 'wizard',
   'wizard-ready-content-search': 'wizard',
   'wizard-ready-content-list-toggle': 'wizard',
@@ -365,6 +437,14 @@ export function normalizeSlide(slide: AuthoredGuideSlide): GuideSlide {
   const branch: GuideBranch | undefined = slide.branch
     ? { paths: [normalizeBranchPath(slide.branch.paths[0]), normalizeBranchPath(slide.branch.paths[1])] }
     : undefined;
+  const choice: GuideChoice | undefined = slide.choice
+    ? {
+        options: slide.choice.options.map((option) => ({
+          ...option,
+          screenshot: normalizeShot(option.screenshot),
+        })),
+      }
+    : undefined;
   return {
     ...slide,
     topic,
@@ -382,6 +462,7 @@ export function normalizeSlide(slide: AuthoredGuideSlide): GuideSlide {
     screenshots: slide.screenshots?.map(normalizeShot),
     flow: normalizeFlow(slide.flow),
     branch,
+    choice,
   };
 }
 
@@ -427,7 +508,10 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'בוחרים „תוכן מוכן”, „שכפול תוכן שלי” או „פיתוח תכנים במרחב למידה ריק”.',
-      screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.', hotspotIds: ['type-cards'] },
+      // One click, three possible targets: a single mark cannot point at three
+      // options, so this capture stays clean and each option is explained on
+      // its own screen in „איזה סוג מרחב למידה בוחרים?" (REQ-GUIDE-012).
+      screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה” — שלוש האפשרויות.' },
     },
     {
       text: 'לוחצים על הכפתור „הבא”.',
@@ -583,6 +667,45 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   status: 'ready',
   },
   {
+  id: 'wizard-space-type',
+  eyebrow: 'פתיחת מרחב · סוג המרחב',
+  title: 'איזה סוג מרחב למידה בוחרים?',
+  summary: 'בשלב „סוג מרחב הלמידה” בוחרים אחת משלוש אפשרויות. זה מה שכל אחת מהן נותנת.',
+  choice: {
+    options: [
+      {
+        label: 'תוכן מוכן (שאוכל לערוך)',
+        meaning: 'המרחב נפתח עם תוכן שכבר קיים במערכת, ואפשר לערוך אותו אחר כך.',
+        screenshot: {
+          src: '22-wizard-step2.png',
+          caption: 'שלב „סוג מרחב הלמידה” — האפשרות „תוכן מוכן (שאוכל לערוך)”.',
+          hotspotIds: ['type-ready'],
+        },
+      },
+      {
+        label: 'שכפול תוכן שלי (ללא תלמידים)',
+        meaning: 'המרחב נפתח עם עותק של התוכן ממרחב קיים שלכם, בלי התלמידים שלו.',
+        screenshot: {
+          src: '22-wizard-step2.png',
+          caption: 'שלב „סוג מרחב הלמידה” — האפשרות „שכפול תוכן שלי (ללא תלמידים)”.',
+          hotspotIds: ['type-clone'],
+        },
+      },
+      {
+        label: 'פיתוח תכנים במרחב למידה ריק',
+        meaning: 'המרחב נפתח ריק, ובונים בו את התוכן מההתחלה.',
+        screenshot: {
+          src: '22-wizard-step2.png',
+          caption: 'שלב „סוג מרחב הלמידה” — האפשרות „פיתוח תכנים במרחב למידה ריק”.',
+          hotspotIds: ['type-empty'],
+        },
+      },
+    ],
+  },
+  keywords: ['סוג מרחב הלמידה', 'תוכן מוכן', 'שכפול תוכן שלי', 'מרחב למידה ריק'],
+  status: 'ready',
+  },
+  {
   id: 'wizard-ready-content-catalog',
   eyebrow: 'פתיחת מרחב · תוכן מוכן',
   title: 'איזה תוכן מוכן אפשר להוסיף?',
@@ -643,7 +766,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   flow: [
     {
       text: 'בוחרים „שכפול תוכן שלי”.',
-      screenshot: { src: '22-wizard-step2.png', caption: 'שלב „סוג מרחב הלמידה”.', hotspotIds: ['type-cards'] },
+      screenshot: {
+        src: '22-wizard-step2.png',
+        caption: 'שלב „סוג מרחב הלמידה” — האפשרות „שכפול תוכן שלי (ללא תלמידים)”.',
+        hotspotIds: ['type-clone'],
+      },
     },
     {
       text: 'לוחצים על הכפתור „הבא”.',
@@ -1375,6 +1502,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'space-heading',
   eyebrow: 'עריכת פרטי המרחב',
   title: 'איך משנים כותרת?',
+  actionLabel: 'שינוי כותרת',
   flow: [
     {
       text: 'מפעילים את מצב העריכה.',
@@ -1398,6 +1526,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'rename-task',
   eyebrow: 'עריכת מרחב · שם משימה',
   title: 'איך משנים שם של משימה?',
+  actionLabel: 'שינוי שם של משימה',
   requiresEditMode: true,
   flow: [
     {
@@ -1434,6 +1563,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'add-content',
   eyebrow: 'תוכן',
   title: 'איך מוסיפים משאב או פעילות?',
+  actionLabel: 'הוספת משאב או פעילות',
   flow: [
     {
       text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
@@ -1490,6 +1620,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'hide-task',
   eyebrow: 'ניהול משימות',
   title: 'איך מסתירים משימה או תוכן מהתלמידים?',
+  actionLabel: 'הסתרת משימה או תוכן מהתלמידים',
   summary: 'המשימה נשארת אצל המורה אבל מוסתרת מהתלמידים.',
   flow: [
     {
@@ -1525,6 +1656,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'delete-task',
   eyebrow: 'ניהול משימות',
   title: 'איך מוחקים משימה, קישור או תוכן אחר מהמרחב?',
+  actionLabel: 'מחיקת משימה, קישור או תוכן אחר מהמרחב',
   summary: 'מחיקה מסירה את המשימה גם מתצוגת המורה; זו אינה הסתרה.',
   warning:
     'ההבדל בין הסתרה למחיקה: בהסתרה הפריט נשאר במרחב והתלמידים אינם רואים אותו, ואפשר להציג אותו שוב בכל רגע. במחיקה הפריט יוצא מהמרחב יחד עם מה שנעשה בו — כולל הגשות וציונים של תלמידים — ואי אפשר להחזיר אותו.',
@@ -1562,6 +1694,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'unhide-task',
   eyebrow: 'ניהול משימות',
   title: 'איך מסירים הסתרה ממשימה או מתוכן?',
+  actionLabel: 'הסרת הסתרה ממשימה או מתוכן',
   flow: [
     {
       text: 'נכנסים למצב עריכה.',
@@ -1603,6 +1736,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'drag-task',
   eyebrow: 'סידור משימות',
   title: 'איך גוררים משימה ממקום למקום?',
+  actionLabel: 'גרירת משימה ממקום למקום',
   flow: [
     {
       text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
@@ -1742,6 +1876,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'unit-menu',
   eyebrow: 'עריכה',
   title: 'איפה פותחים את תפריט יחידת ההוראה?',
+  actionLabel: 'פתיחת תפריט יחידת ההוראה',
   flow: [
     {
       text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
@@ -1861,6 +1996,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   id: 'content-updates',
   eyebrow: 'עדכונים למרחב',
   title: 'איך מכניסים עדכון למרחב?',
+  actionLabel: 'הכנסת עדכון למרחב',
   flow: [
     {
       text: 'מדליקים את מתג „עריכה” בסרגל העליון.',
@@ -2577,4 +2713,19 @@ export const GUIDE_SLIDES = AUTHORED_GUIDE_SLIDES.map(normalizeSlide);
 export const PUBLISHED_GUIDE_SLIDES = GUIDE_SLIDES.filter(
   (slide) => slide.status === 'ready' && !slide.missingCaptureId
 );
+
+/**
+ * The edit-mode dependent operations exactly as the guide lists them: one row
+ * per published slide flagged requiresEditMode, carrying the owner-authored
+ * action name and the slide that row opens (REQ-CONTENT-004, REQ-GUIDE-005).
+ * The list is navigation, not prose, and it stays in sync with the machine
+ * flag on its own. A flagged slide missing its actionLabel is a deck error,
+ * not a silently dropped row — the deck invariants fail on it.
+ */
+export const EDIT_MODE_DEPENDENT_ACTIONS: readonly { slideId: string; label: string }[] =
+  PUBLISHED_GUIDE_SLIDES.flatMap((slide) =>
+    slide.requiresEditMode && slide.actionLabel
+      ? [{ slideId: slide.id, label: slide.actionLabel }]
+      : []
+  );
 

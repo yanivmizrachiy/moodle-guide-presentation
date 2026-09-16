@@ -363,8 +363,13 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
   '99-hidden-item': [
     { id: 'hidden-badge', label: 'מוסתר בפני תלמידים', x: 66.4, y: 42.4, width: 10.1, height: 4.2 },
   ],
+  // 3200x1800 „סוג מרחב הלמידה”: three side-by-side option cards. Each option
+  // carries its OWN target on its own name, measured on the image — one mark
+  // never encircles several options together (REQ-GUIDE-002/012).
   '22-wizard-step2': [
-    { id: 'type-cards', label: 'תוכן מוכן (שאוכל לערוך) | שכפול תוכן שלי (ללא תלמידים) | פיתוח תכנים במרחב למידה', x: 15.5, y: 30.4, width: 69, height: 46.5 },
+    { id: 'type-ready', label: 'תוכן מוכן (שאוכל לערוך)', x: 63.5, y: 61.3, width: 18.5, height: 15 },
+    { id: 'type-clone', label: 'שכפול תוכן שלי (ללא תלמידים)', x: 40.5, y: 61.9, width: 19, height: 15 },
+    { id: 'type-empty', label: 'פיתוח תכנים במרחב למידה ריק', x: 14.5, y: 59.8, width: 25.4, height: 17.4 },
     { id: 'next', label: 'הבא', x: 3.5, y: 79.8, width: 5.3, height: 6.2 },
   ],
   '40-wizard-notification-update': [

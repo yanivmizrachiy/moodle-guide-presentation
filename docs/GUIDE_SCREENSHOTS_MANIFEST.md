@@ -197,7 +197,7 @@
 
 | קובץ | מה רואים | משולב ב־ |
 | --- | --- | --- |
-| 22-wizard-step2.png | שלב „סוג מרחב הלמידה" בעיצוב הנוכחי — שלושת המסלולים (החליף את ה-jpg הישן) | open-space-start |
+| 22-wizard-step2.png | שלב „סוג מרחב הלמידה" בעיצוב הנוכחי — שלושת המסלולים (החליף את ה-jpg הישן) | open-space-start, wizard-space-type, wizard-clone-my-content |
 | 24-wizard-step4.png | „אישור פרטי מרחב הלמידה" בעיצוב הנוכחי עם „אישור" (החליף את ה-jpg הישן; עוגן עודכן) | open-space-start |
 | 34-wizard-ready-content-search.png | קטלוג „תוכן מוכן" — חיפוש, פרויקט מתמטיקה, 4 פריטים אמיתיים | wizard-ready-content-catalog, wizard-ready-content-search, wizard-ready-content-list-toggle |
 | 35-wizard-ready-content-list-toggle.png | אותו קטלוג בתצוגת רשימה עם מתגי התצוגה | wizard-ready-content-list-toggle |

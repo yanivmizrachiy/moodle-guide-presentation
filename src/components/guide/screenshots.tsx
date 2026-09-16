@@ -40,6 +40,7 @@ export function collectSlideScreenshots(slide: GuideSlide): GuideScreenshot[] {
       ...(path.screenshots ?? []),
       ...(path.flow ?? []).flatMap((step) => (step.screenshot ? [step.screenshot] : [])),
     ]),
+    ...(slide.choice?.options ?? []).map((option) => option.screenshot),
   ];
 }
 

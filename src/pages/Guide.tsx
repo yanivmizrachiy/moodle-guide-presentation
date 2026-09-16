@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EditModeDependentGroup } from '@/components/guide/EditModeDependentGroup';
+import { ChoiceOptions } from '@/components/guide/ChoiceOptions';
 import { EditModeToggle } from '@/components/guide/EditModeToggle';
 import { FlowSteps, NumberedStepRow } from '@/components/guide/FlowSteps';
 import { TwoPathBranch } from '@/components/guide/TwoPathBranch';
@@ -180,6 +181,7 @@ function SlideContent({
   const flow = slide.flow ?? [];
   const hasFlow = flow.length > 0;
   const hasBranch = Boolean(slide.branch);
+  const hasChoice = Boolean(slide.choice);
   // Only a slide with an explicit, relevant link shows the link row — no generic
   // „פתיחת Moodle" button on concept slides that don't point anywhere specific.
   const link = slide.link;
@@ -229,14 +231,19 @@ function SlideContent({
           // A branch slide needs the width for two side-by-side lanes.
           hasBranch
             ? 'max-w-[1400px] content-start'
-            : hasFlow
+            : hasFlow || hasChoice
               ? 'max-w-[1080px] content-start'
               : hasScreenshots
                 ? 'max-w-[1540px] content-center lg:grid-cols-[0.72fr_1.28fr]'
                 : 'max-w-5xl content-center'
         )}
       >
-        <div className={cn('flex min-w-0 flex-col', hasFlow || hasBranch ? 'justify-start' : 'justify-center')}>
+        <div
+          className={cn(
+            'flex min-w-0 flex-col',
+            hasFlow || hasBranch || hasChoice ? 'justify-start' : 'justify-center'
+          )}
+        >
           {/* The attribution card lives on the cover; repeating it here pushed the
               slide title down, so the title now starts at the top. */}
           <header>
@@ -340,6 +347,14 @@ function SlideContent({
                   numbered={flow.length > 1}
                 />
               </section>
+            )}
+
+            {slide.choice && (
+              <ChoiceOptions
+                slideTitle={slide.title}
+                choice={slide.choice}
+                onOpenScreenshot={onOpenScreenshot}
+              />
             )}
 
             {slide.branch && (
