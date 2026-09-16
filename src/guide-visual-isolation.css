@@ -67,7 +67,6 @@
   [data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]) > div {
     height: 100%;
     min-height: 0 !important;
-    overflow: hidden;
   }
 }
 
