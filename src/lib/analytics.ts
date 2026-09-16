@@ -1,4 +1,5 @@
-const ANALYTICS_URL = 'https://ep-ancient-rice-b163hnr3.apirest.c-5.eu-central-1.aws.neon.tech/neondb/rest/v1/analytics_events';
+const ANALYTICS_URL = 'https://ep-ancient-rice-b163hnr3.apirest.c-5.eu-central-1.aws.neon.tech/neondb/rest/v1/rpc/track_analytics_events';
+const PRODUCTION_HOST = 'yanivmizrachiy.github.io';
 const VISITOR_KEY = 'moodle_guide_visitor_id';
 const SESSION_KEY = 'moodle_guide_session_id';
 const SESSION_STARTED_KEY = 'moodle_guide_session_started';
@@ -65,9 +66,9 @@ async function postEvents(events: AnalyticsEvent[], keepalive = false) {
       keepalive,
       headers: {
         'Content-Type': 'application/json',
-        Prefer: 'return=minimal,resolution=ignore-duplicates',
+        Prefer: 'return=minimal',
       },
-      body: JSON.stringify(events),
+      body: JSON.stringify({ events }),
     });
     return response.ok;
   } catch {
@@ -76,7 +77,13 @@ async function postEvents(events: AnalyticsEvent[], keepalive = false) {
 }
 
 export function startAnalytics() {
-  if (typeof window === 'undefined' || typeof document === 'undefined') return () => undefined;
+  if (
+    typeof window === 'undefined' ||
+    typeof document === 'undefined' ||
+    window.location.hostname !== PRODUCTION_HOST
+  ) {
+    return () => undefined;
+  }
 
   const visitorId = getOrCreate(localStorage, VISITOR_KEY);
   const sessionId = getOrCreate(sessionStorage, SESSION_KEY);
