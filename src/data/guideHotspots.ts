@@ -109,6 +109,9 @@ export const GUIDE_SCREENSHOT_HOTSPOTS: Readonly<Record<string, readonly GuideHo
     // The bell still closed, carrying its unread badge. Measured on this file at
     // 14.55% across and 1.16% down — the same box capture 40 marks once it is open.
     { id: 'bell', label: 'סמל הפעמון — התראות', x: 14.4, y: 1.4, width: 2.5, height: 3.6 },
+    // The message bubble beside it, also still closed. Measured on this file:
+    // the icon spans 12.75%..13.85% across and 2.2%..4.2% down.
+    { id: 'messages-icon', label: 'סמל בועת ההודעות — הודעות', x: 12.05, y: 1.4, width: 2.5, height: 3.6 },
     { id: 'settings-tab', label: 'הגדרות', x: 58.3, y: 20.4, width: 5.6, height: 4.6 },
     { id: 'participants-tab', label: 'משתתפים', x: 51.6, y: 20.4, width: 5, height: 4.6 },
   ],

@@ -1254,7 +1254,12 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
         hotspotIds: ['save'],
       },
     },
-    { text: 'בוחרים את הקבוצה ברשימת הקבוצות.' },
+    {
+      // The step had no image at all, while the capture of exactly this state —
+      // the groups list with one of them selected — is already on two steps below.
+      text: 'בוחרים את הקבוצה ברשימת הקבוצות.',
+      screenshot: { src: '74-groups-two-groups.png', caption: 'רשימת הקבוצות עם מספר החברים בכל אחת.' },
+    },
     {
       text: 'לוחצים על הכפתור „הוספת/הסרת משתתפים מקבוצה”.',
       screenshot: {
@@ -2624,8 +2629,14 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
   title: 'איפה רואים התראות ומסרים?',
   flow: [
     {
+      // Both icons are pressed while their panel is still shut, so the closed top
+      // bar carries the marks; captures 11 and 12 are those panels once open.
       text: 'לוחצים על סמל הפעמון בסרגל העליון.',
-      screenshot: { src: '11-notifications.jpg', caption: 'פאנל ההתראות.', hotspotIds: ['bell'] },
+      screenshot: {
+        src: '10-course-page.png',
+        caption: 'הסרגל העליון לפני הלחיצה — סמל הפעמון וסמל בועת המסרים.',
+        hotspotIds: ['bell'],
+      },
     },
     {
       text: 'נפתח פאנל ההתראות.',
@@ -2633,7 +2644,11 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
     },
     {
       text: 'לוחצים על סמל בועת המסרים בסרגל העליון.',
-      screenshot: { src: '12-messages.jpg', caption: 'פאנל המסרים.', hotspotIds: ['messages-icon'] },
+      screenshot: {
+        src: '10-course-page.png',
+        caption: 'הסרגל העליון לפני הלחיצה — סמל הפעמון וסמל בועת המסרים.',
+        hotspotIds: ['messages-icon'],
+      },
     },
     {
       text: 'נפתח פאנל המסרים.',
