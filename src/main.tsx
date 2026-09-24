@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import Guide from './pages/Guide';
 import { startAnalytics } from './lib/analytics';
 import { installFirstInteractionFullscreen } from './lib/fullscreen';
+import { isDistrictEmbedMode } from './lib/embed';
 import './index.css';
 import './guide-visual-isolation.css';
 
@@ -67,7 +68,7 @@ class GuideErrorBoundary extends React.Component<React.PropsWithChildren, GuideE
   }
 }
 
-installFirstInteractionFullscreen();
+if (!isDistrictEmbedMode()) installFirstInteractionFullscreen();
 startAnalytics();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
