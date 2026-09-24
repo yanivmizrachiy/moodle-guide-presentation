@@ -1,0 +1,28 @@
+name: Emergency Vercel Auth Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/vercel-auth-probe-trigger'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Check whether a Vercel token is available
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${VERCEL_TOKEN:-}" ]; then
+            echo "VERCEL_TOKEN_AVAILABLE=false"
+            exit 2
+          fi
+          echo "VERCEL_TOKEN_AVAILABLE=true"
+          npx --yes vercel@59.25.4 whoami --token "$VERCEL_TOKEN"
