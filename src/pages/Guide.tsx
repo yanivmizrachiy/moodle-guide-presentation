@@ -38,6 +38,7 @@ import {
   isFullscreenSupported,
   requestFullscreenNow,
 } from '@/lib/fullscreen';
+import { isDistrictEmbedMode, notifyDistrictParentOfGuideLocation } from '@/lib/embed';
 import {
   FIRST_GUIDE_SLIDE_ID,
   EDIT_MODE_DEPENDENCY_LABEL,
@@ -398,6 +399,7 @@ function SlideContent({
 
 export default function Guide() {
   const reducedMotion = Boolean(useReducedMotion());
+  const embeddedMode = isDistrictEmbedMode();
   const [currentIndex, setCurrentIndex] = useState(getSlideIndexFromUrl);
   const [panel, setPanel] = useState<Panel>(null);
   const [query, setQuery] = useState('');
@@ -405,7 +407,7 @@ export default function Guide() {
   // Read once on mount: it never changes for a given browser, and reading it
   // during render would read the DOM from inside a render pass.
   const [fullscreenSupported, setFullscreenSupported] = useState(false);
-  useEffect(() => setFullscreenSupported(isFullscreenSupported()), []);
+  useEffect(() => setFullscreenSupported(!embeddedMode && isFullscreenSupported()), [embeddedMode]);
   const [direction, setDirection] = useState(1);
   const [lightbox, setLightbox] = useState<LightboxState>(null);
   // Which chapter is expanded in the table of contents. The menu lists only the
@@ -533,6 +535,7 @@ export default function Guide() {
 
   useEffect(() => {
     document.title = `${slide.title} | מדריך Moodle למורים`;
+    notifyDistrictParentOfGuideLocation();
 
     // Prefetch the neighbouring slides' screenshots, flow screens included.
     for (const neighbourPosition of [position - 1, position + 1]) {
