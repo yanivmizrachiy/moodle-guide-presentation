@@ -474,7 +474,7 @@ export function normalizeSlide(slide: AuthoredGuideSlide): GuideSlide {
     // Single filing source: the topic map is the ONLY place a slide's chapter
     // is set. Every real slide has a SLIDE_TOPICS entry (a deck invariant
     // enforces it, and would fail loudly otherwise); the fallback only keeps a
-    // synthetic test slide with no topic from producing an undefined section.
+    // test-only slide with no topic from producing an undefined section.
     section: (topic && TOPIC_SECTION[topic]) || GUIDE_SECTIONS[0].id,
     // Truth stays strict: a slide that still owes a real capture cannot be
     // published, no matter what schema (e.g. a branch) it also carries.
@@ -2326,7 +2326,7 @@ const AUTHORED_GUIDE_SLIDES: AuthoredGuideSlide[] = [
       text: 'בעמוד המשימה מופיע „בוצע” בירוק או „נכשל” באדום מול ציון העובר.',
       screenshot: {
         src: '56-quiz-retry.png',
-        caption: '„בוצע” בירוק מציין שהמשימה הוגשה; „נכשל” באדום מציין שהציון לא הגיע לציון העובר — בדוגמה הזו התלמיד נכשל.',
+        caption: '„בוצע” בירוק מציין שהמשימה הוגשה; „נכשל” באדום מציין שהציון לא הגיע לציון העובר — בצילום זה התלמיד נכשל.',
         hotspotIds: ['result-badges'],
       },
     },
