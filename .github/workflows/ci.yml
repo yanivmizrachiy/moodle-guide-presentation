@@ -1,13 +1,15 @@
 name: Presentation CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+  workflow_dispatch:
 
-# A newer commit makes an older CI result irrelevant. This is especially
-# important when several tools/agents work on the repository at the same time:
-# keep only the newest run for the same PR/ref and free runners for it.
+# PR validation only. Main is validated again by Deploy Presentation before
+# GitHub Pages publication, so running this workflow on main would duplicate
+# npm/check and Playwright work without adding a distinct gate.
+#
+# A newer commit makes an older CI result irrelevant. Keep only the newest run
+# for the same PR/ref and free runners for it.
 concurrency:
   group: presentation-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
