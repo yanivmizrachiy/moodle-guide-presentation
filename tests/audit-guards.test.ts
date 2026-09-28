@@ -137,7 +137,7 @@ const GUARDS: { name: string; file: string; break: (source: string) => string; m
     file: 'כמה-נכנסו.cmd',
     break: (source) => source + 'rem שלום',
     message: 'contains a non-ASCII byte',
-  },,
+  },
   {
     name: 'the retired www/guide deployment cannot return as a source URL',
     file: 'README.md',
