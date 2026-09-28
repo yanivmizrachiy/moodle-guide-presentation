@@ -617,6 +617,14 @@ describe('no demo in code, UI or identifiers (REQ-STABILITY-008)', () => {
     expect(offenders, `editModeDemo found in: ${offenders.join(', ')}`).toEqual([]);
   });
 
+  it('no app source contains demo, דמו or mock terminology', () => {
+    const forbidden = /(?:\bdemo\b|דמו|\bmock\b)/i;
+    const offenders = sources
+      .filter((source) => forbidden.test(source.text))
+      .map((source) => source.file);
+    expect(offenders, `demo-like terminology found in: ${offenders.join(', ')}`).toEqual([]);
+  });
+
   it("no UI source renders the 'צילום אמיתי' label", () => {
     const offenders = sources.filter((source) => source.text.includes('צילום אמיתי')).map((source) => source.file);
     expect(offenders, `'צילום אמיתי' found in: ${offenders.join(', ')}`).toEqual([]);
