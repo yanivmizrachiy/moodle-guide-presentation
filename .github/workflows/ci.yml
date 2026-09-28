@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - name: Ensure check did not mutate tracked source
+        run: git diff --exit-code
 
   # The broad browser gate: the full Playwright suite described in
   # playwright.config.ts.
@@ -42,6 +44,9 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium
       - run: npx playwright test
+      - name: Ensure browser tests did not mutate tracked source
+        shell: bash
+        run: git diff --exit-code
       - uses: actions/upload-artifact@v7
         if: failure()
         with:

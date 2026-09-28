@@ -27,6 +27,8 @@ jobs:
       - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - name: Ensure build and E2E did not mutate tracked source
+        run: git diff --exit-code
       - uses: actions/configure-pages@v6
         with:
           enablement: true
@@ -48,6 +50,9 @@ jobs:
       - run: npm ci
       - run: npx playwright install chromium
       - run: npx playwright test tests/e2e/visual.spec.ts
+      - name: Ensure visual tests did not mutate tracked source
+        shell: bash
+        run: git diff --exit-code
 
   deploy:
     environment:
