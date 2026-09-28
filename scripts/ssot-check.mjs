@@ -362,10 +362,20 @@ const textFiles = [
     .map((name) => path.join(root, name))
     .filter((file) => fs.existsSync(file)),
 ];
+const legacyGuideUrl = ['https://yanivmizrachiy.github.io', '/www/guide/'].join('');
+
 for (const file of textFiles) {
-  const code = firstControlCharacter(fs.readFileSync(file, 'utf8'));
-  if (code === null) continue;
+  const contents = fs.readFileSync(file, 'utf8');
   const relative = path.relative(root, file).split(path.sep).join('/');
+
+  if (contents.includes(legacyGuideUrl)) {
+    errors.push(
+      `${relative} references the retired /www/guide/ deployment; use the canonical moodle-guide-presentation URL instead.`
+    );
+  }
+
+  const code = firstControlCharacter(contents);
+  if (code === null) continue;
   const label = code.toString(16).toUpperCase().padStart(4, '0');
   errors.push(
     `${relative} contains a literal control character (U+${label}); an escape was mangled before it was written.`

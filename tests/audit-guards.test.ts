@@ -137,7 +137,14 @@ const GUARDS: { name: string; file: string; break: (source: string) => string; m
     file: 'כמה-נכנסו.cmd',
     break: (source) => source + 'rem שלום',
     message: 'contains a non-ASCII byte',
-  },
+  },,
+  {
+    name: 'the retired www/guide deployment cannot return as a source URL',
+    file: 'README.md',
+    break: (source) =>
+      source + '\n' + ['https://yanivmizrachiy.github.io', '/www/guide/'].join(''),
+    message: 'references the retired /www/guide/ deployment',
+  }
 ];
 
 describe('the SSOT audit guards can actually fail', () => {
