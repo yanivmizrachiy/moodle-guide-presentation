@@ -804,11 +804,11 @@
 /* The cover: a wide, quiet composition — grand, but always one screen (the cover
    is clipped shut on desktop, so its whole stack must fit; sizes stay modest). */
 [data-guide-shell="premium-presentation"] article[data-cover] > div > div:last-child {
-  padding: clamp(0.75rem, 3vh, 2.75rem) clamp(1.5rem, 5vw, 4rem) !important;
-  gap: clamp(.45rem, 1.6vh, 1.25rem);
+  padding: clamp(1.25rem, 3vh, 2.75rem) clamp(1.5rem, 5vw, 4rem) !important;
+  gap: clamp(.75rem, 1.6vh, 1.25rem);
 }
 [data-guide-shell="premium-presentation"] article[data-cover] div[class*="bg-slate-950/88"] {
-  padding: clamp(0.95rem, 2.4vh, 1.9rem) clamp(1.5rem, 4vw, 3rem) !important;
+  padding: clamp(1.1rem, 2.4vh, 1.9rem) clamp(1.5rem, 4vw, 3rem) !important;
 }
 [data-guide-shell="premium-presentation"] article[data-cover] h1.font-display {
   font-size: clamp(2.1rem, min(4.4vw, 7.1vh), 3.9rem) !important;
@@ -822,8 +822,8 @@
 }
 /* the logo, sized so the whole cover clears the fold */
 [data-guide-shell="premium-presentation"] article[data-cover] img[class*="animate-"] {
-  width: clamp(4rem, 12vh, 8rem) !important;
-  height: clamp(4rem, 12vh, 8rem) !important;
+  width: clamp(5rem, 12vh, 8rem) !important;
+  height: clamp(5rem, 12vh, 8rem) !important;
 }
 
 /* On a short laptop the app's own compaction rules fight this; soften them so the
@@ -837,10 +837,11 @@
   }
 }
 
-/* Extra insurance for short laptops: an additive trim so the cover clears the
-   fold with comfortable margin. 800px-tall viewports (the visual baselines) are
-   never matched, so baselines are untouched. */
-@media (max-height: 720px) {
+/* Short DESKTOP laptops only (wide + <=720px tall): trim the cover so it clears
+   the fold with margin. min-width:641 excludes phones (their cover keeps the
+   baseline exactly); 800px-tall desktops are above the height cap, so their
+   baseline is untouched too. */
+@media (min-width: 641px) and (max-height: 720px) {
   [data-guide-shell="premium-presentation"] article[data-cover] h1.font-display {
     font-size: clamp(1.6rem, 6.4vh, 2.6rem) !important;
     line-height: 1.04 !important;
