@@ -6,6 +6,7 @@ import { installFirstInteractionFullscreen } from './lib/fullscreen';
 import { isDistrictEmbedMode } from './lib/embed';
 import './index.css';
 import './guide-visual-isolation.css';
+import './guide-theme-porcelain.css';
 
 type GuideErrorBoundaryState = { failed: boolean };
 
