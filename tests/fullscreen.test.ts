@@ -50,14 +50,14 @@ describe('REQ-PRESENTATION-004 first-interaction fullscreen', () => {
       });
     installFirstInteractionFullscreen();
     win.dispatchEvent(new Event('pointerup'));
-    await Promise.resolve();
-    await Promise.resolve();
-    expect(requestFullscreen).toHaveBeenCalledTimes(1);
-    expect(fullscreenElement()).toBeNull();
+    await vi.waitFor(() => expect(requestFullscreen).toHaveBeenCalledTimes(1));
+    await vi.waitFor(() => expect(fullscreenElement()).toBeNull());
+    // Wait until the rejected promise has re-armed the listener before sending
+    // the next gesture. This models two distinct user interactions rather than
+    // dispatching both inside the same microtask turn.
+    await new Promise((resolve) => setTimeout(resolve, 0));
     win.dispatchEvent(new Event('keydown'));
-    await Promise.resolve();
-    await Promise.resolve();
-    expect(requestFullscreen).toHaveBeenCalledTimes(2);
+    await vi.waitFor(() => expect(requestFullscreen).toHaveBeenCalledTimes(2));
     expect(fullscreenElement()).not.toBeNull();
   });
 
