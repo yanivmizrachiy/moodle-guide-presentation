@@ -188,9 +188,11 @@ describe('links', () => {
     }
   });
 
-  it('the vite base matches the GitHub Pages project path', () => {
+  it('the vite base preserves GitHub Pages while portable previews use root', () => {
     const viteConfig = readFileSync(join(root, 'vite.config.ts'), 'utf8');
-    expect(viteConfig).toContain("base: '/moodle-guide-presentation/'");
+    expect(viteConfig).toContain("process.env.GITHUB_ACTIONS === 'true'");
+    expect(viteConfig).toContain("'/moodle-guide-presentation/'");
+    expect(viteConfig).toContain(": '/'");
   });
 });
 
