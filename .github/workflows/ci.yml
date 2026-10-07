@@ -25,6 +25,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      # External builders such as Google AI Studio do not run inside GitHub
+      # Actions. Exercise that exact portable build mode explicitly.
+      - name: Verify portable external-builder build
+        env:
+          GITHUB_ACTIONS: 'false'
+        run: npm run build
+      # Also pin the production Pages mode so portability can never break the
+      # deployed repository subpath.
+      - name: Verify GitHub Pages build
+        env:
+          GITHUB_ACTIONS: 'true'
+        run: npm run build
       - name: Ensure check did not mutate tracked source
         run: git diff --exit-code
 
