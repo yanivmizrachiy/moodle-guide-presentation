@@ -70,7 +70,15 @@ class GuideErrorBoundary extends React.Component<React.PropsWithChildren, GuideE
 }
 
 if (!isDistrictEmbedMode()) installFirstInteractionFullscreen();
-startAnalytics();
+// Analytics must never prevent the guide from rendering (REQ-ANALYTICS-006). Its own
+// setup is defensive, but this call runs before ReactDOM.render below, so a throw here
+// would abort module evaluation and leave a blank page — GuideErrorBoundary cannot
+// catch what happens before render. This guard is the last line of defence.
+try {
+  startAnalytics();
+} catch (error) {
+  console.error('Analytics failed to start:', error);
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

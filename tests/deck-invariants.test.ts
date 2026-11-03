@@ -13,6 +13,7 @@ import {
   SLIDE_TOPICS,
   collectSlideScreenshots,
   EDIT_MODE_TOGGLE_COPY,
+  EDIT_MODE_DEPENDENCY_LABEL,
   EDIT_MODE_DEPENDENT_ACTIONS,
   isActionLabelValid,
   isValidBranch,
@@ -630,5 +631,65 @@ describe('no demo in code, UI or identifiers (REQ-STABILITY-008)', () => {
   it("no UI source renders the 'צילום אמיתי' label", () => {
     const offenders = sources.filter((source) => source.text.includes('צילום אמיתי')).map((source) => source.file);
     expect(offenders, `'צילום אמיתי' found in: ${offenders.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('REQ-GUIDE-010: the word „אשף” never appears in displayed guide text (REQ-STABILITY-005)', () => {
+  // SSOT rule 24 bans the word „אשף” in ANY text shown in the guide — a screen is
+  // named by its own name instead. Only DISPLAYED strings are gathered; screenshot
+  // filename stems (`screenshot.src`) legitimately use the English "wizard" and are
+  // never shown to a teacher, so they are deliberately excluded.
+  const displayed: string[] = [];
+  const push = (value: unknown) => {
+    if (typeof value === 'string' && value.trim().length > 0) displayed.push(value);
+  };
+
+  for (const slide of PUBLISHED_GUIDE_SLIDES) {
+    push(slide.title);
+    push(slide.summary);
+    push(slide.eyebrow);
+    push(slide.tip);
+    push(slide.warning);
+    push(slide.actionLabel);
+    push(slide.link?.label);
+    (slide.steps ?? []).forEach(push);
+    (slide.points ?? []).forEach(push);
+    (slide.indexCards ?? []).forEach((card) => push(card.label));
+    (slide.flow ?? []).forEach((step) => {
+      push(step.text);
+      push(step.link?.label);
+    });
+    (slide.branch?.paths ?? []).forEach((path) => {
+      push(path.label);
+      (path.steps ?? []).forEach(push);
+      (path.flow ?? []).forEach((step) => {
+        push(step.text);
+        push(step.link?.label);
+      });
+    });
+    (slide.choice?.options ?? []).forEach((option) => {
+      push(option.label);
+      push(option.meaning);
+    });
+    collectSlideScreenshots(slide).forEach((shot) => push(shot.caption));
+  }
+
+  // Chrome shown around the slides is displayed guide text too.
+  GUIDE_SECTIONS.forEach((section) => push(section.title));
+  GUIDE_TOPICS.forEach((topic) => push(topic.title));
+  EDIT_MODE_DEPENDENT_ACTIONS.forEach((action) => push(action.label));
+  push(EDIT_MODE_TOGGLE_COPY.on);
+  push(EDIT_MODE_TOGGLE_COPY.off);
+  push(EDIT_MODE_DEPENDENCY_LABEL);
+  push(GUIDE_ATTRIBUTION.district);
+  push(GUIDE_ATTRIBUTION.site);
+  push(GUIDE_ATTRIBUTION.follow.label);
+
+  it('no displayed guide string contains the forbidden word „אשף”', () => {
+    const offenders = displayed.filter((text) => text.includes('אשף'));
+    expect(
+      offenders,
+      `REQ-GUIDE-010 forbids „אשף” in displayed guide text — name the screen instead. Found in: ${offenders.join(' | ')}`
+    ).toEqual([]);
   });
 });

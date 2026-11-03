@@ -48,11 +48,19 @@ function uuid() {
 }
 
 function getOrCreate(storage: Storage, key: string) {
-  const current = storage.getItem(key);
-  if (current) return current;
-  const value = uuid();
-  storage.setItem(key, value);
-  return value;
+  // Storage can be unavailable or throw (private window, blocked cookies/site data).
+  // Analytics must never break the guide on a page load (REQ-ANALYTICS-006), and this
+  // runs only on the production host, so a throw here would blank the page for a real
+  // visitor. Fall back to an ephemeral, non-persisted id instead of propagating.
+  try {
+    const current = storage.getItem(key);
+    if (current) return current;
+    const value = uuid();
+    storage.setItem(key, value);
+    return value;
+  } catch {
+    return uuid();
+  }
 }
 
 function currentSlideId() {
@@ -130,8 +138,13 @@ export function startAnalytics() {
     client_ts: new Date().toISOString(),
     path: currentPath(),
     referrer: document.referrer ? document.referrer.slice(0, 1000) : null,
-    viewport_width: window.innerWidth,
-    viewport_height: window.innerHeight,
+    // Clamp to the schema CHECK range (db/analytics-schema.sql: 1..10000) exactly as
+    // active_ms is clamped above. A hidden/prerendered tab can report innerWidth 0,
+    // which would violate the constraint, abort the whole INSERT batch, and leave the
+    // event stuck in the retry queue forever — silently killing this browser's
+    // measurement while the guide keeps working (REQ-ANALYTICS-010).
+    viewport_width: Math.max(1, Math.min(10000, window.innerWidth)),
+    viewport_height: Math.max(1, Math.min(10000, window.innerHeight)),
   });
 
   const send = async (event: AnalyticsEvent, keepalive = false) => {

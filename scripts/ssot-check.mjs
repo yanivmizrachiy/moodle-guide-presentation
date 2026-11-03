@@ -215,7 +215,13 @@ if (fs.existsSync(visualIsolationPath)) {
   if (!css.includes('/* REQ-PRESENTATION-001 cover no-scroll')) {
     errors.push('The cover must keep its single-viewport no-scroll rule (REQ-PRESENTATION-001).');
   }
-  if (/article\[data-slide-id\](?![^{]*:not\(\[data-cover\]\))[^{]*\{[^}]*overflow:\s*hidden/.test(css)) {
+  // Flag `overflow: hidden` on ANY article rule that is not the cover-only one. The
+  // old pattern required the literal `article[data-slide-id]` and exempted any
+  // selector carrying `:not([data-cover])` — but that IS the canonical content-slide
+  // spelling (Guide.tsx renders content slides as data-slide-id with no data-cover),
+  // so the guard could not fire on the very regression it names (REQ-STABILITY-009).
+  // The cover alone is written `article[data-cover="true"]`, which this excludes.
+  if (/article(?![^{]*\[data-cover="true"\])[^{]*\{[^}]*overflow:\s*hidden/.test(css)) {
     errors.push('Content slides must not be clipped shut: they scroll inside the article (REQ-PRESENTATION-002).');
   }
 }

@@ -582,6 +582,10 @@ export default function Guide() {
         return;
       }
       if (isTyping || panel || lightbox) return;
+      // Let the browser keep its own modified shortcuts — Ctrl/Cmd+F find-in-page,
+      // Cmd+M, and the rest. The guide's quick keys (arrows, Home/End, f, m) are bare
+      // presses only, so a modifier means the keystroke is not ours to swallow.
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
 
       if (event.key === 'ArrowLeft' || event.key === 'PageDown') {
         event.preventDefault();

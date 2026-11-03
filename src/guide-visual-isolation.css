@@ -47,14 +47,20 @@
 /* REQ-PRESENTATION-006: a control you hit with a thumb is at least 44px square.
  * The header icons are 40px, which is fine under a mouse and too small on a
  * phone, so the floor is raised only where the pointer is coarse — touch devices.
- * Desktop rendering, and therefore the visual baselines, are untouched. */
+ * The modal close controls live outside the header/footer: the table-of-contents
+ * and search dialogs (section[role="dialog"]) and the full-size screenshot lightbox
+ * (figure[role="dialog"]) each carry a ghost icon-button close that is otherwise
+ * 40px on a phone. Desktop rendering, and therefore the visual baselines, are
+ * untouched. */
 @media (pointer: coarse) {
   [data-guide-shell="premium-presentation"] header button,
   [data-guide-shell="premium-presentation"] header a,
   [data-guide-shell="premium-presentation"] header [role="button"],
   [data-guide-shell="premium-presentation"] footer button,
   [data-guide-shell="premium-presentation"] footer a,
-  [data-guide-shell="premium-presentation"] footer [role="button"] {
+  [data-guide-shell="premium-presentation"] footer [role="button"],
+  [data-guide-shell="premium-presentation"] section[role="dialog"] button,
+  [data-guide-shell="premium-presentation"] figure[role="dialog"] button {
     min-height: 44px;
     min-width: 44px;
   }
