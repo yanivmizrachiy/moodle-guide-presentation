@@ -144,6 +144,18 @@ const GUARDS: { name: string; file: string; break: (source: string) => string; m
     break: (source) =>
       source + '\n' + ['https://yanivmizrachiy.github.io', '/www/guide/'].join(''),
     message: 'references the retired /www/guide/ deployment',
+  },
+  {
+    // The clip guard once watched `article[data-slide-id]` and exempted the
+    // `:not([data-cover])` spelling — which is exactly how a content slide is
+    // written — so it could never fire on the real regression. Prove the rewritten
+    // guard bites on the canonical content-slide selector (REQ-PRESENTATION-002).
+    name: 'content slides cannot be clipped shut on the canonical :not([data-cover]) selector',
+    file: 'src/guide-visual-isolation.css',
+    break: (source) =>
+      source +
+      '\n[data-guide-shell="premium-presentation"] article[data-slide-id]:not([data-cover]){overflow:hidden}\n',
+    message: 'Content slides must not be clipped shut',
   }
 ];
 
